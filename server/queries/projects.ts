@@ -1,3 +1,5 @@
+import ProjectFilter from '../models/projectFilter';
+
 const baseLookup = function() {
     return `
     /* COLLECT JSON DATA FOR FIELD */
@@ -28,11 +30,30 @@ const baseLookup = function() {
     INNER JOIN projects p ON l.id = p.id`;
 }
 
-const getProjects = function(sql: any, type: Number) {
+const getFilters = function (filters: any[]): ProjectFilter[] {
+    const projectFilters: ProjectFilter[] = [];
+
+    filters.forEach( (v: any, i: Number) => {
+        projectFilters.push(
+             new ProjectFilter(i, 'data', 1, 'data_val')
+        )
+    });
+
+    return projectFilters;
+}
+
+const getProjects = function(sql: any, type: Number, filters: any) {
+    let abc : any[] = [1];
+    console.log(
+        getFilters(abc)
+    );
     const select = `
     /* SELECT THE LIST OF PROJECTS */
     WITH project_list as (
-        SELECT id FROM projects WHERE project_type = @ptype
+        SELECT
+            p.id FROM projects p
+        WHERE
+            project_type = @ptype
     )
     ${ baseLookup()}
 `;
