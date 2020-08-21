@@ -42,7 +42,7 @@ class App {
 
     startServer() {
         this.server = this.app.listen(PORT, () => {
-            console.log('App is now listening on port 3000!');
+            console.log(`App is now listening on port ${PORT}!`);
         });
     }
 

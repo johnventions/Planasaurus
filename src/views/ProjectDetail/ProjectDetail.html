@@ -1,0 +1,9 @@
+<div>
+    Project Detail {{ $route.params.id }}
+    <div v-if="activeProject">
+        {{ activeProject.name }}
+        <div v-for="(field, i) in activeProject.fields" :key="field.id">
+            {{ field.key }} - {{ field.value }}
+        </div>
+    </div>
+</div>

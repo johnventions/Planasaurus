@@ -1,0 +1,11 @@
+<div>
+    My Projects
+    <div>
+        <div v-for="(project, i) in activeList"
+            :key="project.id">
+            <router-link :to="parseUrl(project)">
+                {{ project.name }}
+            </router-link>
+        </div>
+    </div>
+</div>
