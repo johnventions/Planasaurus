@@ -1,18 +1,24 @@
-const sql = require('mssql');
+import * as sql from 'mssql';
 
-const config = {
+const config : sql.config = {
     user: process.env.SQL_USER,
     password: process.env.SQL_PASSWORD,
-    server: process.env.SQL_HOST,
-    database: process.env.SQL_DB,
+    server: process.env.SQL_HOST || 'localhost',
+    database: process.env.SQL_DB || 'localhost', 
     options: {
         enableArithAbort: true
     } 
 }
 
-module.exports = function () {
-    sql.connect(config).then(() => {
-        console.log('Connected to SQL');
-    });
-    return sql;
+const getSQLPool : Promise<sql.ConnectionPool> = new sql.ConnectionPool(config)
+        .connect()
+        .then(
+            (pool: sql.ConnectionPool) => {
+                console.log("Database Connected")
+                return pool;
+            }
+        );
+
+module.exports = {
+    sql, getSQLPool
 }

@@ -1,0 +1,11 @@
+<div class="col-12" :class="getClass()">
+    {{ item.type }}
+    <template v-if="isContainer()">
+
+    </template>
+    <template v-else>
+        <div v-for="(child, i) in item.components">
+            {{ child.type }}
+        </div>
+    </template>
+</div>

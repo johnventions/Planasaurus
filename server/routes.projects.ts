@@ -1,4 +1,8 @@
-const projectQueries = require('./queries/query.projects');
+import { Router, Request, Response } from 'express';
+const { getSQLPool } = require('../server/sql');
+
+import ProjectSpecification from './specifications/specification.project';
+import projectQueries from './queries/query.projects';
 
 const outputFilter = (result: any) => {
     let data = result.recordset;
@@ -9,23 +13,23 @@ const outputFilter = (result: any) => {
     return data;
 }
 
-module.exports = function (sql: any) {
-    let routes = require('express').Router();
+module.exports = function () {
+    let routes : Router = require('express').Router();
 
-    routes.get('/', async (req: any, res: any) => {
-        let projectType = parseInt(req.query.type);
-        console.log(projectType);
-        let filters = req.query;
-        const result = await projectQueries.getProjects(sql, projectType, filters);
+    routes.get('/', async (req: Request, res: Response) => {
+        const pool = await getSQLPool;
+        let spec : ProjectSpecification = ProjectSpecification.fromParams(req.query);
+        const result = await projectQueries.getProjects(pool, spec);
         res.status(200).json({
             sucess: true,
             list: outputFilter(result)
         });
     });
 
-    routes.get('/:id', async (req: any, res: any) => {
-        const id = req.params.id;
-        const result = await projectQueries.getProjectById(sql, id);
+    routes.get('/:id', async (req: Request, res: Response) => {
+        const pool = await getSQLPool;
+        const id = parseInt(req.params.id);
+        const result = await projectQueries.getProjectById(pool, id);
         res.status(200).json({
             sucess: true,
             project: outputFilter(result)

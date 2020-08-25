@@ -1,14 +1,14 @@
 const routes = require('express').Router();
 
-module.exports = function (sql: any) {
+module.exports = function () {
     routes.get('/', async (req: any, res: any) => {
         res.status(200).json({ message: 'Connected!' });
     });
 
-    const projects = require('./routes.projects')(sql);
+    const projects = require('./routes.projects')();
     routes.use('/projects', projects);
 
-    const types = require('./routes.types')(sql);
+    const types = require('./routes.types')();
     routes.use('/types', types);
 
     return routes;

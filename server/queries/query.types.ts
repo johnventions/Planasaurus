@@ -1,14 +1,18 @@
-const getProjectTypes = function (sql: any) {
+import * as sql from 'mssql';
+
+const getProjectTypes = function (pool: sql.ConnectionPool) {
     const select = `
     /* SELECT THE LIST OF PROJECT TYPES */
         SELECT
             t.id, t.name, t.codename, t.parent_id, t.menu_order
         FROM project_types t
 `;
-    const request = new sql.Request();
+    const request = pool.request();
     return request.query(select);
 }
 
-module.exports = {
-    getProjectTypes,
+const _ = {
+    getProjectTypes
 }
+
+export default _;

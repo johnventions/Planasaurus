@@ -1,11 +1,16 @@
-const typeQueries = require('./queries/query.types');
+import * as sql from 'mssql';
+import { Router, Request, Response } from 'express';
 
-module.exports = function (sql: any) {
-    let routes = require('express').Router();
+const { getSQLPool } = require('../server/sql');
+import typeQueries from './queries/query.types';
 
-    routes.get('/', async (_req: any, res: any) => {
-        const result = await typeQueries.getProjectTypes(sql);
-        res.status(200).json({
+module.exports = function () {
+    let routes : Router = require('express').Router();
+
+    routes.get('/', async (req: Request, res: Response) => {
+        const pool = await getSQLPool;
+        const result = await typeQueries.getProjectTypes(pool);
+        return res.status(200).json({
                 success: true,
                 types: result.recordset
             });

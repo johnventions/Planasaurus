@@ -1,5 +1,7 @@
 <template src="./ProjectDetail.html"></template>
 <script>
+import Layout from '@/components/Layout/Templating/Layout/Layout';
+
 export default {
     name: 'ProjectDetail',
     data: function() {
@@ -8,6 +10,9 @@ export default {
             activeID: null,
             activeProject: null,
         }
+    },
+    components: {
+        'layout': Layout
     },
     methods: {
         processPath: function() {

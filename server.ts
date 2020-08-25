@@ -1,17 +1,20 @@
 require('dotenv').config();
 
+import * as sql from 'mssql';
+
 const express = require('express');
 
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
+const { getSQLPool } = require('./server/sql');
+
 const PORT = process.env.PORT || 3000;
 
 class App {
     app: any;
     server: any;
-    sql: any;
 
     constructor() {
         this.createApp();
@@ -46,13 +49,13 @@ class App {
         });
     }
 
-    startDB() {
+    async startDB() {
         // this.db = require('./server/db')(mongoose, session);
-        this.sql = require('./server/sql')();
+        await getSQLPool;
     }
 
     addApiRoutes() {
-        const apiRoutes = require('./server/routes')(this.sql);
+        const apiRoutes = require('./server/routes')();
         this.app.use('/api', apiRoutes);
     }
 
