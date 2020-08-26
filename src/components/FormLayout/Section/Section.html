@@ -1,0 +1,13 @@
+<section class="section">
+    <div class="row">
+        <layout-zone 
+            v-for="(zone, i) in item.zones"
+            :class="getClass(i)"
+            :item="zone"
+            :key="zone.id">
+        </layout-zone>
+    </div>
+    <div class="section-new">+
+
+    </div>
+</section>

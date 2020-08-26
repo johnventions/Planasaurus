@@ -1,6 +1,6 @@
 <template src="./ProjectDetail.html"></template>
 <script>
-import Layout from '@/components/Layout/Templating/Layout/Layout';
+import Layout from '@/components/FormLayout/Layout/Layout';
 
 export default {
     name: 'ProjectDetail',

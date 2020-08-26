@@ -1,0 +1,13 @@
+<div class='zone editing'>
+    <div class="zone-container">
+        <div v-if="item.components">
+            <div v-for="(child, i) in item.components">
+                <label>Field Label</label><br/>
+                <input type="text"/>
+            </div>
+        </div>
+        <div class="zone-new">
+            + New Field
+        </div>
+    </div>
+</div>
