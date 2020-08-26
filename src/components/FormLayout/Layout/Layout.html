@@ -1,9 +1,42 @@
 <div>
-    <div v-if="layout.primaryArea" class="container">
-        <layout-section 
+    <div v-if="layout.primaryArea" class="container area-container">
+        <div 
+            class="section-container"
             v-for="(item, i) in layout.primaryArea.sections"
-            :item="item"
             :key="item.id">
-        </layout-section>
+            <layout-section 
+                :item="item">
+            </layout-section>
+            <div class="section-new" 
+                @click="newSection(i)">
+                +
+            </div>
+        </div>
+        <modal name="new-section-modal">
+            Which section would you like to create?
+            <div class="row">
+                <div class="col-3">
+                    <button @click="createSection('full')">
+                        Full Width
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button @click="createSection('50-50')">
+                        50-50 split
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button @click="createSection('33-66')">
+                        33-66 split
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button @click="createSection('66-33')">
+                        66-33 split
+                    </button>
+                </div>
+
+            </div>
+        </modal>
     </div>
 </div>

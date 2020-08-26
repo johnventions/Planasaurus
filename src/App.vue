@@ -46,4 +46,7 @@ export default {
     }
   }
 }
+.vm--modal {
+  padding: 15px;
+}
 </style>
