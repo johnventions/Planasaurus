@@ -7,15 +7,25 @@ const dummylayout = {
                 {
                     components: [
                         {
-                            field_id: 2,
+                            id: 1, // text
                         },
                         {
-                            field_id: 2,
+                            id: 2, // number
+                        },
+                        {
+                            id: 3, // date
+                        },
+                        {
+                            id: 4, // checkbox
+                        },
+                        {
+                            id: 5, // checkbox
                         }
                     ]
                 }
             ]
         },
+        /*
         {
             id: 2,
             style: "50-50",
@@ -60,6 +70,7 @@ const dummylayout = {
                 }
             ]
         }
+        */
     ]
 }
 

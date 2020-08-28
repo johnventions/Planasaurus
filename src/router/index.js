@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
+import store from '../store/index'
+
 import Home from '../views/Home.vue'
 import ProjectList from '../views/ProjectList/ProjectList.vue'
 import ProjectDetail from '../views/ProjectDetail/ProjectDetail.vue'
+import ProjectLayout from '../views/ProjectLayout/ProjectLayout.vue'
 
 Vue.use(VueRouter)
 
@@ -31,6 +35,11 @@ Vue.use(VueRouter)
     component: ProjectList
 	},
 	{
+		path: '/dash/:type/layout',
+		name: 'Project Layout',
+    component: ProjectLayout
+	},
+	{
 		path: '/dash/:type/:id',
 		name: 'Project Detail',
     component: ProjectDetail
@@ -42,5 +51,12 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.params.type !== from.params.type) {
+    store.commit('UPDATE_ACTIVE_TYPE', to.params.type)
+  }
+  next();
+});
 
 export default router

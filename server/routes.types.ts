@@ -19,5 +19,15 @@ module.exports = function () {
     routes.get('/:id', async (req: any, res: any) => {
     });
 
+    routes.get('/:id/fields', async (req: Request, res: Response) => {
+        const pool = await getSQLPool;
+        const id = parseInt(req.params.id);
+        const result = await typeQueries.getFieldsByType(pool, id);
+        res.status(200).json({
+            sucess: true,
+            fields: result.recordset
+        });
+    });
+
     return routes;
 }

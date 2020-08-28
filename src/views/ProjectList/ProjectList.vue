@@ -1,6 +1,6 @@
 <template src="./ProjectList.html"></template>
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
     name: 'ProjectList',
     data: function() {
@@ -18,10 +18,15 @@ export default {
             this.processPath();
         }
     },
-    computed: mapState({
-        projectTypes: state => state.projectTypes,
-        activeList: state => state.activeList,
-    }),
+    computed: {
+        ...mapState({
+            projectTypes: state => state.projectTypes,
+        }),
+        ...mapGetters([
+            'activeList'
+        ]),
+        layoutUrl: function() { return  `/dash/${this.activeType}/layout`; }
+    },
     methods: {
         ...mapActions([
             'getProjectList'
@@ -37,7 +42,7 @@ export default {
         },
         parseUrl(project) {
             return `${this.activeType}/${project.id}`;
-        }
+        },
     },
     mounted: function() {
         this.processPath();

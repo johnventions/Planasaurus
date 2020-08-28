@@ -11,8 +11,27 @@ const getProjectTypes = function (pool: sql.ConnectionPool) {
     return request.query(select);
 }
 
+const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
+    const select = `
+    /* SELECT THE LIST OF FIELDS FOR A TYPE TYPES */
+        SELECT
+            fd.id,
+            fd.name,
+            fd.data_type,
+            fd.relationship_type
+        FROM field_defs fd
+        WHERE fd.project_type = @id
+`;
+
+    const request = pool.request();
+    request.input('id', sql.Int, id);
+    request.multiple = true;
+    return request.query(select);
+}
+
 const _ = {
-    getProjectTypes
+    getProjectTypes,
+    getFieldsByType
 }
 
 export default _;

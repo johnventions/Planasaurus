@@ -70,7 +70,8 @@ const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
     const select = `
     /* SELECT THE LIST OF PROJECTS */
     WITH project_list as (
-        SELECT id FROM projects WHERE id = @id
+        SELECT id FROM projects
+        WHERE id = @id
     )
     ${ baseLookup() }
 `;

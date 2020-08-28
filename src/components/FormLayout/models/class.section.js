@@ -4,7 +4,6 @@ export default class Section {
     style = "full";
 
     constructor(obj = {}) {
-        console.log(obj);
         this.id = obj.id || uuidv4();
         this.style = obj.style || "full";
         if (obj && obj.zones) {

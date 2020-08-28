@@ -2,12 +2,19 @@
     <div class="zone-container">
         <div v-if="item.components">
             <div v-for="(child, i) in item.components">
-                <label>Field Label</label><br/>
-                <input type="text"/>
+                <div 
+                :field="getLayoutFieldDef(child.id)"
+                :is="getLayoutComponent(child.id)">
+                </div>
             </div>
         </div>
-        <div class="zone-new">
+        <button class="btn-field-new" @click="newField">
             + New Field
-        </div>
+        </button>
     </div>
+    <modal :name="modalName">
+        <new-field-modal
+            v-on:createField="submitCreateField">
+        </new-field-modal>
+    </modal>
 </div>

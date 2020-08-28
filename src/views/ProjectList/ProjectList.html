@@ -1,7 +1,9 @@
-<div>
-    My Projects
-    <div>
-        <div v-for="(project, i) in activeList"
+<div class="container">
+    <router-link class="btn btn-primary" :to="layoutUrl">
+        Layout
+    </router-link>
+    <div v-if="activeList && activeList.list">
+        <div v-for="(project, i) in activeList.list"
             :key="project.id">
             <router-link :to="parseUrl(project)">
                 {{ project.name }}
