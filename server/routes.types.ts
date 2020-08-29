@@ -29,5 +29,19 @@ module.exports = function () {
         });
     });
 
+    routes.post('/:id/fields', async (req: Request, res: Response) => {
+        const newField = {
+            name: req.body.name,
+            type: req.body.type,
+        };
+        const pool = await getSQLPool;
+        const id = parseInt(req.params.id);
+        const result = await typeQueries.createFieldForType(pool, id,  newField.type, newField.name);
+        res.status(200).json({
+            sucess: true,
+            fields: result.recordset
+        });
+    });
+
     return routes;
 }

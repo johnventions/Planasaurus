@@ -46,7 +46,10 @@ export default {
         },
         async submitCreateField(pkg) {
             let newField = await this.createField(pkg);
-            console.log(newField);
+            if (newField) {
+               
+                console.log(newField);
+            }
         }
     }
 }

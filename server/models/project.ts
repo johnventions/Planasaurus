@@ -1,0 +1,25 @@
+import FieldEntry from "./fieldentry"
+
+export default class Project {
+    id: Number = 0;
+    date_created: Number = Date.now();
+    name: String = 'New Field';
+    project_type: Number = 0;
+    status: Number = 0;
+    fields: Array<FieldEntry> = [];
+
+    static fromData(data: any) : Project {
+        let p =  new this();
+        p.id = data.id;
+        p.date_created = data.date_created;
+        p.name = data.name;
+        p.project_type = data.project_type;
+        p.status = data.status;
+        if (p.fields && typeof data.fields == 'string') {
+            p.fields = FieldEntry.fromData(data.fields);
+        } else {
+        }
+
+        return p;
+    }
+}

@@ -26,7 +26,7 @@ export default {
             this.$http.get(`/api/projects/${this.activeID}`)
                 .then( response => {
                     console.log(response);
-                    this.activeProject = response.data.project[0];
+                    this.activeProject = response.data.project;
                 })
         }
     },

@@ -36,14 +36,12 @@ const baseLookup = function() {
 const getFilters = function (filters: Map<string, any>): ProjectFilter[] {
     const projectFilters: ProjectFilter[] = [];
     let i = 0;
-    console.log(filters);
     filters.forEach((value, key) => {
         projectFilters.push(
              new ProjectFilter(i, key, 1, value.toString())
         )
         i++;
     });
-    console.log(projectFilters);
     return projectFilters;
 }
 

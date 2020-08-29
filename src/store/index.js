@@ -63,8 +63,14 @@ export default new Vuex.Store({
 		EDIT_FIELD: function (state, field) {
 			state.templateEditor.field = field;
 		},
-		PUSH_FIELD: function(state, field) {
-			console.log(state, field);
+		PUSH_FIELD: function(state, pkg) {
+			const { type, field } = pkg;
+			console.log(pkg);
+			if (state.projectFields[type]) {
+				let newArray = [...state.projectFields[type], field];
+				Vue.set(state.projectFields, type, newArray);
+				console.log(state.projectFields);
+			}
 		}
 	},
 	actions: {
@@ -100,12 +106,17 @@ export default new Vuex.Store({
 				});
 		},
 		createField({ commit }, pkg) {
-			console.log(this.getters.activeType, pkg);
+			let typeName = this.activeProjectType;
 			return axios.post(`/api/types/${this.getters.activeType.id}/fields`, pkg)
 				.then(result => {
 					console.log(result);
-					commit('PUSH_FIELD', result);
-					return result;
+					let fieldPush = {
+						id: result.data.fields[0].id,
+						name: pkg.name,
+						data_type: pkg.type
+					};
+					commit('PUSH_FIELD', { type: typeName, field: fieldPush}); // send field to the fieldList
+					return fieldPush;
 				})
 		}
 	},

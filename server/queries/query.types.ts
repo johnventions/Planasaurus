@@ -29,9 +29,31 @@ const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
     return request.query(select);
 }
 
+
+const createFieldForType = function (pool: sql.ConnectionPool, typeID: Number, type: Number, name: String ) {
+    const insert = `
+    /* CREATE A NEW RECORD IN field_defs */
+        INSERT INTO field_defs
+            (project_type, name, data_type)
+        VALUES
+            (@pt, @name, @dt);
+        SELECT SCOPE_IDENTITY() as id;
+`;
+
+    const request = pool.request();
+    request.input('pt', sql.Int, typeID);
+    request.input('name', sql.VarChar, name);
+    request.input('dt', sql.Int, type);
+    request.multiple = true;
+    return request.query(insert);
+}
+
+
+
 const _ = {
     getProjectTypes,
-    getFieldsByType
+    getFieldsByType,
+    createFieldForType
 }
 
 export default _;
