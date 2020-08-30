@@ -1,20 +1,6 @@
 import { Router, Request, Response } from 'express';
 import ProjectService from "./services/project.service"
-
-
-const { getSQLPool } = require('../server/sql');
-
 import ProjectSpecification from './specifications/specification.project';
-import projectQueries from './queries/query.projects';
-
-const outputFilter = (result: any) => {
-    let data = result.recordset;
-    data.forEach((el: any) => {
-        el.fields = JSON.parse(el.fields);
-    });
-
-    return data;
-}
 
 module.exports = function () {
     let routes : Router = require('express').Router();

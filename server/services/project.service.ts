@@ -1,4 +1,3 @@
-import { IRecordSet } from 'mssql';
 const { getSQLPool } = require('../sql');
 
 import ProjectSpecification from '../specifications/specification.project';
@@ -24,7 +23,6 @@ export default class ProjectService {
     }
 
     ToModel(data : any) : Project {
-        console.log(data);
         return Project.fromData(data);
     }
 }
