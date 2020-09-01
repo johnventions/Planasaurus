@@ -1,38 +1,52 @@
-import TextInput from "@/components/FormLayout/FieldTypes/TextInput.vue";
-import DateInput from "@/components/FormLayout/FieldTypes/DateInput.vue";
-import DropdownInput from "@/components/FormLayout/FieldTypes/DropdownInput.vue";
-import RadioInput from "@/components/FormLayout/FieldTypes/RadioInput.vue";
+// Layout Editing
+import TextInput from "@/components/TemplateEditing/FieldTypes/TextInput.vue";
+import DateInput from "@/components/TemplateEditing/FieldTypes/DateInput.vue";
+import DropdownInput from "@/components/TemplateEditing/FieldTypes/DropdownInput.vue";
+import RadioInput from "@/components/TemplateEditing/FieldTypes/RadioInput.vue";
+
+// Content Editing
+import TextInputEditable from "@/components/ContentEditing/FieldTypes/TextInput.vue";
+import DateInputEditable from "@/components/ContentEditing/FieldTypes/DateInput.vue";
+import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/DropdownInput.vue";
+import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
+
 
 const fieldTypes = [
     {
         id: 1,
         name: "Text Input",
         layoutComponent: TextInput,
+        editingComponent: TextInputEditable,
     },
     {
         id: 2,
         name: "Number",
         layoutComponent: TextInput,
+        editingComponent: TextInputEditable,
     },
     {
         id: 3,
         name: "Date",
         layoutComponent: DateInput,
+        editingComponent: DateInputEditable,
     },
     {
         id: 4,
         name: "Radio Input (Yes / No)",
         layoutComponent: RadioInput,
+        editingComponent: RadioInputEditable,
     },
     {
         id: 5,
         name: "Dropdown (Static)",
         layoutComponent: DropdownInput,
+        editingComponent: DropdownInputEditable,
     },
     {
         id: 6,
         name: "Dropdown (Related Item)",
         layoutComponent: DropdownInput,
+        editingComponent: DropdownInputEditable,
     }
 ];
 

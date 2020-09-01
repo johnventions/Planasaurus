@@ -20,7 +20,7 @@
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 
-import LayoutArea from '@/components/FormLayout/LayoutArea/LayoutArea';
+import LayoutArea from '@/components/TemplateEditing/LayoutArea/LayoutArea';
 
 export default {
     name: 'ProjectLayout',

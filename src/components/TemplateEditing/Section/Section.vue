@@ -1,0 +1,37 @@
+<template src="./Section.html"></template>
+<script>
+import Zone from "../Zone/Zone";
+
+export default {
+    name: 'Section',
+    props: ['item', 'index'],
+    components: {
+        'layout-zone': Zone
+    },
+    methods: {
+        getClass(i) {
+            if (this.item.style == "50-50") {
+                return "col-6";
+            } else if (this.item.style == "33-66") {
+                return  i == 0 ? "col-4" : "col-8";
+            } else if (this.item.style == "66-33") {
+                return  i == 0 ? "col-8" : "col-4";
+            }
+            return "col-12";
+        },
+        handleUpdateChild(index, item) {
+            let newItem = { ... this.item };
+            // update the zone that was modified
+            newItem.zones[index] = item;
+            // pass new definition up to parent LAYOUT
+            this.$emit('updatechild', this.index, newItem);
+        }
+    }
+}
+</script>
+<style lang="scss">
+    .section {
+        padding: 10px 0;
+        position: relative;
+    }
+</style>

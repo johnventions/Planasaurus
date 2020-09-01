@@ -1,7 +1,7 @@
 <template src="./ProjectDetail.html"></template>
 <script>
-import { mapGetters } from 'vuex';
-import EditingArea from '@/components/EditingLayout/EditingArea/EditingArea'
+import { mapActions, mapGetters } from 'vuex';
+import EditingArea from '@/components/ContentEditing/EditingArea/EditingArea'
 
 
 export default {
@@ -23,6 +23,10 @@ export default {
         ]),
     },
     methods: {
+        ...mapActions([
+            'getProjectFields',
+            'getProjectLayout',
+        ]),
         processPath: function() {
             this.activeType = this.$route.params.type;
             this.activeID = this.$route.params.id;
@@ -31,6 +35,7 @@ export default {
             }
         },
         queryList: function() {
+            this.getProjectLayout();
             this.$http.get(`/api/projects/${this.activeID}`)
                 .then( response => {
                     console.log(response);
