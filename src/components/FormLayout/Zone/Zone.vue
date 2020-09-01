@@ -5,7 +5,7 @@ import NewFieldModal from '../Modals/NewField'
 import fieldTypes from "@/data/fieldTypes";
 
 export default {
-    props: ["item"],
+    props: ["item", "index"],
     data: function() {
         return {
         };
@@ -47,8 +47,15 @@ export default {
         async submitCreateField(pkg) {
             let newField = await this.createField(pkg);
             if (newField) {
-               
-                console.log(newField);
+                // field was create
+                this.$modal.hide(this.modalName);
+                // add field to Zone
+                let newItem = { ... this.item };
+                newItem.components.push({
+                    id: newField.id
+                });
+                // pass new definition up to parent SECTION
+                this.$emit('updatechild', this.index, newItem);
             }
         }
     }
@@ -60,8 +67,7 @@ export default {
             .zone-container {
                 min-height: 200px;
                 padding: 15px;
-                background: lightblue;
-                border: 1px solid black;
+                border: 1px dotted black;
             }
             .zone-new {
                 display: inline-block;

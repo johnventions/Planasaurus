@@ -4,6 +4,8 @@
             v-for="(zone, i) in item.zones"
             :class="getClass(i)"
             :item="zone"
+            :index="i"
+            v-on:updatechild="handleUpdateChild "
             :key="zone.id">
         </layout-zone>
     </div>

@@ -3,6 +3,7 @@ import typeQueries from '../queries/query.types';
 
 import ProjectType from "../models/projecttype";
 import FieldDef from "../models/fielddef";
+import Layout from "../models/layout";
 
 export default class TypeService {
     constructor() {
@@ -25,9 +26,9 @@ export default class TypeService {
 
     }
 
-    async createTypeField(projectID: Number, field: FieldDef): Promise<FieldDef> {
+    async createTypeField(typeID: Number, field: FieldDef): Promise<FieldDef> {
         const pool = await getSQLPool;
-        const result = await typeQueries.createFieldForType(pool, projectID, field);
+        const result = await typeQueries.createFieldForType(pool, typeID, field);
         let created = result.recordset[0];
         let f: FieldDef = { ...field, id: created.id};
         return f;
@@ -39,5 +40,18 @@ export default class TypeService {
 
     ToFieldModel(data: any) : FieldDef {
         return FieldDef.fromData(data);
+    }
+
+    async getTypeLayoutById(typeID: Number): Promise<Layout> {
+        const pool = await getSQLPool;
+        const result = await typeQueries.getLayoutForProjectType(pool, typeID);
+        let layout: Layout = Layout.fromData(JSON.parse(result.recordset[0].layout));
+        return layout;
+    }
+
+    async updateTypeLayoutById(typeID: Number, layout: any): Promise<any> {
+        const pool = await getSQLPool;
+        const result = await typeQueries.updateLayoutForProjectType(pool, typeID, JSON.stringify(layout));
+        return result;
     }
 }

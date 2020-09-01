@@ -1,17 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
-import Zone from "./class.zone";
+import Zone from "@/models/class.zone";
 export default class Section {
     style = "full";
+    zones = [new Zone()];
 
     constructor(obj = {}) {
         this.id = obj.id || uuidv4();
         this.style = obj.style || "full";
+        console.log(obj.zones);
         if (obj && obj.zones) {
             this.zones = obj.zones.map( x => {
-                return new Zone(x);
+                return new Zone(x || {});
             })
-        } else {
-            this.zones = [new Zone()];
         }
     }
 

@@ -4,7 +4,7 @@ import Zone from "../Zone/Zone";
 
 export default {
     name: 'Section',
-    props: ['item'],
+    props: ['item', 'index'],
     components: {
         'layout-zone': Zone
     },
@@ -18,7 +18,13 @@ export default {
                 return  i == 0 ? "col-8" : "col-4";
             }
             return "col-12";
-
+        },
+        handleUpdateChild(index, item) {
+            let newItem = { ... this.item };
+            // update the zone that was modified
+            newItem.zones[index] = item;
+            // pass new definition up to parent LAYOUT
+            this.$emit('updatechild', this.index, newItem);
         }
     }
 }

@@ -9,7 +9,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Nav from "./components/Layout/Nav/Nav";
+import Nav from "./components/Structure/Nav/Nav";
 
 export default {
   components: {
@@ -28,6 +28,7 @@ export default {
 
 <style lang="scss">
 #nav {
+  margin-bottom: 10px;
   a {
     //font-weight: bold;
     &.router-link-exact-active {

@@ -4,13 +4,19 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
+import Layout from "@/models/class.layout";
+
 export default new Vuex.Store({
 	state: {
 		authenticated: false,
 		activeProjectType: null, //string
+
+		// objects to track various project data
 		projectTypes: [],
 		projectFields: {},
 		projectLists: {},
+		projectLayouts: {},
+
 		filters: [],
 		templateEditor: {
 			layout: null,
@@ -24,12 +30,16 @@ export default new Vuex.Store({
 			}
 			state.authenticated = true;
 		},
+
+		/* TYPES */
 		SET_TYPES: function (state, pkg) {
 			state.projectTypes = pkg;
 		},
 		UPDATE_ACTIVE_TYPE: function(state, type) {
 			state.activeProjectType = type;
 		},
+
+		/* PROJECTS */
 		LOADING_LIST: function (state, type) {
 			let currentList = state.projectLists[type] || {};
 			let newList = {
@@ -45,6 +55,9 @@ export default new Vuex.Store({
 				list: pkg.list
 			});
 		},
+
+
+		/* FIELDS */
 		LOADING_FIELDS: function (state, type) {
 			let currentFields = state.projectFields[type] || {};
 			let newList = {
@@ -65,12 +78,36 @@ export default new Vuex.Store({
 		},
 		PUSH_FIELD: function(state, pkg) {
 			const { type, field } = pkg;
-			console.log(pkg);
+			console.log(pkg, state.projectFields[type]);
 			if (state.projectFields[type]) {
-				let newArray = [...state.projectFields[type], field];
-				Vue.set(state.projectFields, type, newArray);
-				console.log(state.projectFields);
+				let currentFields = state.projectFields[type];
+				currentFields.fields.push(field);
+				Vue.set(state.projectFields, type, currentFields);
 			}
+		},
+
+		/* LAYOUTS */
+		LOADING_LAYOUT: function (state, type) {
+			let currentLayout = state.projectLayouts[type] || {};
+			let newLayout = {
+				...currentLayout,
+				loading: true
+			};
+			Vue.set(state.projectLayouts, type, newLayout);
+		},
+		
+		SET_LAYOUT: function (state, pkg) {
+			Vue.set(state.projectLayouts, pkg.type, {
+				loading: false,
+				lastUpdate: Date.now(),
+				layout: new Layout(pkg.layout)
+			});
+		},
+
+		MODIFY_LAYOUT_AREA: function (state, pkg) {
+			console.log(pkg);
+			let currentLayout = state.projectLayouts[pkg.type].layout;
+			Vue.set(currentLayout, pkg.areaName, pkg.area);
 		}
 	},
 	actions: {
@@ -106,17 +143,31 @@ export default new Vuex.Store({
 				});
 		},
 		createField({ commit }, pkg) {
-			let typeName = this.activeProjectType;
+			let typeName = this.state.activeProjectType;
 			return axios.post(`/api/types/${this.getters.activeType.id}/fields`, pkg)
 				.then(result => {
-					console.log(result);
-					let fieldPush = {
-						id: result.data.fields[0].id,
-						name: pkg.name,
-						data_type: pkg.type
-					};
+					let fieldPush = result.data.field;
 					commit('PUSH_FIELD', { type: typeName, field: fieldPush}); // send field to the fieldList
 					return fieldPush;
+				});
+		},
+		getProjectLayout({ commit }, type) {
+			const searchType = this.state.projectTypes.find(x => x.codename == type);
+			if (searchType == null) return;
+			commit('LOADING_LAYOUT', type);
+			axios.get(`/api/types/${searchType.id}/layout`)
+				.then(result => {
+					commit('SET_LAYOUT', {
+						type,
+						layout: result.data.layout
+					});
+				});
+		},
+		saveLatestLayout(_, pkg) {
+			return axios.post(`/api/types/${this.getters.activeType.id}/layout`, pkg)
+				.then(result => {
+					console.log(result.data);
+					return result.data;
 				})
 		}
 	},
@@ -136,6 +187,12 @@ export default new Vuex.Store({
 		activeType: state => {
 			const t = state.projectTypes.find(x => x.codename == state.activeProjectType);
 			return t || {};
+		},
+		activeLayout: state => {
+			if (state.projectLayouts[state.activeProjectType]) {
+				return state.projectLayouts[state.activeProjectType];
+			}
+			return {};
 		}
 	},
 	modules: {

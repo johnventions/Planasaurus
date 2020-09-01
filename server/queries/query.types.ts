@@ -32,7 +32,7 @@ const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
 }
 
 
-const createFieldForType = function (pool: sql.ConnectionPool, projectID: Number, field: FieldDef) {
+const createFieldForType = function (pool: sql.ConnectionPool, typeID: Number, field: FieldDef) {
     const insert = `
     /* CREATE A NEW RECORD IN field_defs */
         INSERT INTO field_defs
@@ -43,19 +43,47 @@ const createFieldForType = function (pool: sql.ConnectionPool, projectID: Number
 `;
 
     const request = pool.request();
-    request.input('pt', sql.Int, projectID);
+    request.input('pt', sql.Int, typeID);
     request.input('name', sql.VarChar, field.name);
     request.input('dt', sql.Int, field.data_type);
     request.multiple = true;
     return request.query(insert);
 }
 
+const getLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Number) {
+    const select = `
+    /* Pull out the LAYOUT field */
+        SELECT layout
+        FROM project_types
+        WHERE id = @pt 
+`;
 
+    const request = pool.request();
+    request.input('pt', sql.Int, typeID);
+    request.multiple = true;
+    return request.query(select);
+}
+
+const updateLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Number, layout: String) {
+    const update = `
+        UPDATE project_types
+        SET layout = @layout
+        WHERE id = @pt;
+`;
+
+    const request = pool.request();
+    request.input('pt', sql.Int, typeID);
+    request.input('layout', sql.VarChar, layout);
+    request.multiple = true;
+    return request.query(update);
+}
 
 const _ = {
     getProjectTypes,
     getFieldsByType,
-    createFieldForType
+    createFieldForType,
+    getLayoutForProjectType,
+    updateLayoutForProjectType
 }
 
 export default _;

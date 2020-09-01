@@ -1,21 +1,14 @@
-<template src="./Layout.html"></template>
+<template src="./LayoutArea.html"></template>
 <script>
+import Vue from 'vue';
 import LayoutSection from '@/components/FormLayout/Section/Section';
-import Area from '../models/class.area';
-import Section from '../models/class.section';
-import dummyarea from "./dummyarea";
+import Section from '@/models/class.section';
 
 
 export default {
+    props: ['area', 'areaname'],
     data: function() {
         return {
-            layout: {
-                name: 'Default Layout',
-                hasWorkflow: true,
-                id: 1,
-                primaryArea: new Area(dummyarea)
-            },
-            newSectionIndex: -1
         }
     },
     components: {
@@ -28,10 +21,19 @@ export default {
         },
         createSection(type) {
             // create new section at the index
-            let newSection = Section.create(type);
-            this.layout.primaryArea.sections.splice(this.newSectionIndex, 0, newSection);
-             this.$modal.hide('new-section-modal');
-
+            let newArea = {...this.area };
+            newArea.sections.splice(this.newSectionIndex, 0, Section.create(type));
+            // push that bad boy live
+            this.updateMe(newArea);
+            this.$modal.hide('new-section-modal');
+        },
+        handleUpdateChild(index, item) {
+            let newArea = {...this.area };
+            Vue.set(newArea.sections, index, item);
+            this.updateMe(newArea);
+        },
+        updateMe(obj) {
+            this.$emit('updateArea', this.areaname, obj);
         }
     }
 }
@@ -40,6 +42,12 @@ export default {
 <style lang="scss">
     .section-container {
         position: relative;
+    }
+    .section-choices {
+        button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
     }
     .section-new {
             border-radius: 20%;
@@ -51,14 +59,10 @@ export default {
             bottom: -16px;
             z-index: 20;
             text-align: center;
-            background: #3d3ae0;
             color: white;
             font-size: 18px;
             font-weight: 800;
             cursor: pointer;
-            &:hover {
-                background: lightblue;
-                color: black;
-            }
+            padding: 0;
         }
 </style>

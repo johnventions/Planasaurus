@@ -6,6 +6,7 @@ import TypeService from "./services/types.service";
 const { getSQLPool } = require('../server/sql');
 import typeQueries from './queries/query.types';
 import FieldDef from './models/fielddef';
+import Layout from './models/layout';
 
 module.exports = function () {
     let routes : Router = require('express').Router();
@@ -43,7 +44,29 @@ module.exports = function () {
         const result = await service.createTypeField(id, newField);
         res.status(200).json({
             sucess: true,
-            fields: result
+            field: result
+        });
+    });
+
+    routes.get('/:id/layout', async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const service = new TypeService();
+        const result = await service.getTypeLayoutById(id);
+        res.status(200).json({
+            sucess: true,
+            layout: result
+        });
+    });
+
+    routes.post('/:id/layout', async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const layoutUpdate: any = req.body.layout;
+
+        const service = new TypeService();
+        const result = await service.updateTypeLayoutById(id, layoutUpdate);
+        res.status(200).json({
+            sucess: true,
+            layout: layoutUpdate
         });
     });
 

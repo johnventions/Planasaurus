@@ -2,6 +2,7 @@
     Project Detail {{ $route.params.id }}
     <div v-if="activeProject">
         {{ activeProject.name }}
+        <editing-area v-if="activeLayout && activeLayout.layout" :item="activeLayout.layout"></editing-area>
         <div v-for="(field, i) in activeProject.fields" :key="field.id">
             {{ field.key }} - {{ field.value }}
         </div>

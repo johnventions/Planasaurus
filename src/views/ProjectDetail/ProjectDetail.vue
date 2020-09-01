@@ -1,6 +1,8 @@
 <template src="./ProjectDetail.html"></template>
 <script>
-import Layout from '@/components/FormLayout/Layout/Layout';
+import { mapGetters } from 'vuex';
+import EditingArea from '@/components/EditingLayout/EditingArea/EditingArea'
+
 
 export default {
     name: 'ProjectDetail',
@@ -12,7 +14,13 @@ export default {
         }
     },
     components: {
-        'layout': Layout
+        'editing-area': EditingArea
+    },
+    computed: {
+        ...mapGetters([
+            'activeFields',
+            'activeLayout'
+        ]),
     },
     methods: {
         processPath: function() {
