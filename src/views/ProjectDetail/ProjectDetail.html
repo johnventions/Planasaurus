@@ -1,13 +1,23 @@
 <div class="container">
-    Project Detail {{ $route.params.id }}
     <div v-if="activeProject">
-        {{ activeProject.name }}
+        <div class="row">
+            <div class="col-9">
+                <h2>
+                    {{ activeProject.name }}
+                </h2>
+            </div>
+            <div class="col-3">
+                <button 
+                    v-if="Object.keys(pendingUpdates).length"
+                    @click="saveChanges"
+                    class="btn btn-primary">
+                    Save Changes
+                </button>
+            </div>
+        </div>
         <editing-area 
             v-if="activeLayout && activeLayout.layout"
             :item="activeLayout.layout.primaryArea">
         </editing-area>
-        <div v-for="(field, i) in activeProject.fields" :key="field.id">
-            {{ field.key }} - {{ field.value }}
-        </div>
     </div>
 </div>

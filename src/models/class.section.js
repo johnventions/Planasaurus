@@ -7,7 +7,6 @@ export default class Section {
     constructor(obj = {}) {
         this.id = obj.id || uuidv4();
         this.style = obj.style || "full";
-        console.log(obj.zones);
         if (obj && obj.zones) {
             this.zones = obj.zones.map( x => {
                 return new Zone(x || {});

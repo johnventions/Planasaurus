@@ -2,6 +2,8 @@ const { getSQLPool } = require('../sql');
 
 import ProjectSpecification from '../specifications/specification.project';
 import projectQueries from '../queries/query.projects';
+
+import FieldUpdate from "../models/fieldUpdate";
 import Project from "../models/project"
 
 
@@ -20,6 +22,16 @@ export default class ProjectService {
         const project = await projectQueries.getProjectById(pool, id);
         const firstProject= project.recordset[0];
         return this.ToModel(firstProject);
+    }
+
+    async updateProjectFields(id: Number, fields: Array<any>) : Promise<any> {
+        const pool = await getSQLPool;
+        // convert fields to proper type
+        let fieldData : Array<FieldUpdate> = fields.map(x => {
+            return FieldUpdate.fromData(x);
+        });
+        const update = await projectQueries.updateProject(pool, id, fieldData);
+        return 1;
     }
 
     ToModel(data : any) : Project {

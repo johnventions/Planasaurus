@@ -1,4 +1,7 @@
 import * as sql from 'mssql';
+
+import FieldUpdate from "../models/fieldUpdate";
+
 import ProjectFilter from '../models/projectFilter';
 import ProjectSpecification from '../specifications/specification.project';
 
@@ -45,6 +48,7 @@ const getFilters = function (filters: Map<string, any>): ProjectFilter[] {
     return projectFilters;
 }
 
+
 const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecification) {
     const filters = spec.fields ? getFilters(spec.fields) : [];
     const select = `
@@ -78,11 +82,32 @@ const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
     request.input('id', sql.Int, id);
     request.multiple = true;
     return request.query(select);
-}
+};
+
+const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: Array<FieldUpdate>) {
+    const request = pool.request();
+    request.multiple = true;
+    request.input('id', sql.Int, id);
+
+    // create the update string
+    let update = fields.map((x) => {
+        return x.toUpdateString();
+    }).join("\r\n");
+
+    // bind the input parameters (sql injection prevention)
+    fields.forEach( x => {
+        request.input(`${x.paramID}_v`, sql.VarChar, x.value);
+        request.input(`${x.paramID}_f`, sql.Int, x.field_id);
+    });
+    
+    return request.query(update);
+};
+
 
 const _ = {
     getProjects,
-    getProjectById
+    getProjectById,
+    updateProject
 }
 
 export default _;

@@ -4,6 +4,11 @@
 import { mapState } from 'vuex';
 export default {
     name: 'Nav',
+    data: function() {
+        return {
+            navOpen: false,
+        }
+    },
     components: {
 
     },
@@ -13,9 +18,17 @@ export default {
     mounted: function() {
     },
     methods: {
+        openNav() {
+            this.navOpen = !this.navOpen;
+        },
         parseUrl(item) {
             return `/dash/${item.codename}`;
         }
     }
 }
 </script>
+<style>
+    .bg-grey {
+        background-color: #d6d6d6;
+    }
+</style>

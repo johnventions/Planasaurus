@@ -4,6 +4,7 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
+import viewModes from "../data/viewModes";
 import Layout from "@/models/class.layout";
 
 export default new Vuex.Store({
@@ -11,13 +12,16 @@ export default new Vuex.Store({
 		authenticated: false,
 		activeProjectType: null, //string
 
+		activeProject: null,
+		pendingUpdates: {},
+
 		// objects to track various project data
 		projectTypes: [],
 		projectFields: {},
 		projectLists: {},
 		projectLayouts: {},
 
-		filters: [],
+		viewModes: viewModes.VIEW,
 		templateEditor: {
 			layout: null,
 			field: null,
@@ -48,6 +52,7 @@ export default new Vuex.Store({
 			};
 			Vue.set(state.projectLists, type, newList);
 		},
+
 		SET_LIST: function (state, pkg) {
 			Vue.set(state.projectLists, pkg.type, {
 				loading: false,
@@ -73,9 +78,11 @@ export default new Vuex.Store({
 				fields: pkg.fields
 			});
 		},
-		EDIT_FIELD: function (state, field) {
+
+		EDIT_LAYOUT_FIELD: function (state, field) {
 			state.templateEditor.field = field;
 		},
+
 		PUSH_FIELD: function(state, pkg) {
 			const { type, field } = pkg;
 			console.log(pkg, state.projectFields[type]);
@@ -108,6 +115,18 @@ export default new Vuex.Store({
 			console.log(pkg);
 			let currentLayout = state.projectLayouts[pkg.type].layout;
 			Vue.set(currentLayout, pkg.areaName, pkg.area);
+		},
+
+		SET_RECORD: function(state, project) {
+			state.activeProject = project;
+		},
+
+		UPDATE_FIELD(state, pkg) {
+			Vue.set(state.pendingUpdates, pkg.id, pkg.value);
+		},
+
+		RESET_UPDATES(state) {
+			state.pendingUpdates = {};
 		}
 	},
 	actions: {
@@ -132,6 +151,7 @@ export default new Vuex.Store({
 		},
 		getProjectFields({ commit }, type) {
 			const searchType = this.state.projectTypes.find(x => x.codename == type);
+			console.log("getting fields");
 			if (searchType == null) return;
 			commit('LOADING_FIELDS', type);
 			axios.get(`/api/types/${searchType.id}/fields`)
@@ -153,6 +173,7 @@ export default new Vuex.Store({
 		},
 		getProjectLayout({ commit }, type) {
 			const searchType = this.state.projectTypes.find(x => x.codename == type);
+			console.log("get layout 2")
 			if (searchType == null) return;
 			commit('LOADING_LAYOUT', type);
 			axios.get(`/api/types/${searchType.id}/layout`)
@@ -168,6 +189,30 @@ export default new Vuex.Store({
 				.then(result => {
 					console.log(result.data);
 					return result.data;
+				})
+		},
+		getProjectRecord({ commit }, id) {
+			return axios.get(`/api/projects/${id}`)
+				.then(response => {
+					commit('SET_RECORD', response.data.project);
+					return true;
+				});
+		},
+
+		updateProject({ commit }) {
+			let fields = Object.keys(this.state.pendingUpdates).map(x => {
+				return {
+					field_id: x,
+					value: this.state.pendingUpdates[x]
+				};
+			});
+			if (fields.length == 0) return;
+			return axios.post(`/api/projects/${this.state.activeProject.id}`, {
+				fields
+			})
+				.then(() => {
+					commit('RESET_UPDATES');
+					return 1;
 				})
 		}
 	},
@@ -193,6 +238,10 @@ export default new Vuex.Store({
 				return state.projectLayouts[state.activeProjectType];
 			}
 			return {};
+		},
+		getFieldVal: (state) => (id) => {
+			let f = state.activeProject.fields.find(x => x.field_id == id);
+			return f ? f.value : '';
 		}
 	},
 	modules: {
