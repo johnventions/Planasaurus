@@ -8,7 +8,7 @@
     </div>
 </template>
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 export default {
     props: [
         'field'
@@ -18,7 +18,15 @@ export default {
             value: this.$store.getters.getFieldVal(this.field.id)
         }
     },
+    watch: {
+        viewMode: function() {
+            this.resetValue();
+        }
+    },
     computed: {
+        ... mapState({
+            viewMode: state => state.viewMode,
+        })
     },
     methods: {
         ...mapMutations({
@@ -29,7 +37,17 @@ export default {
                 id: this.field.id,
                 value: this.value
             });   
+        },
+        resetValue() {
+            this.value = this.$store.getters.getFieldVal(this.field.id);
         }
+    },
+    mounted: function() {
+        this.$store.subscribe((mutation) => {
+            if (mutation.type == "SET_RECORD") {
+                this.resetValue();
+            }
+        });
     }
 }
 </script>

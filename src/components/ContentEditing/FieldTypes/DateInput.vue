@@ -1,7 +1,7 @@
 <template>
     <div class="form-group">
         <label>{{ field.name }}</label><br/>
-        <input type="date" class="form-control"/>
+        <input type="datetime-local" class="form-control"/>
     </div>
 </template>
 <script>

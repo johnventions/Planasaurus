@@ -4,9 +4,13 @@ export default class FieldEntry {
     key: String = '';
     value: any;
 
-    static fromData(data: string): Array<FieldEntry> {
-        let arr = JSON.parse(data);
-        console.log(arr);
-        return arr as Array<FieldEntry>;
+    static arrayFromData(data: object | string): Array<FieldEntry> {
+        if (typeof data == "string") {
+            let arr = JSON.parse(data);
+            return arr as Array<FieldEntry>;
+        } else if (Array.isArray(data)) {
+            return data as Array<FieldEntry>;
+        }
+        return [];
     }
 }

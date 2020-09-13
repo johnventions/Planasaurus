@@ -36,8 +36,8 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-grey">
         <div class="container">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <router-link to="/myq" class="nav-link">
+                <li class="nav-item" v-if="activeProjectType">
+                    <router-link :to="`/dash/${activeProjectType}/new`" class="nav-link">
                         New
                     </router-link>
                 </li>

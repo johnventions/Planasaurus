@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import Nav from "./components/Structure/Nav/Nav";
 
 export default {
@@ -16,12 +16,21 @@ export default {
     'app-nav': Nav
   },
   methods: {
+    ...mapMutations({
+        startFindMode: 'START_FIND_MODE'
+    }),
     ...mapActions([
       'getTypes'
     ]),
   },
   mounted: function() {
     this.getTypes();
+    window.addEventListener("keydown", (e) => {
+      if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
+          e.preventDefault();
+          this.startFindMode();
+      }
+  })
   }
 }
 </script>

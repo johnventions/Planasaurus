@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import ProjectService from "./services/project.service"
 import ProjectSpecification from './specifications/specification.project';
 
+import Project from "./models/project";
 import FieldUpdate from "./models/fieldUpdate";
 
 module.exports = function () {
@@ -28,13 +29,18 @@ module.exports = function () {
     });
 
     routes.post('/:id', async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
-        const fields = req.body.fields;
+        let id : Number = parseInt(req.params.id);
         const service = new ProjectService();
-        const result = await service.updateProjectFields(id, fields);
+
+        let p = Project.fromData(req.body);
+        if (req.params.id == "0") {
+            let newProj = await service.createProject(p);
+            id = newProj.id;
+        }
+        // extract fields
+        const result = await service.updateProjectFields(id, p.fields);
         res.status(200).json({
-            sucess: true,
-            project: result
+            sucess: true
         });
     });
 

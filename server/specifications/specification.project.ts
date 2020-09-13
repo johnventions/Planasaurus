@@ -10,7 +10,7 @@ export default class ProjectSpecification {
     static ignoreFields : string[] = [
         'type',
         'sortBy',
-        'xortByDir'
+        'sortByDir'
     ];
 
     constructor(

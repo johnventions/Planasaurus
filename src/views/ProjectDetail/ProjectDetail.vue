@@ -1,20 +1,26 @@
 <template src="./ProjectDetail.html"></template>
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import EditingArea from '@/components/ContentEditing/EditingArea/EditingArea'
-
+import Project from '@/models/class.project'
 
 export default {
     name: 'ProjectDetail',
     data: function() {
         return {
-            activeType: null,
             activeID: null,
         }
     },
     watch: {
         projectTypes() {
             this.queryTypes();
+        },
+        $route() {
+            this.processPath();
+        // react to route changes...
+        },
+        activeType() {
+            this.processPath();
         }
     },
     components: {
@@ -22,13 +28,15 @@ export default {
     },
     computed: {
         ...mapGetters([
+            'activeType',
             'activeFields',
             'activeLayout'
         ]),
         ...mapState({
             activeProject: state => state.activeProject,
             projectTypes: state => state.projectTypes,
-            pendingUpdates: state => state.pendingUpdates
+            pendingUpdates: state => state.pendingUpdates,
+            pendingFind: state => state.pendingFind
         }),
     },
     methods: {
@@ -38,10 +46,14 @@ export default {
             'getProjectRecord',
             'updateProject'
         ]),
+        ...mapMutations({
+           setRecord: 'SET_RECORD'
+        }),
         processPath: function() {
-            this.activeType = this.$route.params.type;
             this.activeID = this.$route.params.id;
-            if (this.activeType && this.activeID) {
+            if (this.activeID == "new" && this.activeType) {
+                this.setRecord(new Project(this.activeType.id));
+            } else if (this.activeType && this.activeID) {
                 this.queryList();
             }
         },
@@ -62,6 +74,9 @@ export default {
         },
         saveChanges: function() {
             this.updateProject();
+        },
+        initiateFind: function() {
+            
         }
 
     },

@@ -4,11 +4,18 @@ import ProjectSpecification from '../specifications/specification.project';
 import projectQueries from '../queries/query.projects';
 
 import FieldUpdate from "../models/fieldUpdate";
-import Project from "../models/project"
+import Project from "../models/project";
 
 
 export default class ProjectService {
     constructor() {
+    }
+
+    async createProject(p: Project) : Promise<Project> {
+        const pool = await getSQLPool;
+        const newProjectId = await projectQueries.newProject(pool, p);
+        p.id = newProjectId.recordset[0].id;
+        return p;
     }
 
     async getProjects(spec: ProjectSpecification) : Promise<Project[]> {

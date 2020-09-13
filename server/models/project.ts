@@ -15,9 +15,8 @@ export default class Project {
         p.name = data.name;
         p.project_type = data.project_type;
         p.status = data.status;
-        if (p.fields && typeof data.fields == 'string') {
-            p.fields = FieldEntry.fromData(data.fields);
-        } else {
+        if (data.fields) {
+            p.fields = FieldEntry.arrayFromData(data.fields);
         }
 
         return p;

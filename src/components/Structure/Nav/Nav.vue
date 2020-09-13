@@ -13,7 +13,8 @@ export default {
 
     },
     computed: mapState({
-		navItems: state => state.projectTypes.filter( x => x.parent_id == null)
+        navItems: state => state.projectTypes.filter( x => x.parent_id == null),
+        activeProjectType: state => state.activeProjectType
     }),
     mounted: function() {
     },
