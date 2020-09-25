@@ -1,10 +1,14 @@
 <template>
-    <div class="form-group">
+    <div class="form-group"
+        v-bind:class="{ find: viewMode == 'find' }"
+    >
         <label>{{ field.name }}</label><br/>
-        <input type="text" 
-            class="form-control"
-            v-on:change="handleUpdate"
-            v-model="value"/>
+        <div class="input-container">
+            <input type="text" 
+                class="form-control"
+                v-on:change="handleUpdate"
+                v-model="value"/>
+        </div>
     </div>
 </template>
 <script>
@@ -51,3 +55,24 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+    .form-group {
+        &.find {
+            .input-container {
+                position: relative;
+                &:after {
+                    display: block;
+                    position: absolute;
+                    content: 'X';
+                    height: 20px;
+                    width: 20px;
+                    right: 5px;
+                    top: 5px;
+                }
+            }
+            input {
+                    background-color: #d9f6ff;
+                }
+        }
+    }
+</style>

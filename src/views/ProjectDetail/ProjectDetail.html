@@ -2,7 +2,7 @@
     <div v-if="activeProject">
         <div class="row">
             <div class="col-9">
-                <h2>
+                <h2 v-if="viewMode == 'view'">
                     {{ activeProject.name }}
                 </h2>
             </div>

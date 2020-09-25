@@ -36,7 +36,8 @@ export default {
             activeProject: state => state.activeProject,
             projectTypes: state => state.projectTypes,
             pendingUpdates: state => state.pendingUpdates,
-            pendingFind: state => state.pendingFind
+            pendingFind: state => state.pendingFind,
+            viewMode: state => state.viewMode,
         }),
     },
     methods: {
