@@ -1,7 +1,7 @@
 export default class FieldEntry {
     id: Number = 0;
     field_id: Number = 0;
-    key: String = '';
+    key: string = '';
     value: any;
 
     static arrayFromData(data: object | string): Array<FieldEntry> {

@@ -18,6 +18,12 @@ module.exports = function () {
         });
     });
 
+    /**
+     * Look up a project record by its ID
+     * Return the Project object
+     *
+     * @param {number} id The id of the project
+     */
     routes.get('/:id', async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const service = new ProjectService();

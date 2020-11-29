@@ -42,42 +42,42 @@ export default {
     },
     methods: {
         ...mapActions([
+            'ensureProjectLayoutDisplay',
             'getProjectFields',
             'getProjectLayout',
             'getProjectRecord',
             'updateProject'
         ]),
         ...mapMutations({
-           setRecord: 'SET_RECORD'
+           setRecord: 'SET_RECORD',
+           startFind: 'START_FIND_MODE'
         }),
         processPath: function() {
             this.activeID = this.$route.params.id;
             if (this.activeID == "new" && this.activeType) {
-                this.setRecord(new Project(this.activeType.id));
+                this.setRecord(
+                    new Project(this.activeType.id)
+                    );
+            } else if (this.activeID == "find" && this.activeType) {
+                this.startFind();
             } else if (this.activeType && this.activeID) {
                 this.queryList();
             }
         },
-        queryList: function() {
-            this.getProjectLayout(this.activeType);
+        queryList: async function() {
+            await this.ensureProjectLayoutDisplay(this.activeType.codename);
             this.getProjectRecord(this.activeID).then(() => {
-                if (this.activeFields.fields == null) {
-                    this.getProjectFields(this.activeType);
-                }
+                console.log("Record retrieved");
             });
         },
         queryTypes: function() {
             // get the types
             if (this.activeType) {
-                this.getProjectFields(this.activeType);
-                this.getProjectLayout(this.activeType);
+                this.ensureProjectLayoutDisplay(this.activeType.codename);
             }
         },
         saveChanges: function() {
             this.updateProject();
-        },
-        initiateFind: function() {
-            
         }
 
     },

@@ -41,6 +41,7 @@ export default {
             activeProjectType: state => state.activeProjectType,
             projectTypes: state => state.projectTypes
         }),
+        layoutUrl: function() { return  `/dash/${this.activeType}/layout`; }
     },
     watch: {
         $route(to, from) {
@@ -54,6 +55,7 @@ export default {
     },
     methods: {
         ...mapActions([
+            'ensureProjectLayoutDisplay',
             'getProjectFields',
             'getProjectLayout',
             'saveLatestLayout'
@@ -61,11 +63,11 @@ export default {
         ...mapMutations({
            modifyArea: 'MODIFY_LAYOUT_AREA'
         }),
-        processPath: function() {
+        processPath: async function() {
             this.activeType = this.$route.params.type;
             if (this.activeType != null) {
-                this.getProjectFields(this.activeType);
-                this.getProjectLayout(this.activeType);
+                await this.ensureProjectLayoutDisplay(this.activeType);
+                // this.getProjectLayout(this.activeType);
             }
         },
         handleUpdateArea(name, obj) {

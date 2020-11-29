@@ -1,11 +1,11 @@
 import { v4 } from "uuid";
 
 class FieldUpdate {
-    paramID: String;
+    paramID: string;
     field_id: Number = 0;
-    value: String = '';
+    value: string = '';
 
-    constructor(field_id: Number, value: String) {
+    constructor(field_id: Number, value: string) {
         this.paramID = v4().replace(/-/g, '');
         this.field_id = field_id;
         this.value = value;

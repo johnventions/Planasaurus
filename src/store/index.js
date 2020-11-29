@@ -167,13 +167,13 @@ export default new Vuex.Store({
 				});
 		},
 		getProjectFields({ commit }, type) {
-			const searchType = this.state.projectTypes.find(x => x.codename == type.codename);
+			const searchType = this.state.projectTypes.find(x => x.codename == type);
 			if (searchType == null) return;
 			commit('LOADING_FIELDS', type);
 			axios.get(`/api/types/${searchType.id}/fields`)
 				.then(result => {
 					commit('SET_FIELDS', {
-						type: type.codename,
+						type: type,
 						fields: result.data.fields
 					});
 				});
@@ -190,16 +190,25 @@ export default new Vuex.Store({
 		},
 
 		getProjectLayout({ commit }, type) {
-			const searchType = this.state.projectTypes.find(x => x.codename == type.codename);
+			const searchType = this.state.projectTypes.find(x => x.codename == type);
 			if (searchType == null) return;
 			commit('LOADING_LAYOUT', type);
 			axios.get(`/api/types/${searchType.id}/layout`)
 				.then(result => {
 					commit('SET_LAYOUT', {
-						type: type.codename,
+						type: type,
 						layout: result.data.layout
 					});
 				});
+		},
+
+		ensureProjectLayoutDisplay({ dispatch }, type) {
+			// looks up the fields and the layout for a project type
+			const searchType = this.state.projectTypes.find(x => x.codename == type);
+			if (searchType == null) return;
+			const fieldLookup = dispatch('getProjectFields', type);
+			const layoutLookup = dispatch('getProjectLayout', type);
+			return Promise.all([fieldLookup, layoutLookup]);
 		},
 
 		saveLatestLayout(_, pkg) {
@@ -216,6 +225,14 @@ export default new Vuex.Store({
 					return true;
 				});
 		},
+
+		// searchProjectRecords({ commit }) {
+		// 	return axios.get(`/api/projects/${id}`)
+		// 		.then(response => {
+		// 			commit('SET_RECORD', response.data.project);
+		// 			return true;
+		// 		});
+		// },
 
 		updateProject({ commit }) {
 			let fields = Object.keys(this.state.pendingUpdates).map(x => {

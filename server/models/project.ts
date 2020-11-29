@@ -3,7 +3,7 @@ import FieldEntry from "./fieldentry"
 export default class Project {
     id: Number = 0;
     date_created: Number = Date.now();
-    name: String = 'New Field';
+    name: string = 'New Field';
     project_type: Number = 0;
     status: Number = 0;
     fields: Array<FieldEntry> = [];

@@ -4,6 +4,7 @@
             <div v-for="(child, i) in item.components">
                 <div 
                 :field="getLayoutFieldDef(child.id)"
+                :type="getLayoutFieldType(child.id)"
                 :is="getLayoutComponent(child.id)">
                 </div>
             </div>

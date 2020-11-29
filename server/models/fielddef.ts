@@ -1,6 +1,6 @@
 export default class FieldDef {
     id: Number = 0;
-    name: String = '';
+    name: string = '';
     data_type: Number = 1;
     relationship_type: Number | null = null;
 

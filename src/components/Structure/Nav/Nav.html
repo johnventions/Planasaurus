@@ -33,17 +33,40 @@
             </div>
         </div>
     </nav>
-    <nav class="navbar navbar-expand-lg navbar-light bg-grey">
+    <nav class="navbar utility-nav navbar-expand-lg navbar-light bg-grey">
         <div class="container">
             <ul class="navbar-nav">
                 <li class="nav-item" v-if="activeProjectType">
                     <router-link :to="`/dash/${activeProjectType}/new`" class="nav-link">
+                        <font-awesome-icon icon="plus-square" size="2x"/>
                         New
                     </router-link>
                 </li>
-                <li class="nav-item">
-                    <router-link to="/myq" class="nav-link">
-                        Find
+                <template v-if="viewMode != 'find'">
+                    <li class="nav-item">
+                        <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
+                            <font-awesome-icon icon="search" size="2x"/>
+                            Find
+                        </router-link>
+                    </li>
+                </template>
+                <template v-if="viewMode == 'find'">
+                    <li class="nav-item">
+                        <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
+                            <font-awesome-icon icon="angle-double-left" size="2x" />
+                            Cancel Find
+                        </router-link>
+                    </li>
+                    <li class="nav-item" >
+                        <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
+                            <font-awesome-icon icon="search" size="2x" />
+                            Perform Find
+                        </router-link>
+                    </li>
+                </template >
+                <li class="nav-item util">
+                    <router-link class="btn btn-primary" :to="layoutUrl">
+                        Edit Layout
                     </router-link>
                 </li>
             </ul>

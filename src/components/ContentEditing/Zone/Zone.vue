@@ -17,7 +17,7 @@ export default {
         ]),
         modalName: function(){ 
             return `new_modal_${this.item.id}`;
-        } 
+        }
     },
     methods: {
         ...mapActions([
@@ -26,6 +26,15 @@ export default {
         getLayoutFieldDef(fieldID) {
             if (this.activeFields && this.activeFields.fields) {
                 return this.activeFields.fields.find(x => x.id == fieldID);
+            }
+            return null;
+        },
+        getLayoutFieldType(fieldID) {
+            let fieldDef = this.getLayoutFieldDef(fieldID);
+            if (fieldDef) {
+                // find matching component base on the data type
+                let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
+                return matchingComponent.type;
             }
             return null;
         },

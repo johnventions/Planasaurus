@@ -5,8 +5,9 @@ import DropdownInput from "@/components/TemplateEditing/FieldTypes/DropdownInput
 import RadioInput from "@/components/TemplateEditing/FieldTypes/RadioInput.vue";
 
 // Content Editing
-import TextInputEditable from "@/components/ContentEditing/FieldTypes/TextInput.vue";
-import DateInputEditable from "@/components/ContentEditing/FieldTypes/DateInput.vue";
+import BasicInputEditable from "@/components/ContentEditing/FieldTypes/BasicInput.vue";
+// import TextInputEditable from "@/components/ContentEditing/FieldTypes/TextInput.vue";
+// import DateInputEditable from "@/components/ContentEditing/FieldTypes/DateInput.vue";
 import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/DropdownInput.vue";
 import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
 
@@ -15,20 +16,22 @@ const fieldTypes = [
     {
         id: 1,
         name: "Text Input",
+        type: "text",
         layoutComponent: TextInput,
-        editingComponent: TextInputEditable,
+        editingComponent: BasicInputEditable,
     },
     {
         id: 2,
         name: "Number",
         layoutComponent: TextInput,
-        editingComponent: TextInputEditable,
+        editingComponent: BasicInputEditable,
     },
     {
         id: 3,
         name: "Date",
+        type: "datetime-local",
         layoutComponent: DateInput,
-        editingComponent: DateInputEditable,
+        editingComponent: BasicInputEditable,
     },
     {
         id: 4,

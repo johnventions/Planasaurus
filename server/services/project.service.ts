@@ -20,6 +20,7 @@ export default class ProjectService {
 
     async getProjects(spec: ProjectSpecification) : Promise<Project[]> {
         const pool = await getSQLPool;
+        console.log(spec);
         const projects = await projectQueries.getProjects(pool, spec);
         return projects.recordset.map( x => this.ToModel(x) );
     }

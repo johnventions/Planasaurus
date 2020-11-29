@@ -3,8 +3,8 @@ import { stringify } from 'querystring';
 
 export default class ProjectSpecification {
     type: Number;
-    sortBy: String;
-    sortByDir?: String;
+    sortBy: string;
+    sortByDir?: string;
     fields: Map<string, any>;
 
     static ignoreFields : string[] = [
@@ -30,8 +30,11 @@ export default class ProjectSpecification {
             qs.sortBy,
             qs.sortByDir
         );
+        const skipList = ['type', 'sortBy', 'sortByDir'];
         for (const [key, value] of Object.entries(qs)) {
-            proj.fields.set(key, value);
+            if (skipList.indexOf(key) == -1) {
+                proj.fields.set(key, value);
+            }
         }
         return proj;
     }

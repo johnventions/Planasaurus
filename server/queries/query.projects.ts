@@ -42,7 +42,7 @@ const getFilters = function (filters: Map<string, any>): ProjectFilter[] {
     let i = 0;
     filters.forEach((value, key) => {
         projectFilters.push(
-             new ProjectFilter(i, key, 1, value.toString())
+             new ProjectFilter(i, key, key, value.toString())
         )
         i++;
     });
@@ -68,15 +68,41 @@ const newProject = function (pool: sql.ConnectionPool, project: Project) {
     return request.query(insert);
 }
 
+const expandFilters = function (filters: ProjectFilter[]) {
+    if (filters.length > 0) {
+        const joins: string[] = [];
+        const wheres: string[] = [];
+        filters.forEach(
+            x => {
+                joins.push(x.joinStatement);
+                wheres.push(x.whereStatement);
+            }
+        )
+        return {
+            joins: joins.join(" "),
+            wheres: wheres.join(" ")
+        };
+    }
+    return {
+        joins: '',
+        wheres: ''
+    };
+}
+
+
 const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecification) {
     const filters = spec.fields ? getFilters(spec.fields) : [];
+    const filterStrings: any = expandFilters(filters);
+    console.log(filters);
     const select = `
     /* SELECT THE LIST OF PROJECTS */
     WITH project_list as (
         SELECT
             p.id FROM projects p
+            ${ filterStrings.joins }
         WHERE
             project_type = @ptype
+        ${ filterStrings.wheres }
     )
     ${ baseLookup()}
 `;
@@ -84,6 +110,10 @@ const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecificati
     const request : sql.Request = pool.request();
     request.input('ptype', sql.Int, spec.type);
     request.multiple = true;
+    filters.forEach( f => {
+        request.input(f.param, `${ f.value }`);
+    })
+    console.log(select);
     return request.query(select);
 }
 

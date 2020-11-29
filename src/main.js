@@ -5,6 +5,22 @@ import store from './store'
 import Axios from 'axios';
 import VModal from 'vue-js-modal';
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { 
+  faPlusSquare,
+  faSearch,
+  faAngleDoubleLeft
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(
+  faPlusSquare,
+  faSearch,
+  faAngleDoubleLeft
+)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+
 import './registerServiceWorker'
 
 Vue.prototype.$http = Axios;
