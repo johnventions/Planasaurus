@@ -1,7 +1,7 @@
 <template src="./Nav.html">
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 export default {
     name: 'Nav',
     data: function() {
@@ -22,8 +22,12 @@ export default {
     },
     methods: {
         ...mapMutations({
-            startFindMode: 'START_FIND_MODE'
+            startFindMode: 'START_FIND_MODE',
+            startViewMode: 'START_VIEW_MODE'
         }),
+        ...mapActions([
+            'searchProjectRecords'
+        ]),
         openNav() {
             this.navOpen = !this.navOpen;
         },

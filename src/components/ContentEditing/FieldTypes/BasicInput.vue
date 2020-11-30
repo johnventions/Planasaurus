@@ -7,6 +7,7 @@
             <input :type="type" 
                 class="form-control"
                 v-on:change="handleUpdate"
+                v-on:keyup="handleUpdate"
                 v-model="value"/>
         </div>
     </div>

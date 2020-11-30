@@ -52,16 +52,16 @@
                 </template>
                 <template v-if="viewMode == 'find'">
                     <li class="nav-item">
-                        <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
+                        <button @click="startViewMode" class="nav-link">
                             <font-awesome-icon icon="angle-double-left" size="2x" />
                             Cancel Find
-                        </router-link>
+                        </button>
                     </li>
                     <li class="nav-item" >
-                        <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
+                        <button @click="searchProjectRecords" class="nav-link">
                             <font-awesome-icon icon="search" size="2x" />
                             Perform Find
-                        </router-link>
+                        </button>
                     </li>
                 </template >
                 <li class="nav-item util">

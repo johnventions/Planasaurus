@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
+import objectToQuerystring from '../util/objectToQuerystring';
+
 Vue.use(Vuex)
 
 import viewModes from "../data/viewModes";
@@ -145,6 +147,13 @@ export default new Vuex.Store({
 				state.pendingFind = {};
 				state.viewMode = viewModes.FIND;
 			}
+		},
+
+		START_VIEW_MODE(state) {
+			if (state.viewMode != viewModes.VIEW) {
+				state.pendingFind = {};
+				state.viewMode = viewModes.VIEW;
+			}
 		}
 	},
 	actions: {
@@ -154,6 +163,7 @@ export default new Vuex.Store({
 					commit('SET_TYPES', result.data.types);
 				});
 		},
+
 		getProjectList({ commit }, type) {
 			const searchType = this.state.projectTypes.find(x => x.codename == type);
 			if (searchType == null) return;
@@ -166,6 +176,7 @@ export default new Vuex.Store({
 					});
 				});
 		},
+
 		getProjectFields({ commit }, type) {
 			const searchType = this.state.projectTypes.find(x => x.codename == type);
 			if (searchType == null) return;
@@ -226,13 +237,25 @@ export default new Vuex.Store({
 				});
 		},
 
-		// searchProjectRecords({ commit }) {
-		// 	return axios.get(`/api/projects/${id}`)
-		// 		.then(response => {
-		// 			commit('SET_RECORD', response.data.project);
-		// 			return true;
-		// 		});
-		// },
+		searchProjectRecords({ commit }) {
+			const searchParams = {
+				type: this.getters.activeType.id,
+				...this.state.pendingFind
+			};
+			const qs = objectToQuerystring(searchParams);
+			const url = `/api/projects${qs}`;
+			return axios.get(url)
+				.then(response => {
+					console.log(response);
+					const pkg = {
+						type: this.getters.activeType.codename,
+						list: response.data.list
+					};
+					commit('START_VIEW_MODE');
+					commit('SET_LIST', pkg);
+					return true;
+				});
+		},
 
 		updateProject({ commit }) {
 			let fields = Object.keys(this.state.pendingUpdates).map(x => {

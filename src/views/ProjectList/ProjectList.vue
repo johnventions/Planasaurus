@@ -33,7 +33,8 @@ export default {
         ]),
         processPath: function() {
             this.activeType = this.$route.params.type;
-            if (this.activeType != null) {
+            console.log(this.$route);
+            if (this.activeType != null && this.$route.query.search == null) {
                 this.queryList();
             }
         },
