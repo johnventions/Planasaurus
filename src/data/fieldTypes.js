@@ -12,6 +12,10 @@ import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/Dropdo
 import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
 
 
+// Metacomponents
+import NameCodename from "@/components/TemplateEditing/MetaComponents/NameCodename.vue";
+
+
 const fieldTypes = [
     {
         id: 1,
@@ -19,12 +23,18 @@ const fieldTypes = [
         type: "text",
         layoutComponent: TextInput,
         editingComponent: BasicInputEditable,
+        metaComponents: [
+            NameCodename
+        ]
     },
     {
         id: 2,
         name: "Number",
         layoutComponent: TextInput,
         editingComponent: BasicInputEditable,
+        metaComponents: [
+            NameCodename
+        ]
     },
     {
         id: 3,
@@ -32,24 +42,36 @@ const fieldTypes = [
         type: "datetime-local",
         layoutComponent: DateInput,
         editingComponent: BasicInputEditable,
+        metaComponents: [
+            NameCodename
+        ]
     },
     {
         id: 4,
         name: "Radio Input (Yes / No)",
         layoutComponent: RadioInput,
         editingComponent: RadioInputEditable,
+        metaComponents: [
+            NameCodename
+        ]
     },
     {
         id: 5,
         name: "Dropdown (Static)",
         layoutComponent: DropdownInput,
         editingComponent: DropdownInputEditable,
+        metaComponents: [
+            NameCodename
+        ]
     },
     {
         id: 6,
         name: "Dropdown (Related Item)",
         layoutComponent: DropdownInput,
         editingComponent: DropdownInputEditable,
+        metaComponents: [
+            NameCodename
+        ]
     }
 ];
 

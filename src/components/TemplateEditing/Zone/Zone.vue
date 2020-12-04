@@ -1,25 +1,32 @@
 <template src="./Zone.html"></template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import NewFieldModal from '../Modals/NewField'
 import fieldTypes from "@/data/fieldTypes";
+
+import NewFieldModal from '../Modals/NewField'
+import EditFieldModal from '../Modals/EditField'
 
 export default {
     props: ["item", "index"],
     data: function() {
         return {
+            fieldInEdit: null,
         };
     },
     components: {
-        'new-field-modal': NewFieldModal
+        'new-field-modal': NewFieldModal,
+        'edit-field-modal': EditFieldModal
     },
     computed: {
         ...mapGetters([
             'activeFields'
         ]),
-        modalName: function(){ 
+        modalNewField: function(){ 
             return `new_modal_${this.item.id}`;
-        } 
+        },
+        modalEditField: function(){ 
+            return `edit_modal_${this.item.id}`;
+        }
     },
     methods: {
         ...mapActions([
@@ -42,7 +49,7 @@ export default {
             console.log("Could not find", fieldID)
         },
         newField() {
-            this.$modal.show(this.modalName);
+            this.$modal.show(this.modalNewField);
         },
         async submitCreateField(pkg) {
             let newField = await this.createField(pkg);
@@ -57,12 +64,22 @@ export default {
                 // pass new definition up to parent SECTION
                 this.$emit('updatechild', this.index, newItem);
             }
+        },
+        editField(id) {
+            this.fieldInEdit = id;
+            this.$modal.show(this.modalEditField);
         }
     }
 }
 </script>
 <style lang="scss">
     .zone {
+        .zone-input {
+            padding: 5px;
+            &:hover {
+                border: 1px dashed #3d3ae0;
+            }
+        }
         &.editing {
             .zone-container {
                 min-height: 200px;

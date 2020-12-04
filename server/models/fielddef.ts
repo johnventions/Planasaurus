@@ -3,6 +3,7 @@ export default class FieldDef {
     name: string = '';
     data_type: Number = 1;
     relationship_type: Number | null = null;
+    metadata: any = {};
 
     static fromData(data: any) : FieldDef {
         let d = new FieldDef();

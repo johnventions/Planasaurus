@@ -34,6 +34,13 @@ export default class TypeService {
         return f;
     }
 
+    async updateTypeField(fieldID: Number, field: FieldDef): Promise<FieldDef> {
+        const pool = await getSQLPool;
+        const result = await typeQueries.updateFieldDefinition(pool, fieldID, field);
+        let f: FieldDef = { ...field };
+        return f;
+    }
+
     ToTypeModel(data: any) : ProjectType {
         return ProjectType.fromData(data);
     }

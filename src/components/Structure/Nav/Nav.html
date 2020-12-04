@@ -39,20 +39,20 @@
                 <li class="nav-item" v-if="activeProjectType">
                     <router-link :to="`/dash/${activeProjectType}/new`" class="nav-link">
                         <font-awesome-icon icon="plus-square" size="2x"/>
-                        New
+                        New {{ activeType ? activeType.name : '' }}
                     </router-link>
                 </li>
                 <template v-if="viewMode != 'find'">
                     <li class="nav-item">
                         <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
                             <font-awesome-icon icon="search" size="2x"/>
-                            Find
+                            Find {{ activeType ? activeType.name : '' }}
                         </router-link>
                     </li>
                 </template>
                 <template v-if="viewMode == 'find'">
                     <li class="nav-item">
-                        <button @click="startViewMode" class="nav-link">
+                        <button @click="cancelClick" class="nav-link">
                             <font-awesome-icon icon="angle-double-left" size="2x" />
                             Cancel Find
                         </button>
@@ -65,7 +65,8 @@
                     </li>
                 </template >
                 <li class="nav-item util">
-                    <router-link class="btn btn-primary" :to="layoutUrl">
+                    <router-link class="nav-link" :to="layoutUrl">
+                        <font-awesome-icon icon="edit" size="2x" />
                         Edit Layout
                     </router-link>
                 </li>

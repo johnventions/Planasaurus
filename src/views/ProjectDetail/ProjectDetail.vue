@@ -52,8 +52,9 @@ export default {
            setRecord: 'SET_RECORD',
            startFind: 'START_FIND_MODE'
         }),
-        processPath: function() {
+        processPath: async function() {
             this.activeID = this.$route.params.id;
+            await this.ensureProjectLayoutDisplay(this.activeType.codename);
             if (this.activeID == "new" && this.activeType) {
                 this.setRecord(
                     new Project(this.activeType.id)
@@ -65,7 +66,6 @@ export default {
             }
         },
         queryList: async function() {
-            await this.ensureProjectLayoutDisplay(this.activeType.codename);
             this.getProjectRecord(this.activeID).then(() => {
                 console.log("Record retrieved");
             });

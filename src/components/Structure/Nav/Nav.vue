@@ -1,7 +1,7 @@
 <template src="./Nav.html">
 </template>
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 export default {
     name: 'Nav',
     data: function() {
@@ -13,9 +13,13 @@ export default {
 
     },
     computed: mapState({
+        ...mapGetters([
+            'activeType',
+        ]),
         viewMode: state => state.viewMode,
         navItems: state => state.projectTypes.filter( x => x.parent_id == null),
         activeProjectType: state => state.activeProjectType,
+        projectTypeDisplayName: state => state.activeProjectType ? state.activeProjectType.name : '',
         layoutUrl: function(state) { return  `/dash/${state.activeProjectType}/layout`; }
     }),
     mounted: function() {
@@ -33,6 +37,9 @@ export default {
         },
         parseUrl(item) {
             return `/dash/${item.codename}`;
+        },
+        cancelClick() {
+            this.startViewMode();
         },
         findClick() {
           this.startFindMode();

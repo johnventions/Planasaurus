@@ -48,6 +48,21 @@ module.exports = function () {
         });
     });
 
+    routes.put('/fields/:fid', async (req: Request, res: Response) => {
+        const fid = parseInt(req.params.fid);
+        const fieldDef: FieldDef = {
+            name: req.body.name,
+            metadata: req.body.metadata,
+        } as FieldDef;
+
+        const service = new TypeService();
+        const result = await service.updateTypeField(fid, fieldDef);
+        res.status(200).json({
+            sucess: true,
+            field: result
+        });
+    });
+
     routes.get('/:id/layout', async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const service = new TypeService();

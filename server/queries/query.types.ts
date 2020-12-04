@@ -50,6 +50,24 @@ const createFieldForType = function (pool: sql.ConnectionPool, typeID: Number, f
     return request.query(insert);
 }
 
+const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Number, field: FieldDef) {
+    const update = `
+    /* UPDATE EXISTING NEW RECORD IN field_defs */
+        UPDATE field_defs
+        SET name = @fieldName,
+            metadata = @meta
+        WHERE id = @id;
+`;
+
+    const request = pool.request();
+    request.input('fieldName', sql.VarChar, field.name);
+    request.input('meta', sql.VarChar, field.metadata);
+    request.input('id', sql.Int, fieldID);
+    request.multiple = true;
+    return request.query(update);
+
+}
+
 const getLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Number) {
     const select = `
     /* Pull out the LAYOUT field */
@@ -83,7 +101,8 @@ const _ = {
     getFieldsByType,
     createFieldForType,
     getLayoutForProjectType,
-    updateLayoutForProjectType
+    updateLayoutForProjectType,
+    updateFieldDefinition
 }
 
 export default _;

@@ -1,5 +1,5 @@
 <div class="container">
-    <div v-if="activeProject">
+    <div v-if="activeProject || viewMode == 'find'">
         <div class="row">
             <div class="col-9">
                 <h2 v-if="viewMode == 'view'">

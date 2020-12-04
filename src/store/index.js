@@ -310,7 +310,13 @@ export default new Vuex.Store({
 				f = field ? field.value : f;
 			}
 			return f;
-		}
+		},
+		getFieldDefintion: (state) => (id) => {
+			if (state.projectFields[state.activeProjectType]) {
+				return state.projectFields[state.activeProjectType].fields.find(x => x.id == id);
+			}
+			return {};
+		},
 	},
 	modules: {
 	}

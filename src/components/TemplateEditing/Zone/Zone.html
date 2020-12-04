@@ -1,7 +1,9 @@
 <div class='zone editing'>
     <div class="zone-container">
         <div v-if="item.components">
-            <div v-for="(child, i) in item.components">
+            <div v-for="(child, i) in item.components"
+                class="zone-input"
+                v-on:click="editField(child.id)">
                 <div 
                 :field="getLayoutFieldDef(child.id)"
                 :is="getLayoutComponent(child.id)">
@@ -12,9 +14,13 @@
             + New Field
         </button>
     </div>
-    <modal :name="modalName">
+    <modal :name="modalNewField">
         <new-field-modal
             v-on:createField="submitCreateField">
         </new-field-modal>
+    </modal>
+    <modal :name="modalEditField">
+        <edit-field-modal 
+            :field="fieldInEdit" />
     </modal>
 </div>

@@ -9,14 +9,16 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
   faPlusSquare,
   faSearch,
-  faAngleDoubleLeft
+  faAngleDoubleLeft,
+  faEdit
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
   faPlusSquare,
   faSearch,
-  faAngleDoubleLeft
+  faAngleDoubleLeft,
+  faEdit
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
