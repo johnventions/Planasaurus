@@ -6,22 +6,32 @@ export default {
     name: 'Nav',
     data: function() {
         return {
+            isSticky: false,
             navOpen: false,
         }
     },
     components: {
 
     },
-    computed: mapState({
-        ...mapGetters([
+    computed: {
+        ... mapGetters([
             'activeType',
+            'activeLayout'
         ]),
-        viewMode: state => state.viewMode,
-        navItems: state => state.projectTypes.filter( x => x.parent_id == null),
-        activeProjectType: state => state.activeProjectType,
-        projectTypeDisplayName: state => state.activeProjectType ? state.activeProjectType.name : '',
-        layoutUrl: function(state) { return  `/dash/${state.activeProjectType}/layout`; }
-    }),
+        ... mapState({
+            viewMode: state => state.viewMode,
+            navItems: state => state.projectTypes.filter( x => x.parent_id == null),
+            activeProjectType: state => state.activeProjectType,
+            projectTypeDisplayName: state => state.activeProjectType ? state.activeProjectType.name : '',
+            layoutUrl: function(state) { return  `/dash/${state.activeProjectType}/layout`; }
+        }),
+        layoutEditing: function() {
+            if (this.$route.name == "Project Layout") {
+                return true;
+            }
+            return false;
+        }
+    },
     mounted: function() {
     },
     methods: {
@@ -30,8 +40,17 @@ export default {
             startViewMode: 'START_VIEW_MODE'
         }),
         ...mapActions([
-            'searchProjectRecords'
+            'searchProjectRecords',
+            'saveLatestLayout'
         ]),
+        handleScroll(){
+                const scrollPosition = window.scrollY;
+                if(scrollPosition>=100){
+                    this.isSticky = true
+                }else{
+                    this.isSticky = false
+                }
+        },
         openNav() {
             this.navOpen = !this.navOpen;
         },
@@ -43,11 +62,29 @@ export default {
         },
         findClick() {
           this.startFindMode();
+        },
+        saveLayout() {
+            let pkg = {
+                layout: this.activeLayout.layout
+            };
+            this.saveLatestLayout(pkg);
         }
-    }
+    },
+    created () {
+            window.addEventListener('scroll', this.handleScroll);
+    },
+    destroyed () {
+            window.removeEventListener('scroll', this.handleScroll);
+    },
 }
 </script>
 <style lang="scss">
+    nav.utility-nav.sticky {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 40;
+    }
     .bg-grey {
         background-color: #d6d6d6;
     }

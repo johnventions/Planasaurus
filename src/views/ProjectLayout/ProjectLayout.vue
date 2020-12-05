@@ -1,8 +1,5 @@
 <template>
     <div class="container">
-        <button class="btn btn-primary" @click="saveLayout">
-            Save Layout
-        </button>
         <div class="row">
             <div class="col-8">
                 <layout-area 
