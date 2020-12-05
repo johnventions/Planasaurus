@@ -7,6 +7,7 @@ import Home from '../views/Home.vue'
 import ProjectList from '../views/ProjectList/ProjectList.vue'
 import ProjectDetail from '../views/ProjectDetail/ProjectDetail.vue'
 import ProjectLayout from '../views/ProjectLayout/ProjectLayout.vue'
+import Configure from '../views/Configure/Configure.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,11 @@ Vue.use(VueRouter)
     name: 'Dash',
     component: Home
   },
+	{
+		path: '/dash/configure',
+		name: 'Configure',
+    component: Configure
+	},
 	{
 		path: '/dash/:type',
 		name: 'Projects',

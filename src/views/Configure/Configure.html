@@ -1,0 +1,45 @@
+<div class="container">
+    <button class="btn btn-primary float-right">
+        <font-awesome-icon icon="plus-square" size="lg" />
+        New Data Collection
+    </button>
+    <br/><br />
+    <div class="list-group">
+        <type-card v-for="(type, i) in topLevelProjects" 
+            :obj="type"
+            v-on:edit="editType"
+            :key="type.id">
+            <div v-if="getTypeChildren(type.id).length">
+                <type-card v-for="(childType, j) in getTypeChildren(type.id)"
+                    :obj="childType"
+                    v-on:edit="editType"
+                    :key="childType.id">
+                </type-card>
+            </div>
+        </type-card>
+    </div>
+    <modal name="editTypeModal" 
+            height="auto">
+        <div v-if="editingType">
+            <label>Collection Name</label><br/>
+            <input v-model="editingType.name"><br />
+
+            <label>Collection URL</label><br />
+            <input v-model="editingType.codename"><br />
+
+            <label>Order</label><br />
+            <input v-model="editingType.menu_order"><br />
+
+            <label>Parent</label><br />
+            <select v-model="editingType.parent_id">
+                <option v-for="(p, k) in possibleParents"
+                    :value="p.id"
+                    :key="p.id">{{ p.name }}</option>
+            </select>
+            <br/><br/>
+            <button class="btn btn-primary" @click="saveType">
+                Save
+            </button>
+        </div>
+    </modal>
+</div>

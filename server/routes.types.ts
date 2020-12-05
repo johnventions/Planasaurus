@@ -23,6 +23,13 @@ module.exports = function () {
     routes.get('/:id', async (req: any, res: any) => {
     });
 
+    routes.post('/:id', async (req: any, res: any) => {
+        res.status(200).json({
+            sucess: true,
+            msg: 'Yes!'
+        });
+    });
+
     routes.get('/:id/fields', async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const service = new TypeService();

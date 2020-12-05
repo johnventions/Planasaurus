@@ -114,5 +114,9 @@ export default {
         width: 30px;
         display: block;
         margin: 0 auto;
+
+        &.inline {
+            display: inline-block;
+        }
     }
 </style>

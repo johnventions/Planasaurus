@@ -6,6 +6,7 @@ export default class ProjectType {
     name: string = '';
     menu_order: Number = 0;
     parent_id: Number | null = null;
+    qty: Number = 0;
 
     static fromData(data: any) : ProjectType {
         let t = new ProjectType();
@@ -14,6 +15,7 @@ export default class ProjectType {
         t.name = data.name;
         t.menu_order = data.menu_order;
         t.parent_id = data.parent_id;
+        t.qty = data.qty || 0;
 
         return t;
     }

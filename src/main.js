@@ -11,7 +11,9 @@ import {
   faSearch,
   faAngleDoubleLeft,
   faEdit,
-  faFileUpload
+  faFileUpload,
+  faLocationArrow,
+  faCog
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -20,7 +22,9 @@ library.add(
   faSearch,
   faAngleDoubleLeft,
   faEdit,
-  faFileUpload
+  faFileUpload,
+  faLocationArrow,
+  faCog
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

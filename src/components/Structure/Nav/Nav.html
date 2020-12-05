@@ -29,6 +29,11 @@
                             {{ item.name }}
                         </router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link to="/dash/configure" class="nav-link">
+                            <font-awesome-icon icon="cog" size="lg" class="inline" /> Configure
+                        </router-link>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -48,7 +53,7 @@
                     <li class="nav-item">
                         <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
                             <font-awesome-icon icon="search" size="2x"/>
-                            Find {{ activeType ? activeType.name : '' }}
+                            Search {{ activeType ? activeType.name : '' }}
                         </router-link>
                     </li>
                 </template>
@@ -56,13 +61,13 @@
                     <li class="nav-item">
                         <button @click="cancelClick" class="nav-link">
                             <font-awesome-icon icon="angle-double-left" size="2x" />
-                            Cancel Find
+                            Cancel Search
                         </button>
                     </li>
                     <li class="nav-item" >
                         <button @click="searchProjectRecords" class="nav-link">
                             <font-awesome-icon icon="search" size="2x" />
-                            Perform Find
+                            Run Search
                         </button>
                     </li>
                 </template >
