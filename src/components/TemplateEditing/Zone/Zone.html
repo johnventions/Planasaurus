@@ -19,8 +19,10 @@
             v-on:createField="submitCreateField">
         </new-field-modal>
     </modal>
-    <modal :name="modalEditField">
-        <edit-field-modal 
+    <modal :name="modalEditField"
+            height="auto">
+        <edit-field-modal
+            v-on:editFinish="finishEdit"
             :field="fieldInEdit" />
     </modal>
 </div>

@@ -20,7 +20,8 @@ const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
             fd.id,
             fd.name,
             fd.data_type,
-            fd.relationship_type
+            fd.relationship_type,
+            fd.metadata
         FROM field_defs fd
         WHERE fd.project_type = @id
 `;
@@ -61,7 +62,7 @@ const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Numbe
 
     const request = pool.request();
     request.input('fieldName', sql.VarChar, field.name);
-    request.input('meta', sql.VarChar, field.metadata);
+    request.input('meta', sql.VarChar, JSON.stringify(field.metadata));
     request.input('id', sql.Int, fieldID);
     request.multiple = true;
     return request.query(update);

@@ -14,6 +14,7 @@ import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInpu
 
 // Metacomponents
 import NameCodename from "@/components/TemplateEditing/MetaComponents/NameCodename.vue";
+import KeyValueOptions from "@/components/TemplateEditing/MetaComponents/KeyValueOptions.vue";
 
 
 const fieldTypes = [
@@ -61,7 +62,8 @@ const fieldTypes = [
         layoutComponent: DropdownInput,
         editingComponent: DropdownInputEditable,
         metaComponents: [
-            NameCodename
+            NameCodename,
+            KeyValueOptions
         ]
     },
     {

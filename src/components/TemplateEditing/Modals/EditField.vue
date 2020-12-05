@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="edit-field">
         <div v-if="currentFieldType">
             <div v-for="(meta, i) in currentFieldType.metaComponents" :key="i">
                 <div :is="meta"
@@ -7,7 +7,7 @@
                     v-on:updateField="handleUpdate"></div>
             </div>
         </div>
-        <button class="btn btn-primary"
+        <button class="btn btn-primary save"
             v-if="changes > 0"
             @click="saveChanges">
             Save changes
@@ -58,6 +58,7 @@ export default {
             axios.put(`/api/types/fields/${this.editedFieldDef.id}`, this.editedFieldDef)
                 .then((response) => {
                     console.log(response);
+                    this.$emit("editFinish");
                 });
         }
     },
@@ -67,8 +68,15 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-    button {
-        margin-top: 20px;
+<style lang="scss">
+    .edit-field {
+        button.save {
+            margin-top: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+        }
     }
+    
 </style>

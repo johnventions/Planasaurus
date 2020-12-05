@@ -53,6 +53,11 @@ export default {
     }
     .navbar-nav {
         width: 100%;
+        flex-direction: initial;
+    }
+    .nav-item {
+        display: inline-block;
+        padding: 0 12px;
     }
     button.nav-link {
         background: none;
@@ -63,7 +68,8 @@ export default {
     }
     .utility-nav {
         .nav-item {
-            min-width: 80px;
+            min-width: 85px;
+            padding: 0 8px;
             text-align: center;
         }
     }

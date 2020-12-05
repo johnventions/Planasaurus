@@ -5,8 +5,7 @@
                 v-model="value"
                 v-on:change="handleUpdate">
             <option disabled selected>Select One</option>
-            <option value="a">A</option>
-            <option value="b">B</option>
+            <option :value="option" v-for="(option, i) in options" :key="i">{{ option }}</option>
         </select>
     </div>
 </template>
@@ -30,7 +29,11 @@ export default {
     computed: {
         ... mapState({
             viewMode: state => state.viewMode,
-        })
+        }),
+        options: function() {
+            if (this.field.metadata == null || this.field.metadata.options == null) return [];
+            return this.field.metadata.options;
+        }
     },
     methods: {
         ...mapMutations({

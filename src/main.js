@@ -29,7 +29,13 @@ Vue.prototype.$http = Axios;
 
 Vue.config.productionTip = false
 
-Vue.use(VModal);
+Vue.use(VModal, {
+  dynamicDefaults: {
+    draggable: true,
+    resizable: true,
+    height: 'auto'
+  }
+});
 
 new Vue({
   router,

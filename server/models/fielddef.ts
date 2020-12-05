@@ -11,6 +11,13 @@ export default class FieldDef {
         d.name = data.name;
         d.data_type = data.data_type;
         d.relationship_type = data.relationship_type;
+        if (data.metadata != null) {
+            try {
+                d.metadata = JSON.parse(data.metadata);
+            } catch {
+                d.metadata = {};
+            }
+        }
 
         return d;
     }

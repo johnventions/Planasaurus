@@ -93,7 +93,6 @@ const expandFilters = function (filters: ProjectFilter[]) {
 const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecification) {
     const filters = spec.fields ? getFilters(spec.fields) : [];
     const filterStrings: any = expandFilters(filters);
-    console.log(filters);
     const select = `
     /* SELECT THE LIST OF PROJECTS */
     WITH project_list as (
@@ -113,7 +112,6 @@ const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecificati
     filters.forEach( f => {
         request.input(f.param, `${ f.value }`);
     })
-    console.log(select);
     return request.query(select);
 }
 
@@ -149,8 +147,6 @@ const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: A
     
     request.multiple = true;
     request.input('id', sql.Int, id);
-
-    console.log(update, id);
 
     return request.query(update);
 };

@@ -68,6 +68,9 @@ export default {
         editField(id) {
             this.fieldInEdit = id;
             this.$modal.show(this.modalEditField);
+        },
+        finishEdit: function() {
+            this.$modal.hide(this.modalEditField);
         }
     }
 }
