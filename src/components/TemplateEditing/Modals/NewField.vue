@@ -49,10 +49,9 @@ export default {
             this.fieldType = field.id;
         },
         submit() {
-            console.log("create field");
             this.$emit('createField', {
                 name: this.fieldName,
-                type: this.fieldType,
+                data_type: this.fieldType,
             });
         }
     }

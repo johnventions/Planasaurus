@@ -57,11 +57,7 @@ module.exports = function () {
 
     routes.post('/:id/fields', async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
-        const newField: FieldDef = {
-            name: req.body.name,
-            data_type: req.body.type,
-        } as FieldDef;
-
+        const newField: FieldDef = FieldDef.fromData(req.body);
         const service = new TypeService();
         const result = await service.createTypeField(id, newField);
         res.status(200).json({

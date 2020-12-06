@@ -12,6 +12,11 @@
             @click="saveChanges">
             Save changes
         </button>
+        <button class="btn btn-primary save"
+            v-if="changes == 0"
+            @click="$emit('edit-finish')">
+            Finish
+        </button>
     </div>
 </template>
 <script>
@@ -49,6 +54,9 @@ export default {
             if (key == "name") {
                 this.editedFieldDef.name = value;
             } else {
+                if (this.editedFieldDef.metadata == null) {
+                    this.editedFieldDef.metadata = [];
+                }
                 this.$set(this.editedFieldDef.metadata, key, value);
             }
             this.changes++;
@@ -58,7 +66,7 @@ export default {
             axios.put(`/api/types/fields/${this.editedFieldDef.id}`, this.editedFieldDef)
                 .then((response) => {
                     console.log(response);
-                    this.$emit("editFinish");
+                    this.$emit("edit-finish");
                 });
         }
     },

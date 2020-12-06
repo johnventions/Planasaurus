@@ -14,15 +14,15 @@
             + New Field
         </button>
     </div>
-    <modal :name="modalNewField">
+    <modal :name="modalNewField" height="auto">
         <new-field-modal
-            v-on:createField="submitCreateField">
-        </new-field-modal>
+            v-if="creatingField"
+            v-on:createField="submitCreateField" />
     </modal>
-    <modal :name="modalEditField"
-            height="auto">
+    <modal :name="modalEditField" height="auto">
         <edit-field-modal
-            v-on:editFinish="finishEdit"
+            v-if="editingField"
+            v-on:edit-finish="finishEdit"
             :field="fieldInEdit" />
     </modal>
 </div>

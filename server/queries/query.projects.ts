@@ -53,17 +53,15 @@ const getFilters = function (filters: Map<string, any>): ProjectFilter[] {
 const newProject = function (pool: sql.ConnectionPool, project: Project) {
     const insert = `
     INSERT INTO projects
-        (name, project_type, status, date_created)
+        (name, project_type, status)
     VALUES
-        (@name, @type, @status, @date);
+        (@name, @type, 1);
     SELECT SCOPE_IDENTITY() as id;
     `
     
     const request : sql.Request = pool.request();
     request.input('name', sql.VarChar, project.name);
     request.input('type', sql.Int, project.project_type);
-    request.input('status', sql.Int, project.status);
-    request.input('date', sql.DateTime, project.date_created);
     request.multiple = true;
     return request.query(insert);
 }

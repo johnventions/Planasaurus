@@ -1,6 +1,6 @@
 <template src="./Zone.html"></template>
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 import fieldTypes from "@/data/fieldTypes";
 
 export default {
@@ -14,15 +14,9 @@ export default {
     computed: {
         ...mapGetters([
             'activeFields'
-        ]),
-        modalName: function(){ 
-            return `new_modal_${this.item.id}`;
-        }
+        ])
     },
     methods: {
-        ...mapActions([
-            'createField'
-        ]),
         getLayoutFieldDef(fieldID) {
             if (this.activeFields && this.activeFields.fields) {
                 return this.activeFields.fields.find(x => x.id == fieldID);
@@ -47,23 +41,6 @@ export default {
                 return matchingComponent.editingComponent;
             }
             console.log("Could not find", fieldID)
-        },
-        newField() {
-            this.$modal.show(this.modalName);
-        },
-        async submitCreateField(pkg) {
-            let newField = await this.createField(pkg);
-            if (newField) {
-                // field was create
-                this.$modal.hide(this.modalName);
-                // add field to Zone
-                let newItem = { ... this.item };
-                newItem.components.push({
-                    id: newField.id
-                });
-                // pass new definition up to parent SECTION
-                this.$emit('updatechild', this.index, newItem);
-            }
         }
     }
 }

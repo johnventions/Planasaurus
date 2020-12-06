@@ -10,6 +10,8 @@ export default {
     props: ["item", "index"],
     data: function() {
         return {
+            creatingField: false,
+            editingField: false,
             fieldInEdit: null,
         };
     },
@@ -50,12 +52,15 @@ export default {
         },
         newField() {
             this.$modal.show(this.modalNewField);
+            this.creatingField = true;
+            this.editingField = false;
         },
-        async submitCreateField(pkg) {
+        submitCreateField: async function(pkg) {
             let newField = await this.createField(pkg);
+            this.creatingField = false;
+
             if (newField) {
                 // field was create
-                this.$modal.hide(this.modalName);
                 // add field to Zone
                 let newItem = { ... this.item };
                 newItem.components.push({
@@ -63,13 +68,17 @@ export default {
                 });
                 // pass new definition up to parent SECTION
                 this.$emit('updatechild', this.index, newItem);
+                this.$modal.hide(this.modalNewField);
+                this.editField(newField.id);
             }
         },
         editField(id) {
-            this.fieldInEdit = id;
             this.$modal.show(this.modalEditField);
+            this.fieldInEdit = id;
+            this.editingField = true;
         },
         finishEdit: function() {
+            this.editingField = false;
             this.$modal.hide(this.modalEditField);
         }
     }

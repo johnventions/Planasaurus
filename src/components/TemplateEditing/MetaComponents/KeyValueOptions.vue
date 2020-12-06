@@ -31,12 +31,17 @@ export default {
         },
         addOption: function() {
             if (this.inputValue == '') return;
-            this.value.push(this.inputValue);
+            this.value = [ ...this.value, this.inputValue];
             this.handleNameUpdate();
+            this.inputValue = '';
         }
     },
     mounted: function() {
-        this.value = this.field.metadata.options || [];
+        if (this.field.metadata) {
+            this.value = this.field.metadata.options || [];
+        } else {
+            this.value = [];
+        }
     }
 
 }

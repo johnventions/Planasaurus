@@ -20,7 +20,7 @@ export default {
             projectTypes: state => state.projectTypes
         }),
         possibleParents: function() {
-            const types = this.$store.state.projectTypes;
+            const types = this.$store.state.projectTypes.filter(x => x.id != this.editingType.id);
             return [
                 {
                     id: null,
