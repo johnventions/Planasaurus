@@ -7,6 +7,8 @@ const { getSQLPool } = require('../server/sql');
 import typeQueries from './queries/query.types';
 import FieldDef from './models/fielddef';
 import Layout from './models/layout';
+import Project from './models/project';
+import ProjectType from './models/projecttype';
 
 module.exports = function () {
     let routes : Router = require('express').Router();
@@ -23,7 +25,20 @@ module.exports = function () {
     routes.get('/:id', async (req: any, res: any) => {
     });
 
-    routes.post('/:id', async (req: any, res: any) => {
+    routes.post('/', async (req: any, res: any) => {
+        const proj: ProjectType = req.body as ProjectType;
+        const service = new TypeService();
+        const result = await service.createOrUpdateType(proj);
+        res.status(200).json({
+            sucess: true,
+            msg: 'Yes!'
+        });
+    });
+
+    routes.put('/:id', async (req: any, res: any) => {
+        const proj: ProjectType = req.body as ProjectType;
+        const service = new TypeService();
+        const result = await service.createOrUpdateType(proj);
         res.status(200).json({
             sucess: true,
             msg: 'Yes!'

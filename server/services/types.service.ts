@@ -15,6 +15,17 @@ export default class TypeService {
         return types.recordset.map(x => this.ToTypeModel(x) );
     }
 
+    async createOrUpdateType(type: ProjectType) : Promise<ProjectType> {
+        const pool = await getSQLPool;
+        if (type.id == 0) {
+            const ins = await typeQueries.createType(pool, type);
+            type.id = ins.recordset[0].id;
+        } else {
+            await typeQueries.updateType(pool, type)
+        }
+        return type;;
+    }
+
     async getTypeById() {
 
     }

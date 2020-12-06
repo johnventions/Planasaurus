@@ -1,5 +1,6 @@
 import * as sql from 'mssql';
 import FieldDef from "../models/fielddef";
+import ProjectType from "../models/projecttype";
 
 
 const getProjectTypes = function (pool: sql.ConnectionPool) {
@@ -7,7 +8,8 @@ const getProjectTypes = function (pool: sql.ConnectionPool) {
     /* SELECT THE LIST OF PROJECT TYPES */
         SELECT
             t.id,
-            t.name, t.codename,
+            t.name,
+            t.codename,
             t.parent_id,
             t.menu_order,
             p.qty
@@ -19,9 +21,45 @@ const getProjectTypes = function (pool: sql.ConnectionPool) {
             FROM projects 
             GROUP BY project_type
             ) p ON t.id = p.project_type
+        ORDER BY parent_id, menu_order
 `;
     const request = pool.request();
     return request.query(select);
+}
+
+const createType = function (pool: sql.ConnectionPool, type: ProjectType) {
+    const insert = `
+        INSERT INTO project_types 
+            (name, codename, parent_id, menu_order)
+        VALUES
+            (@n, @c, @p, @m);
+        SELECT SCOPE_IDENTITY() as id;
+    `;
+
+    const request = pool.request();
+    request.input('n', sql.VarChar, type.name);
+    request.input('c', sql.VarChar, type.codename);
+    request.input('p', sql.Int, type.parent_id);
+    request.input('m', sql.Int, type.menu_order);
+    request.multiple = true;
+    return request.query(insert);
+}
+
+const updateType = function (pool: sql.ConnectionPool, type: ProjectType) {
+    const update = `
+        UPDATE project_types
+        SET name = @n, codename = @c, parent_id = @p, menu_order = @m
+        WHERE id = @id
+    `;
+
+    const request = pool.request();
+    request.input('id', sql.Int, type.id);
+    request.input('n', sql.VarChar, type.name);
+    request.input('c', sql.VarChar, type.codename);
+    request.input('p', sql.Int, type.parent_id);
+    request.input('m', sql.Int, type.menu_order);
+    request.multiple = true;
+    return request.query(update);
 }
 
 const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
@@ -110,6 +148,8 @@ const updateLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: N
 
 const _ = {
     getProjectTypes,
+    createType,
+    updateType,
     getFieldsByType,
     createFieldForType,
     getLayoutForProjectType,

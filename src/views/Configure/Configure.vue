@@ -1,6 +1,6 @@
 <template src="./Configure.html"></template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import axios from 'axios'
 import TypeCard from '@/components/Admin/TypeCard/TypeCard.vue';
 
@@ -31,6 +31,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions([
+            'getTypes'
+        ]),
         getTypeChildren: function(id) {
             return this.projectTypes.filter(x => x.parent_id == id);
         },
@@ -43,16 +46,19 @@ export default {
         },
         newType: function() {
             this.editingType = {
-                id: 'new',
+                id: 0,
                 name: '',
                 codename: '',
-            }
+                menu_order: 0,
+                parent_id: null,
+            };
+            this.$modal.show('editTypeModal');
         },
         saveType: function() {
-            const url = `/api/types/${ this.editingType.id }`;
-            let update = this.editingType.id == 'new' ? axios.put(url) : axios.post(url);
-            update.then( (response) => {
-                console.log(response);
+            const url = `/api/types${ this.editingType.id != 0 ? '/' + this.editingType.id  : '' }`;
+            let update = this.editingType.id == 0 ? axios.post(url, this.editingType) : axios.put(url, this.editingType);
+            update.then( () => {
+                this.getTypes();
                 this.$modal.hide('editTypeModal');
             })
         }
