@@ -1,13 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import store from '../store/index'
+import store from '../store/index';
+
+import axios from 'axios';
 
 import Home from '../views/Home.vue'
 import ProjectList from '../views/ProjectList/ProjectList.vue'
 import ProjectDetail from '../views/ProjectDetail/ProjectDetail.vue'
 import ProjectLayout from '../views/ProjectLayout/ProjectLayout.vue'
 import Configure from '../views/Configure/Configure.vue'
+
+
+const checkAuth = async function(to, from, next) {
+    axios.get('/login/status')
+      .then((res) => {
+        console.log(res.data);
+        next();
+      });
+}
 
 Vue.use(VueRouter)
 
@@ -28,28 +39,30 @@ Vue.use(VueRouter)
   {
     path: '/dash',
     name: 'Dash',
-    component: Home
+    component: Home,
+    beforeEnter: checkAuth,
+    children: [
+      {
+        path: 'configure',
+        name: 'Configure',
+        component: Configure
+      }, {
+        path: ':type',
+        name: 'Projects',
+        component: ProjectList
+      },
+      {
+        path: ':type/layout',
+        name: 'Project Layout',
+        component: ProjectLayout
+      },
+      {
+        path: '/dash/:type/:id',
+        name: 'Project Detail',
+        component: ProjectDetail
+      }
+    ]
   },
-	{
-		path: '/dash/configure',
-		name: 'Configure',
-    component: Configure
-	},
-	{
-		path: '/dash/:type',
-		name: 'Projects',
-    component: ProjectList
-	},
-	{
-		path: '/dash/:type/layout',
-		name: 'Project Layout',
-    component: ProjectLayout
-	},
-	{
-		path: '/dash/:type/:id',
-		name: 'Project Detail',
-    component: ProjectDetail
-	}
 ]
 
 const router = new VueRouter({
@@ -58,11 +71,14 @@ const router = new VueRouter({
   routes
 })
 
+
 router.beforeEach((to, from, next) => {
   if (to.params.type !== from.params.type) {
     store.commit('UPDATE_ACTIVE_TYPE', to.params.type)
   }
   next();
 });
+
+
 
 export default router

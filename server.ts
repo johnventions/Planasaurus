@@ -7,6 +7,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const passport = require('passport');
 
 const { getSQLPool } = require('./server/sql');
 
@@ -40,6 +41,9 @@ class App {
             saveUninitialized: true
         }));
 
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
+
         this.app.use(express.static('dist'));
     }
 
@@ -57,6 +61,9 @@ class App {
     addApiRoutes() {
         const apiRoutes = require('./server/routes')();
         this.app.use('/api', apiRoutes);
+
+        const loginRoutes = require('./server/routes.login')();
+        this.app.use('/login', loginRoutes);
     }
 
     addRoutes() {

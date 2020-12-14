@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import axios from 'axios';
 import { mapActions, mapMutations, mapGetters } from "vuex";
 import Nav from "./components/Structure/Nav/Nav";
 
@@ -20,6 +22,16 @@ export default {
       startFindMode: "START_FIND_MODE",
     }),
     ...mapActions(["getTypes"]),
+    signIn: function() {
+      Vue.googleAuth().signIn(this.onSignInSuccess, this.onSignInError);
+    },
+    onSignInSuccess: function(authorizationCode) {
+      console.log(authorizationCode);
+      axios.get(`/api/verify?auth=${authorizationCode}`).then(x => console.log(x));
+    },
+    onSignInError: function(error) {
+      console.log(error);
+    }
   },
   computed: {
     ...mapGetters([

@@ -14,6 +14,11 @@ module.exports = {
                 ws: true,
                 changeOrigin: true
             },
+            '^/login': {
+                target: 'http://localhost:3366/',
+                ws: true,
+                changeOrigin: true
+            },
         }
     }
 }
