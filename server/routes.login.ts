@@ -4,8 +4,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 import UsersService from "./services/users.service";
 
-const ClientId = '43281342662-rgtjnfe4eojqe7vj33he5t0m82q55fvk.apps.googleusercontent.com';
-const ClientSecret = 'C63tSnfQtEQ3EcwLGTGQxWxs';
+const ClientId = process.env.GOOGLE_CLIENT_ID;
+const ClientSecret = process.env.GOOGLE_SECRET;
 
 
 

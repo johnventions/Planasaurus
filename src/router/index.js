@@ -6,6 +6,7 @@ import store from '../store/index';
 import axios from 'axios';
 
 import Home from '../views/Home.vue'
+import AuthContainer from '../views/AuthContainer.vue'
 import ProjectList from '../views/ProjectList/ProjectList.vue'
 import ProjectDetail from '../views/ProjectDetail/ProjectDetail.vue'
 import ProjectLayout from '../views/ProjectLayout/ProjectLayout.vue'
@@ -13,11 +14,9 @@ import Configure from '../views/Configure/Configure.vue'
 
 
 const checkAuth = async function(to, from, next) {
-    axios.get('/login/status')
-      .then((res) => {
-        console.log(res.data);
-        next();
-      });
+    const status = await (await axios.get('/login/status')).data;
+    console.log(status);
+    next();
 }
 
 Vue.use(VueRouter)
@@ -38,28 +37,33 @@ Vue.use(VueRouter)
   },
   {
     path: '/dash',
-    name: 'Dash',
-    component: Home,
+    name: 'Auth Dashboard',
+    component: AuthContainer,
     beforeEnter: checkAuth,
     children: [
       {
+        path: '/',
+        name: 'Dash Home',
+        component: Home,
+      },
+      {
         path: 'configure',
         name: 'Configure',
-        component: Configure
+        component: Configure,
       }, {
         path: ':type',
         name: 'Projects',
-        component: ProjectList
+        component: ProjectList,
       },
       {
         path: ':type/layout',
         name: 'Project Layout',
-        component: ProjectLayout
+        component: ProjectLayout,
       },
       {
         path: '/dash/:type/:id',
         name: 'Project Detail',
-        component: ProjectDetail
+        component: ProjectDetail,
       }
     ]
   },
