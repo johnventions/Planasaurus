@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
         <div class='container'>
             <router-link to="/" class="navbar-brand">
-                Planasaurus
+                Pterobyte
             </router-link>
             <button class="navbar-toggler"
                 type="button"
@@ -19,19 +19,21 @@
                 class="collapse navbar-collapse"
                 id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="authenticated">
                         <router-link to="/myq" class="nav-link">
                             My Q
                         </router-link>
                     </li>
-                    <li class="nav-item" v-for="(item, i) in navItems" :key="item.id">
+                    <li class="nav-item" 
+                        v-for="(item, i) in navItems" :key="item.id">
                         <router-link :to="parseUrl(item)" class="nav-link">
                             {{ item.name }}
                         </router-link>
                     </li>
                     <li class="nav-item ml-auto">
                         <router-link to="/dash/configure" class="nav-link">
-                            <font-awesome-icon icon="cog" size="lg" class="inline" /> Configure
+                            <font-awesome-icon icon="cog" size="lg" class="inline" />
+                            Configure
                         </router-link>
                     </li>
                 </ul>

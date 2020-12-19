@@ -16,8 +16,14 @@ export default class UserService {
             const id = newUserInsert.recordset[0].id;
             dbUser = await userQueries.getUserById(pool, id);
             // get new user from the DB
-            return newUserInsert;
+            return dbUser.recordset[0];
         }
+        return dbUser.recordset[0];
+    }
+
+    async getUserById(id: Number) {
+        const pool = await getSQLPool;
+        const dbUser = await userQueries.getUserById(pool, id);
         return dbUser.recordset[0];
     }
 }

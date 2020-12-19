@@ -23,25 +23,25 @@ passport.serializeUser(async function (user: any, done: any) {
         email: user._json ? user._json.email : ''
     };
     const userLogin = await service.createOrGetUser('googleid', userObj);
-    console.log(userLogin);
-    done(null, userLogin);
+    done(null, userLogin.id);
 });
 
-passport.deserializeUser(function (user: any, done: any) {
+passport.deserializeUser(async function (user: any, done: any) {
     /*
     Instead of user this function usually recives the id 
     then you use the id to select the user from the db and pass the user obj to the done callback
     PS: You can later access this data in any routes in: req.user
     */
-    console.log("Deserliaze", user);
-    done(null, user);
+    const service = new UsersService();
+    const userLogin = await service.getUserById(user);
+    done(null, userLogin);
 });
 
 
 passport.use(new GoogleStrategy({
     clientID: ClientId,
     clientSecret: ClientSecret,
-    callbackURL: "http://localhost:3355/login/google/callback"
+    callbackURL: "http://localhost:3355/signin/google/callback"
 },
     function (accessToken: any, refreshToken: any, profile: any, done: any) {
         /*
@@ -57,7 +57,7 @@ module.exports = function () {
     let routes: Router = require('express').Router();
 
     routes.get('/status', (req: any, res: any) => {
-        const sessionUser = req.session.passport ? req.session.passport.user : null;
+        const sessionUser = req.user ? req.user : null;
         res.status(200).json({
             user: sessionUser
         });
@@ -68,7 +68,7 @@ module.exports = function () {
     routes.get('/google/callback', 
         passport.authenticate('google', { failureRedirect: '/failed' }),
         async (req: Request, res: Response) => {
-            res.redirect('/');
+            res.redirect('/dash');
         }
     );
 

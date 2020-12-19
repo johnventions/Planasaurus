@@ -11,7 +11,10 @@ import Layout from "@/models/class.layout";
 
 export default new Vuex.Store({
 	state: {
+		authLogin: null, // promise for login lookup
 		authenticated: false,
+		user: null,
+
 		activeProjectType: null, //string
 
 		activeProject: null,
@@ -31,11 +34,14 @@ export default new Vuex.Store({
 		}
 	},
 	mutations: {
-		SET_AUTH: function (state, pkg) {
-			if (pkg) {
-				state.authenticated = true;
-			}
+		START_LOGIN: function(state, prom) {
+			state.authLogin = prom;
+		},
+
+		SET_LOGIN: function(state, user) {
+			state.authLogin = null;
 			state.authenticated = true;
+			state.user = user;
 		},
 
 		/* TYPES */
@@ -157,6 +163,24 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
+		getLoginStatus({ commit, dispatch }) {
+			// if logged in, return user
+			if (this.state.authenticated) return this.state.user;
+			// if already looking up user, return promise
+			if (this.state.authLogin) return this.state.authLogin;
+			// otheriwse, lets check login status
+			const lookup = axios.get('/signin/status')
+				.then(res => {
+					if (res.data && res.data.user) {
+						commit('SET_LOGIN', res.data.user);
+						dispatch('getTypes');
+					}
+					return res.data.user;
+				});
+			commit('START_LOGIN', lookup);
+			return lookup;
+		},
+
 		getTypes({ commit }) {
 			axios.get("/api/types")
 				.then(result => {

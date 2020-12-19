@@ -3,9 +3,8 @@ import VueRouter from 'vue-router'
 
 import store from '../store/index';
 
-import axios from 'axios';
-
 import Home from '../views/Home.vue'
+import Login from '../views/Login/Login.vue'
 import AuthContainer from '../views/AuthContainer.vue'
 import ProjectList from '../views/ProjectList/ProjectList.vue'
 import ProjectDetail from '../views/ProjectDetail/ProjectDetail.vue'
@@ -14,8 +13,8 @@ import Configure from '../views/Configure/Configure.vue'
 
 
 const checkAuth = async function(to, from, next) {
-    const status = await (await axios.get('/login/status')).data;
-    console.log(status);
+    const loginStatus = await store.dispatch('getLoginStatus');
+    if (loginStatus == null) next({ name: 'Login' });
     next();
 }
 
@@ -26,7 +25,12 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
-    }, 
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
   {
     path: '/about',
     name: 'About',

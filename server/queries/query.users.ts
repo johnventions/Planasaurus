@@ -18,7 +18,6 @@ const getUser = function (pool: sql.ConnectionPool, col: String, user: any) {
     request.input('col', sql.VarChar, col);
     request.input('externalid', sql.VarChar, user.externalid);
     request.multiple = true;
-    console.log(request);
     return request.query(select);
 }
 
@@ -37,9 +36,8 @@ const getUserById = function (pool: sql.ConnectionPool, id: Number) {
     `
 
     const request: sql.Request = pool.request();
-    request.input('col', sql.Int, id);
+    request.input('id', sql.Int, id);
     request.multiple = true;
-    console.log(request);
     return request.query(select);
 }
 

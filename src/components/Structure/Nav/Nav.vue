@@ -19,6 +19,7 @@ export default {
             'activeLayout'
         ]),
         ... mapState({
+            authenticated: state => state.authenticated,
             viewMode: state => state.viewMode,
             navItems: state => state.projectTypes.filter( x => x.parent_id == null),
             activeProjectType: state => state.activeProjectType,

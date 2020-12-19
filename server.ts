@@ -63,7 +63,7 @@ class App {
         this.app.use('/api', apiRoutes);
 
         const loginRoutes = require('./server/routes.login')();
-        this.app.use('/login', loginRoutes);
+        this.app.use('/signin', loginRoutes);
     }
 
     addRoutes() {

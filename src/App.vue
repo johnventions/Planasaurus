@@ -39,7 +39,7 @@ export default {
     ])
   },
   mounted: function () {
-    this.getTypes();
+    this.$store.dispatch('getLoginStatus');
 
     // CTRL+F Listener
     window.addEventListener("keydown", (e) => {
