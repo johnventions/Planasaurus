@@ -34,6 +34,7 @@ export default {
         ]),
         ...mapState({
             activeProject: state => state.activeProject,
+            activeProjectType: state => state.activeProjectType,
             projectTypes: state => state.projectTypes,
             pendingUpdates: state => state.pendingUpdates,
             pendingFind: state => state.pendingFind,
@@ -76,15 +77,33 @@ export default {
                 this.ensureProjectLayoutDisplay(this.activeType.codename);
             }
         },
-        saveChanges: function() {
-            this.updateProject();
-        }
 
+        saveChanges: async function() {
+            const update = await this.updateProject();
+            if (this.activeProject.id == 0) {
+                this.$router.push(`/dash/${this.activeProjectType}/${update.id}`);
+            }
+        },
+
+        saveHandler(e) {
+            if (e.ctrlKey && e.keyCode === 83) {
+                // CTRL+S Listener
+                e.preventDefault();
+                this.saveChanges();
+            }
+        }
     },
+
     mounted: function() {
         this.queryTypes();
         this.processPath();
-    }
+
+        window.addEventListener("keydown", this.saveHandler);
+    },
+    
+    beforeDestroy() {
+        window.removeEventListener('keydown', this.saveHandler);
+    },
     
 
 }

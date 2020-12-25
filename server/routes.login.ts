@@ -1,4 +1,6 @@
 import { Router, Request, Response, response } from 'express';
+import User from './models/user';
+import Workspace from './models/workspace';
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
@@ -22,8 +24,13 @@ passport.serializeUser(async function (user: any, done: any) {
         lastname: user.name ? user.name.familyName : '',
         email: user._json ? user._json.email : ''
     };
-    const userLogin = await service.createOrGetUser('googleid', userObj);
-    done(null, userLogin.id);
+    const userLogin : User = await service.createOrGetUser('googleid', userObj);
+    const activeWorkspace: Number = userLogin.workspaces[0].id;
+
+    done(null, {
+        id: userLogin.id,
+        workspace: activeWorkspace
+    });
 });
 
 passport.deserializeUser(async function (user: any, done: any) {
@@ -33,8 +40,13 @@ passport.deserializeUser(async function (user: any, done: any) {
     PS: You can later access this data in any routes in: req.user
     */
     const service = new UsersService();
-    const userLogin = await service.getUserById(user);
-    done(null, userLogin);
+    const userLogin = await service.getUserById(user.id);
+    const activeWorkspace: Number = userLogin.default_workspace ? userLogin.default_workspace : userLogin.workspaces[0].id;
+
+    done(null, {
+        user: userLogin,
+        workspace: activeWorkspace
+    });
 });
 
 
@@ -58,8 +70,12 @@ module.exports = function () {
 
     routes.get('/status', (req: any, res: any) => {
         const sessionUser = req.user ? req.user : null;
-        res.status(200).json({
-            user: sessionUser
+        if (sessionUser == null) {
+            return res.status(200).json({});
+        }
+        return res.status(200).json({
+            user: sessionUser.user,
+            workspace: sessionUser.workspace
         });
     });
 

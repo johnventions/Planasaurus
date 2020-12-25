@@ -21,7 +21,7 @@ export default {
     ...mapMutations({
       startFindMode: "START_FIND_MODE",
     }),
-    ...mapActions(["getTypes"]),
+    ...mapActions(["getTypes", "updateProject"]),
     signIn: function() {
       Vue.googleAuth().signIn(this.onSignInSuccess, this.onSignInError);
     },
@@ -41,9 +41,9 @@ export default {
   mounted: function () {
     this.$store.dispatch('getLoginStatus');
 
-    // CTRL+F Listener
     window.addEventListener("keydown", (e) => {
-      if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+      if (e.ctrlKey && e.keyCode === 70) {
+        // CTRL+F Listener
         e.preventDefault();
         this.startFindMode();
       }

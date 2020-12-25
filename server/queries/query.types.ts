@@ -3,7 +3,7 @@ import FieldDef from "../models/fielddef";
 import ProjectType from "../models/projecttype";
 
 
-const getProjectTypes = function (pool: sql.ConnectionPool) {
+const getProjectTypes = function (pool: sql.ConnectionPool, workspace: Number) {
     const select = `
     /* SELECT THE LIST OF PROJECT TYPES */
         SELECT
@@ -14,6 +14,7 @@ const getProjectTypes = function (pool: sql.ConnectionPool) {
             t.menu_order,
             p.qty
         FROM project_types t
+        INNER JOIN workspaces w ON t.workspace = w.id
         LEFT JOIN (
             SELECT
                 project_type, 
@@ -21,18 +22,20 @@ const getProjectTypes = function (pool: sql.ConnectionPool) {
             FROM projects 
             GROUP BY project_type
             ) p ON t.id = p.project_type
+        WHERE w.id = @workspace
         ORDER BY parent_id, menu_order
 `;
     const request = pool.request();
+    request.input('workspace', sql.Int, workspace);
     return request.query(select);
 }
 
-const createType = function (pool: sql.ConnectionPool, type: ProjectType) {
+const createType = function (pool: sql.ConnectionPool, workspace: Number, type: ProjectType) {
     const insert = `
         INSERT INTO project_types 
-            (name, codename, parent_id, menu_order)
+            (name, codename, parent_id, workspace, menu_order)
         VALUES
-            (@n, @c, @p, @m);
+            (@n, @c, @p, @w, @m);
         SELECT SCOPE_IDENTITY() as id;
     `;
 
@@ -40,16 +43,27 @@ const createType = function (pool: sql.ConnectionPool, type: ProjectType) {
     request.input('n', sql.VarChar, type.name);
     request.input('c', sql.VarChar, type.codename);
     request.input('p', sql.Int, type.parent_id);
+    request.input('w', sql.Int, workspace);
     request.input('m', sql.Int, type.menu_order);
     request.multiple = true;
     return request.query(insert);
 }
 
-const updateType = function (pool: sql.ConnectionPool, type: ProjectType) {
+const updateType = function (pool: sql.ConnectionPool, workspace: Number, type: ProjectType) {
     const update = `
-        UPDATE project_types
-        SET name = @n, codename = @c, parent_id = @p, menu_order = @m
-        WHERE id = @id
+        UPDATE t
+        
+        SET
+            t.name = @n,
+            t.codename = @c,
+            t.parent_id = @p,
+            t.menu_order = @m
+        FROM
+            project_types t
+            INNER JOIN workspaces w ON t.workspace = w.id
+        WHERE
+            t.id = @id
+            AND w.id = @w
     `;
 
     const request = pool.request();
@@ -58,6 +72,7 @@ const updateType = function (pool: sql.ConnectionPool, type: ProjectType) {
     request.input('c', sql.VarChar, type.codename);
     request.input('p', sql.Int, type.parent_id);
     request.input('m', sql.Int, type.menu_order);
+    request.input('w', sql.Int, workspace);
     request.multiple = true;
     return request.query(update);
 }
@@ -105,7 +120,8 @@ const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Numbe
     /* UPDATE EXISTING NEW RECORD IN field_defs */
         UPDATE field_defs
         SET name = @fieldName,
-            metadata = @meta
+            metadata = @meta,
+            relationship_type = @reltype
         WHERE id = @id;
 `;
 
@@ -113,6 +129,7 @@ const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Numbe
     request.input('fieldName', sql.VarChar, field.name);
     request.input('meta', sql.VarChar, JSON.stringify(field.metadata));
     request.input('id', sql.Int, fieldID);
+    request.input('reltype', sql.Int, field.relationship_type);
     request.multiple = true;
     return request.query(update);
 
@@ -124,7 +141,44 @@ const getLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Numb
         SELECT layout
         FROM project_types
         WHERE id = @pt 
-`;
+    `;
+
+    const request = pool.request();
+    request.input('pt', sql.Int, typeID);
+    request.multiple = true;
+    return request.query(select);
+}
+
+const getOptionsForProjectType = function (pool: sql.ConnectionPool, typeID: Number) {
+    const select = `
+    /* Pull out the OPTIONS field */
+        SELECT
+            defs.id as 'field_id',
+            t.codename,
+            (
+                SELECT 
+                    p.id as 'project_id',
+                    (
+                        SELECT
+                            d.field_id,
+                            d.value
+                        FROM field_data d
+                        WHERE 
+                            d.field_id IN (defs.related_keys)
+                            AND d.project_id = p.id
+                        FOR JSON AUTO
+                    ) as meta
+                FROM projects p
+                WHERE p.project_type = defs.relationship_type
+                ORDER BY p.id ASC
+                FOR JSON AUTO
+
+            ) as options 
+        FROM project_types t
+        INNER JOIN field_defs defs ON t.id = defs.project_type
+        WHERE t.id = @pt
+        AND defs.data_type = 6;
+    `;
 
     const request = pool.request();
     request.input('pt', sql.Int, typeID);
@@ -153,6 +207,7 @@ const _ = {
     getFieldsByType,
     createFieldForType,
     getLayoutForProjectType,
+    getOptionsForProjectType,
     updateLayoutForProjectType,
     updateFieldDefinition
 }

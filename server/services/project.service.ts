@@ -18,6 +18,12 @@ export default class ProjectService {
         return p;
     }
 
+    async getProjectCount(type: Number) : Promise<Number> {
+        const pool = await getSQLPool;
+        const count = await projectQueries.getProjectCount(pool, type);
+        return parseInt(count.recordset[0].total);
+    }
+
     async getProjects(spec: ProjectSpecification) : Promise<Project[]> {
         const pool = await getSQLPool;
         const projects = await projectQueries.getProjects(pool, spec);

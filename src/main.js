@@ -14,18 +14,34 @@ import {
   faEdit,
   faFileUpload,
   faLocationArrow,
-  faCog
+  faCog,
+  faSignInAlt,
+  faAngleLeft,
+  faAngleRight,
+  faFont,
+  faHashtag,
+  faCalendarAlt,
+  faToggleOn,
+  faCaretSquareDown,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
   faPlusSquare,
   faSearch,
+  faAngleLeft,
+  faAngleRight,
   faAngleDoubleLeft,
   faEdit,
   faFileUpload,
   faLocationArrow,
-  faCog
+  faCog,
+  faSignInAlt,
+  faFont,
+  faHashtag,
+  faCalendarAlt,
+  faToggleOn,
+  faCaretSquareDown
 );
 
 Vue.use(GoogleAuth, {
@@ -39,6 +55,11 @@ import './registerServiceWorker'
 
 Vue.prototype.$http = Axios;
 
+Axios.interceptors.request.use(function (config) {
+  const workspace = store.state.activeWorkspace || -1;
+  config.headers['Pterobyte-Workspace'] = workspace;
+  return config;
+});
 Vue.config.productionTip = false
 
 Vue.use(VModal, {

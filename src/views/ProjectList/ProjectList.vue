@@ -1,11 +1,10 @@
 <template src="./ProjectList.html"></template>
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 export default {
     name: 'ProjectList',
     data: function() {
         return {
-            activeType: null,
         }
     },
     watch: {
@@ -21,28 +20,31 @@ export default {
     computed: {
         ...mapState({
             projectTypes: state => state.projectTypes,
+            activeProjectType: state => state.activeProjectType,
         }),
         ...mapGetters([
-            'activeList'
+            'activeList',
+            'activeType'
         ]),
-        layoutUrl: function() { return  `/dash/${this.activeType}/layout`; }
+        layoutUrl: function() { return  `/dash/${this.activeProjectType}/layout`; }
     },
     methods: {
+        ...mapMutations({
+            'startViewMode': 'START_VIEW_MODE'
+        }),
         ...mapActions([
             'getProjectList'
         ]),
         processPath: function() {
-            this.activeType = this.$route.params.type;
-            console.log(this.$route);
-            if (this.activeType != null && this.$route.query.search == null) {
+            if (this.activeProjectType != null && this.$route.query.search == null) {
                 this.queryList();
             }
         },
         queryList() {
-            this.getProjectList(this.activeType);
+            this.getProjectList(this.activeProjectType);
         },
         parseUrl(project) {
-            return `${this.activeType}/${project.id}`;
+            return `${this.activeProjectType}/${project.id}`;
         },
     },
     mounted: function() {

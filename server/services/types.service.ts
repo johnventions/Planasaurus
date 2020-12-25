@@ -9,19 +9,19 @@ export default class TypeService {
     constructor() {
     }
 
-    async getTypes() : Promise<ProjectType[]> {
+    async getTypes(workspace: Number) : Promise<ProjectType[]> {
         const pool = await getSQLPool;
-        const types = await typeQueries.getProjectTypes(pool);
+        const types = await typeQueries.getProjectTypes(pool, workspace);
         return types.recordset.map(x => this.ToTypeModel(x) );
     }
 
-    async createOrUpdateType(type: ProjectType) : Promise<ProjectType> {
+    async createOrUpdateType(workspace: Number, type: ProjectType) : Promise<ProjectType> {
         const pool = await getSQLPool;
         if (type.id == 0) {
-            const ins = await typeQueries.createType(pool, type);
+            const ins = await typeQueries.createType(pool, workspace, type);
             type.id = ins.recordset[0].id;
         } else {
-            await typeQueries.updateType(pool, type)
+            await typeQueries.updateType(pool, workspace, type)
         }
         return type;;
     }
@@ -65,6 +65,16 @@ export default class TypeService {
         const result = await typeQueries.getLayoutForProjectType(pool, typeID);
         let layout: Layout = Layout.fromData(JSON.parse(result.recordset[0].layout));
         return layout;
+    }
+
+    async getTypeOptionsById(typeID: Number): Promise<any> {
+        const pool = await getSQLPool;
+        const result = await typeQueries.getOptionsForProjectType(pool, typeID);
+        let options : any = {};
+        result.recordset.forEach(v => {
+            options[v.field_id] = JSON.parse(v.options);
+        });
+        return options;
     }
 
     async updateTypeLayoutById(typeID: Number, layout: any): Promise<any> {

@@ -22,10 +22,10 @@ export default {
     },
     methods: {
         handleNameUpdate(){
-            this.$emit('updateField', 'name', this.nameValue);
+            this.$emit('updateFieldAttribute', 'name', this.nameValue);
         },
         handleCodeUpdate(){
-            this.$emit('updateField', 'codename', this.codenameValue);
+            this.$emit('updateFieldAttribute', 'codename', this.codenameValue);
         },
     },
     mounted: function() {

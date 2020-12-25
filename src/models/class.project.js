@@ -6,7 +6,6 @@ export default class Project {
     status = '';
     fields = [];
     constructor(type) {
-        console.log(type);
         this.project_type = type;
     }
 }

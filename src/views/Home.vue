@@ -1,6 +1,5 @@
 <template>
   <div class="home container">
-    <h1>Planasaurus</h1>
   </div>
 </template>
 

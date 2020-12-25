@@ -15,6 +15,7 @@ import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInpu
 // Metacomponents
 import NameCodename from "@/components/TemplateEditing/MetaComponents/NameCodename.vue";
 import KeyValueOptions from "@/components/TemplateEditing/MetaComponents/KeyValueOptions.vue";
+import OneToOne from "@/components/TemplateEditing/MetaComponents/OneToOne.vue";
 
 
 const fieldTypes = [
@@ -24,15 +25,19 @@ const fieldTypes = [
         type: "text",
         layoutComponent: TextInput,
         editingComponent: BasicInputEditable,
+        icon: "font",
+        description: "Simple text field",
         metaComponents: [
             NameCodename
-        ]
+        ],
     },
     {
         id: 2,
         name: "Number",
         layoutComponent: TextInput,
         editingComponent: BasicInputEditable,
+        icon: "hashtag",
+        description: "Basic numbers",
         metaComponents: [
             NameCodename
         ]
@@ -40,9 +45,11 @@ const fieldTypes = [
     {
         id: 3,
         name: "Date",
-        type: "datetime-local",
+        type: "date",
         layoutComponent: DateInput,
         editingComponent: BasicInputEditable,
+        icon: "calendar-alt",
+        description: "Date picker, or date time",
         metaComponents: [
             NameCodename
         ]
@@ -52,6 +59,8 @@ const fieldTypes = [
         name: "Radio Input (Yes / No)",
         layoutComponent: RadioInput,
         editingComponent: RadioInputEditable,
+        icon: "toggle-on",
+        description: "Basic yes/no field",
         metaComponents: [
             NameCodename
         ]
@@ -61,6 +70,8 @@ const fieldTypes = [
         name: "Dropdown (Static)",
         layoutComponent: DropdownInput,
         editingComponent: DropdownInputEditable,
+        icon: "caret-square-down",
+        description: "Choose an item from a list of static options",
         metaComponents: [
             NameCodename,
             KeyValueOptions
@@ -71,8 +82,11 @@ const fieldTypes = [
         name: "Dropdown (Related Item)",
         layoutComponent: DropdownInput,
         editingComponent: DropdownInputEditable,
+        icon: "caret-square-down",
+        description: "Choose an items from another data source in your project",
         metaComponents: [
-            NameCodename
+            NameCodename,
+            OneToOne
         ]
     }
 ];

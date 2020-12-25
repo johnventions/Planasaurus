@@ -14,6 +14,7 @@ export default new Vuex.Store({
 		authLogin: null, // promise for login lookup
 		authenticated: false,
 		user: null,
+		activeWorkspace: null,
 
 		activeProjectType: null, //string
 
@@ -44,6 +45,10 @@ export default new Vuex.Store({
 			state.user = user;
 		},
 
+		SET_WORKSPACE: function(state, workspace) {
+			state.activeWorkspace = workspace;
+		},
+
 		/* TYPES */
 		SET_TYPES: function (state, pkg) {
 			state.projectTypes = pkg;
@@ -66,8 +71,10 @@ export default new Vuex.Store({
 			Vue.set(state.projectLists, pkg.type, {
 				loading: false,
 				lastUpdate: Date.now(),
-				list: pkg.list
+				list: pkg.list,
+				total: pkg.total
 			});
+			state.viewMode = viewModes.VIEW;
 		},
 
 
@@ -116,7 +123,8 @@ export default new Vuex.Store({
 			Vue.set(state.projectLayouts, pkg.type, {
 				loading: false,
 				lastUpdate: Date.now(),
-				layout: new Layout(pkg.layout)
+				layout: new Layout(pkg.layout),
+				related: pkg.related
 			});
 		},
 
@@ -133,6 +141,7 @@ export default new Vuex.Store({
 				//state.projectFields = {};
 			}
 			state.activeProject = project;
+			//router.push(`/dash/${project.codename}/${project.id}`);
 		},
 
 		UPDATE_FIELD(state, pkg) {
@@ -173,6 +182,7 @@ export default new Vuex.Store({
 				.then(res => {
 					if (res.data && res.data.user) {
 						commit('SET_LOGIN', res.data.user);
+						commit('SET_WORKSPACE', res.data.workspace);
 						dispatch('getTypes');
 					}
 					return res.data.user;
@@ -196,7 +206,8 @@ export default new Vuex.Store({
 				.then(result => {
 					commit('SET_LIST', {
 						type,
-						list: result.data.list
+						list: result.data.list,
+						total: result.data.total,
 					});
 				});
 		},
@@ -232,7 +243,8 @@ export default new Vuex.Store({
 				.then(result => {
 					commit('SET_LAYOUT', {
 						type: type,
-						layout: result.data.layout
+						layout: result.data.layout,
+						related: result.data.related
 					});
 				});
 		},
@@ -273,7 +285,8 @@ export default new Vuex.Store({
 					console.log(response);
 					const pkg = {
 						type: this.getters.activeType.codename,
-						list: response.data.list
+						list: response.data.list,
+						total: response.data.total,
 					};
 					commit('START_VIEW_MODE');
 					commit('SET_LIST', pkg);
@@ -296,9 +309,10 @@ export default new Vuex.Store({
 			};
 
 			return axios.post(`/api/projects/${this.state.activeProject.id}`, updatedProject)
-				.then(() => {
+				.then((response) => {
 					commit('RESET_UPDATES');
-					return 1;
+					//commit('SET_RECORD', updatedProject);
+					return response.data;
 				})
 		}
 	},
@@ -308,6 +322,26 @@ export default new Vuex.Store({
 				return state.projectLists[state.activeProjectType];
 			}
 			return {};
+		},
+		prevItem: state => {
+			if (state.activeProject && state.projectLists[state.activeProjectType]) {
+				const list = state.projectLists[state.activeProjectType].list;
+				const index = list.findIndex(x => x.id == state.activeProject.id);
+				if (index == 0) return null;
+				const prevItem = Math.max(index - 1, 0);
+				return list[prevItem];
+			}
+			return null;
+		},
+		nextItem: state => {
+			if (state.activeProject && state.projectLists[state.activeProjectType]) {
+				const list = state.projectLists[state.activeProjectType].list;
+				const index = list.findIndex(x => x.id == state.activeProject.id);
+				if (index + 1 == list.length) return null;
+				const nextItem = Math.min(index + 1, list.length - 1);
+				return list[nextItem];
+			}
+			return null;
 		},
 		activeFields: state => {
 			if (state.projectFields[state.activeProjectType]) {

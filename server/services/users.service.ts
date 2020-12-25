@@ -1,5 +1,8 @@
 const { getSQLPool } = require('../sql');
 import userQueries from '../queries/query.users';
+import User from '../models/user';
+import WorkspaceService from './workspace.service'
+import Workspace from '../models/workspace';
 
 
 export default class UserService {
@@ -15,15 +18,24 @@ export default class UserService {
             const newUserInsert = await userQueries.createUser(pool, method, user);
             const id = newUserInsert.recordset[0].id;
             dbUser = await userQueries.getUserById(pool, id);
-            // get new user from the DB
-            return dbUser.recordset[0];
+            const u = dbUser.recordset[0] as User;
+            // create their first workspace
+            const wsService = new WorkspaceService();
+            await wsService.createWorkSpace(u.id, 'My First Workspace');
         }
-        return dbUser.recordset[0];
+        return this.getUserComplete(dbUser.recordset[0] as User);
+    }
+
+    async getUserComplete(user: User): Promise<User> {
+        const wsService = new WorkspaceService();
+        const ws: Workspace[] = await wsService.getUserWorkspaces(user.id);
+        user.workspaces = ws;
+        return user;
     }
 
     async getUserById(id: Number) {
         const pool = await getSQLPool;
         const dbUser = await userQueries.getUserById(pool, id);
-        return dbUser.recordset[0];
+        return this.getUserComplete(dbUser.recordset[0] as User);
     }
 }

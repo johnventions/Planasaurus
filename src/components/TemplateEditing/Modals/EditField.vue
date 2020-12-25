@@ -4,7 +4,8 @@
             <div v-for="(meta, i) in currentFieldType.metaComponents" :key="i">
                 <div :is="meta"
                     :field="currentFieldDef"
-                    v-on:updateField="handleUpdate"></div>
+                    v-on:updateFieldAttribute="handleUpdate"
+                    v-on:updateFieldMeta="handleMetaUpdate"></div>
             </div>
         </div>
         <button class="btn btn-primary save"
@@ -51,14 +52,14 @@ export default {
     },
     methods: {
         handleUpdate: function(key, value) {
-            if (key == "name") {
-                this.editedFieldDef.name = value;
-            } else {
-                if (this.editedFieldDef.metadata == null) {
-                    this.editedFieldDef.metadata = [];
-                }
-                this.$set(this.editedFieldDef.metadata, key, value);
+            this.editedFieldDef[key] = value;
+            this.changes++;
+        },
+        handleMetaUpdate: function(key, value) {
+            if (this.editedFieldDef.metadata == null) {
+                this.editedFieldDef.metadata = [];
             }
+            this.$set(this.editedFieldDef.metadata, key, value);
             this.changes++;
         },
         saveChanges: function() {

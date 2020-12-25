@@ -1,11 +1,14 @@
 <template>
-    <div class="form-group">
+    <div class="form-group" 
+        v-bind:class="{ find: viewMode == 'find' }"
+    >
         <label>{{ field.name }}</label><br/>
         <select class="form-control"
+                v-bind:class="{touched: touched}"
                 v-model="value"
                 v-on:change="handleUpdate">
             <option disabled selected>Select One</option>
-            <option :value="option" v-for="(option, i) in options" :key="i">{{ option }}</option>
+            <option :value="option.key" v-for="(option, i) in options" :key="i">{{ option.value }}</option>
         </select>
     </div>
 </template>
@@ -18,7 +21,8 @@ export default {
     ],
     data: function() {
         return {
-            value: this.$store.getters.getFieldVal(this.field.id)
+            value: this.$store.getters.getFieldVal(this.field.id),
+            touched: false,
         }
     },
     watch: {
@@ -31,8 +35,24 @@ export default {
             viewMode: state => state.viewMode,
         }),
         options: function() {
+            if (this.field.data_type == 6) {
+                const relatedOptions = this.$store.getters.activeLayout.related;
+                if (relatedOptions && relatedOptions[this.field.id]) {
+                    return relatedOptions[this.field.id].map( x => {
+                        return {
+                        key: x.project_id,
+                        value: x.meta ? x.meta.map(x => x.value).join(" ") : x.project_id
+                        }
+                    });
+                }
+            }
             if (this.field.metadata == null || this.field.metadata.options == null) return [];
-            return this.field.metadata.options;
+            return this.field.metadata.options.map( x => {
+                return {
+                key: x,
+                value: x
+                }
+            });
         }
     },
     methods: {
@@ -43,18 +63,50 @@ export default {
             this.updateField({
                 id: this.field.id,
                 value: this.value
-            });   
+            });
+            this.touched = true;
         },
         resetValue() {
             this.value = this.$store.getters.getFieldVal(this.field.id);
+            this.touched = false;
         }
     },
     mounted: function() {
         this.$store.subscribe((mutation) => {
             if (mutation.type == "SET_RECORD") {
                 this.resetValue();
+            } else if (mutation.type == "RESET_UPDATES") {
+                this.touched = false;
             }
         });
     }
 }
 </script>
+<style lang="scss" scoped>
+    .form-group {
+        &.find {
+            .input-container {
+                position: relative;
+                &:after {
+                    display: block;
+                    position: absolute;
+                    content: 'X';
+                    height: 20px;
+                    width: 20px;
+                    right: 5px;
+                    top: 5px;
+                }
+            }
+            select {
+                    background-color: #d9f6ff;
+                }
+        }
+
+        select {
+            &.touched {
+                border: 2px solid #328d32;
+                font-weight: bold;
+            }
+        }
+    }
+</style>

@@ -3,30 +3,49 @@
         <h3>New Field</h3>
         <label>Field Name</label>
         <input type="text" v-model="fieldName"/>
-        <div class="row">
-            <div class="col-6"
-                v-for="(field) in fieldTypes" :key="field.id">
-                <button
-                    class="btn"
-                    :class="{
-                        'btn-dark': field.id !== fieldType,
-                        'btn-success': field.id == fieldType
-                    }"
-                    @click="selectType(field)">
-                    {{ field.name }}
-                </button>
+        <button
+            class="btn"
+            :class="{
+                'btn-dark': field.id !== fieldType,
+                'btn-success': field.id == fieldType
+            }"
+            @click="selectType(field)"
+            v-for="(field) in fieldTypes" :key="field.id">
+            <div class="row">
+                    <div class="col-2 field-icon">
+                        <font-awesome-icon :icon="field.icon" size="2x"/>
+                    </div>
+                    <div class="col-10">
+                        <h4>
+                            {{ field.name }}
+                        </h4>
+                        <p>
+                            {{ field.description}}
+                        </p>
+                    </div>
             </div>
-        </div>
+        </button>
+
         <button class="btn btn-primary" @click="submit">
             Create
         </button>
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
     button {
         width: 100%;
         margin-bottom: 10px;
+        text-align: left;
+        padding: 15px;
+
+        .field-icon {
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 0;
+        }
     }
 </style>
 

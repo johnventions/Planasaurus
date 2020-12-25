@@ -16,7 +16,10 @@ export default {
     computed: {
         ... mapGetters([
             'activeType',
-            'activeLayout'
+            'activeLayout',
+            'activeList',
+            'prevItem',
+            'nextItem'
         ]),
         ... mapState({
             authenticated: state => state.authenticated,
@@ -31,6 +34,18 @@ export default {
                 return true;
             }
             return false;
+        },
+        currentItemDisplay: function() {
+            const list = this.$store.getters.activeList.list;
+            const total = this.$store.getters.activeList.total;
+            if (this.$route.name == "Project Detail") {
+                if (this.$store.state.activeProject == null) return 0
+                const id = this.$store.state.activeProject.id;
+                const index = list.findIndex(x => x.id == id) + 1;
+                return `${index} of ${list.length}`
+            }
+            if (total == list.length) return `${list.length} items`;
+            return `${list.length} items <br/> ${total} total`;
         }
     },
     mounted: function() {
@@ -38,7 +53,8 @@ export default {
     methods: {
         ...mapMutations({
             startFindMode: 'START_FIND_MODE',
-            startViewMode: 'START_VIEW_MODE'
+            startViewMode: 'START_VIEW_MODE',
+            setRecord: 'SET_RECORD',
         }),
         ...mapActions([
             'searchProjectRecords',
@@ -59,6 +75,7 @@ export default {
             return `/dash/${item.codename}`;
         },
         cancelClick() {
+            this.$router.go(-1);
             this.startViewMode();
         },
         findClick() {
@@ -69,6 +86,20 @@ export default {
                 layout: this.activeLayout.layout
             };
             this.saveLatestLayout(pkg);
+        },
+        goPrev() {
+            if (this.prevItem) {
+                const id = this.prevItem.id;
+                this.setRecord(this.prevItem);
+                this.$router.push(`/dash/${this.activeType.codename}/${id}`)
+            }
+        },
+        goNext() {
+            if (this.nextItem) {
+                const id = this.nextItem.id;
+                this.setRecord(this.nextItem);
+                this.$router.push(`/dash/${this.activeType.codename}/${id}`)
+            }
         }
     },
     created () {
@@ -91,7 +122,10 @@ export default {
     }
     .navbar-nav {
         width: 100%;
-        flex-direction: initial;
+        flex-direction: column;
+        @media screen and (min-width: 768px) {
+            flex-direction: initial;
+        }
     }
     .nav-item {
         display: inline-block;
@@ -105,10 +139,14 @@ export default {
         margin-left: auto;
     }
     .utility-nav {
+        .navbar-nav {
+            flex-direction: inherit;
+        }
         .nav-item {
             min-width: 85px;
             padding: 0 8px;
             text-align: center;
+            max-width: 33%;
         }
     }
     .nav-item .nav-link > svg {

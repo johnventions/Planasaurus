@@ -11,9 +11,11 @@ module.exports = function () {
     routes.get('/', async (req: Request, res: Response) => {
         let spec: ProjectSpecification = ProjectSpecification.fromParams(req.query);
         const service = new ProjectService();
+        const total = await service.getProjectCount(spec.type);
         const result = await service.getProjects(spec);
         res.status(200).json({
-            sucess: true,
+            success: true,
+            total: total,
             list: result,
         });
     });
@@ -29,7 +31,7 @@ module.exports = function () {
         const service = new ProjectService();
         const result = await service.getProjectById(id);
         res.status(200).json({
-            sucess: true,
+            success: true,
             project: result
         });
     });
@@ -47,7 +49,8 @@ module.exports = function () {
         // extract fields
         const result = await service.updateProjectFields(id, p.fields);
         res.status(200).json({
-            sucess: true
+            success: true,
+            id: id
         });
     });
 

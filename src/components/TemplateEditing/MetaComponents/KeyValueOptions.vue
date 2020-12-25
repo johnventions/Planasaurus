@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         handleNameUpdate: function(){
-            this.$emit('updateField', 'options', this.value);
+            this.$emit('updateFieldMeta', 'options', this.value);
         },
         addOption: function() {
             if (this.inputValue == '') return;

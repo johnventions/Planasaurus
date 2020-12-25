@@ -34,7 +34,9 @@ const baseLookup = function() {
         ) as fields
     FROM
         project_list l
-    INNER JOIN projects p ON l.id = p.id`;
+    INNER JOIN projects p ON l.id = p.id
+    ORDER BY p.id ASC
+    `;
 }
 
 const getFilters = function (filters: Map<string, any>): ProjectFilter[] {
@@ -87,6 +89,18 @@ const expandFilters = function (filters: ProjectFilter[]) {
     };
 }
 
+
+const getProjectCount = function (pool: sql.ConnectionPool, type: Number) {
+    const select = `
+    SELECT COUNT(id) as 'total'
+    FROM projects
+    WHERE project_type = @type;
+`;
+    const request: sql.Request = pool.request();
+    request.input('type', sql.Int, type);
+    request.multiple = true;
+    return request.query(select);
+}
 
 const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecification) {
     const filters = spec.fields ? getFilters(spec.fields) : [];
@@ -152,6 +166,7 @@ const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: A
 
 const _ = {
     newProject,
+    getProjectCount,
     getProjects,
     getProjectById,
     updateProject

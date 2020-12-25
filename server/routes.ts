@@ -19,7 +19,7 @@ module.exports = function () {
         
 
     //     res.status(200).json({
-    //         sucess: true,
+    //         success: true,
     //         tokens: tokens,
     //         plus: plus,
     //         person: me
