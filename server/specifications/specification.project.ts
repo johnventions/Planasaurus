@@ -1,11 +1,13 @@
 import {  Options, OptionsJson } from 'body-parser';
 import { stringify } from 'querystring';
+import FieldDef from '../models/fielddef';
 
 export default class ProjectSpecification {
     type: Number;
     sortBy: string;
     sortByDir?: string;
     fields: Map<string, any>;
+    definitions: Map<string, FieldDef> = new Map < string, FieldDef>();
 
     static ignoreFields : string[] = [
         'type',
@@ -24,7 +26,7 @@ export default class ProjectSpecification {
         this.fields = new Map<string, any>();
     }
 
-    public static fromParams(qs: any) {
+    public static fromParams(qs: any, fieldDefs: Map<string, FieldDef>) {
         let proj: ProjectSpecification = new this(
             qs.type,
             qs.sortBy,
@@ -35,6 +37,9 @@ export default class ProjectSpecification {
             if (skipList.indexOf(key) == -1) {
                 proj.fields.set(key, value);
             }
+        }
+        if (fieldDefs != null) {
+            proj.definitions = fieldDefs;
         }
         return proj;
     }

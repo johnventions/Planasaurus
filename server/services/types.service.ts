@@ -37,6 +37,16 @@ export default class TypeService {
 
     }
 
+    async getTypeFieldsMapById(id: Number): Promise<Map<string, FieldDef>> {
+        const fields = await this.getTypeFieldsById(id);
+        let fieldMap = new Map<string, FieldDef>();
+        fields.forEach(x => {
+            fieldMap.set(x.id.toString(), x); 
+        });
+        return fieldMap;
+
+    }
+
     async createTypeField(typeID: Number, field: FieldDef): Promise<FieldDef> {
         const pool = await getSQLPool;
         const result = await typeQueries.createFieldForType(pool, typeID, field);

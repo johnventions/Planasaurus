@@ -1,23 +1,46 @@
+import FieldDef from "./fielddef";
+
 export default class ProjectFilter {
     param: string;
     value: any;
+    operator: string = "=";
     joinStatement: string;
     whereStatement: string;
+    def?: FieldDef;
 
     constructor(
         index: Number,
         _param: string,
         _fieldid: string,
-        _value: any
+        _value: any,
+        def?: FieldDef
     ) {
         this.param = "param_" + _param;
         this.value = _value
+        this.def = def;
+        let table_name = "field_data";
+        if (def && def.data_type == 3) {
+            table_name = "field_dates";
+            this.checkOperator();
+            this.whereStatement = `
+                AND fd_${index}.field_id = ${_fieldid} AND fd_${index}.value ${this.operator} @${this.param}
+            `;
+        } else {
+            this.whereStatement = `
+                AND fd_${index}.field_id = ${_fieldid} AND fd_${index}.value LIKE '%' + @${this.param} + '%'
+            `;
+        }
         this.joinStatement = `
-            INNER JOIN field_data fd_${index} ON p.id = fd_${index}.project_id 
+            INNER JOIN ${table_name} fd_${index} ON p.id = fd_${index}.project_id 
         `;
-        this.whereStatement = `
-            AND fd_${index}.field_id = ${_fieldid} AND fd_${index}.value LIKE '%' + @${this.param } + '%'
-        `;
+    }
+
+    checkOperator() {
+        const initial = this.value.charAt(0);
+        if ([">", "<"].includes(initial)) {
+            this.value = this.value.substring(1);
+            this.operator = initial;
+        }
     }
     
 }

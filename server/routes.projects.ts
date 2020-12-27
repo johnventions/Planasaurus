@@ -4,12 +4,22 @@ import ProjectSpecification from './specifications/specification.project';
 
 import Project from "./models/project";
 import FieldUpdate from "./models/fieldUpdate";
+import TypeService from './services/types.service';
+import FieldDef from './models/fielddef';
 
 module.exports = function () {
     let routes : Router = require('express').Router();
 
     routes.get('/', async (req: Request, res: Response) => {
-        let spec: ProjectSpecification = ProjectSpecification.fromParams(req.query);
+        const typeID : Number = Number(req.query.type);
+
+        // Look up field definitions, so we can search the correct table
+        const typeService = new TypeService();
+        const typeDefs: Map<string, FieldDef> = await typeService.getTypeFieldsMapById(typeID);
+
+        let spec: ProjectSpecification = ProjectSpecification.fromParams(req.query, typeDefs);
+
+        // Query the DB for the related projects
         const service = new ProjectService();
         const total = await service.getProjectCount(spec.type);
         const result = await service.getProjects(spec);

@@ -5,6 +5,8 @@ import projectQueries from '../queries/query.projects';
 
 import FieldUpdate from "../models/fieldUpdate";
 import Project from "../models/project";
+import TypeService from './types.service';
+import FieldDef from '../models/fielddef';
 
 
 export default class ProjectService {
@@ -37,13 +39,27 @@ export default class ProjectService {
         return this.ToModel(firstProject);
     }
 
+    async getProjectType(id: Number) : Promise<Number> {
+        const pool = await getSQLPool;
+        const project = await projectQueries.getProjectType(pool, id);
+        return project.recordset[0].project_type;
+    }
+
+    async getProjectFieldDefinitions(id: Number): Promise<Map<string, FieldDef>> {
+        const type = await this.getProjectType(id);
+        const service = new TypeService();
+        const fields = await service.getTypeFieldsMapById(type);
+        return fields;
+    }
+
     async updateProjectFields(id: Number, fields: Array<any>) : Promise<any> {
         const pool = await getSQLPool;
         // convert fields to proper type
         let fieldData : Array<FieldUpdate> = fields.map(x => {
             return FieldUpdate.fromData(x);
         });
-        const update = await projectQueries.updateProject(pool, id, fieldData);
+        const defs = await this.getProjectFieldDefinitions(id);
+        const update = await projectQueries.updateProject(pool, id, fieldData, defs);
         return 1;
     }
 

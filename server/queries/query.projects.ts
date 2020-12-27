@@ -1,4 +1,5 @@
 import * as sql from 'mssql';
+import FieldDef from '../models/fielddef';
 
 import FieldUpdate from "../models/fieldUpdate";
 
@@ -18,17 +19,31 @@ const baseLookup = function() {
         p.date_created,
         (
         SELECT * FROM (
-            SELECT 
-                f.id as 'id',
-                d.id as 'field_id',
-                d.name as 'key',
-                f.value as 'value'
-            FROM
-                field_data f
-            INNER JOIN
-                field_defs d ON f.field_id = d.id
-            WHERE
-                f.project_id = l.id
+                SELECT * FROM (
+                    SELECT 
+                        f.id as 'id',
+                        d.id as 'field_id',
+                        d.name as 'key',
+                        f.value as 'value'
+                    FROM
+                        field_data f
+                    INNER JOIN
+                        field_defs d ON f.field_id = d.id
+                    WHERE
+                        f.project_id = l.id
+                    UNION ALL
+                    SELECT 
+                        f2.id as 'id',
+                        d.id as 'field_id',
+                        d.name as 'key',
+                        convert(varchar, f2.value, 23) as 'value'
+                    FROM
+                        field_dates f2
+                    INNER JOIN
+                        field_defs d ON f2.field_id = d.id
+                    WHERE
+                        f2.project_id = l.id
+                ) as nested
             ) as json_data
             FOR JSON AUTO
         ) as fields
@@ -39,12 +54,14 @@ const baseLookup = function() {
     `;
 }
 
-const getFilters = function (filters: Map<string, any>): ProjectFilter[] {
+const getFilters = function (filters: Map<string, any>, definitions: Map<string, FieldDef>): ProjectFilter[] {
     const projectFilters: ProjectFilter[] = [];
     let i = 0;
     filters.forEach((value, key) => {
+        const def = definitions.has(key) ? definitions.get(key) : undefined;
+        console.log(def);
         projectFilters.push(
-             new ProjectFilter(i, key, key, value.toString())
+             new ProjectFilter(i, key, key, value.toString(), def)
         )
         i++;
     });
@@ -103,7 +120,7 @@ const getProjectCount = function (pool: sql.ConnectionPool, type: Number) {
 }
 
 const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecification) {
-    const filters = spec.fields ? getFilters(spec.fields) : [];
+    const filters = spec.fields ? getFilters(spec.fields, spec.definitions) : [];
     const filterStrings: any = expandFilters(filters);
     const select = `
     /* SELECT THE LIST OF PROJECTS */
@@ -143,13 +160,15 @@ const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
     return request.query(select);
 };
 
-const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: Array<FieldUpdate>) {
+const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: Array<FieldUpdate>, definitions: Map<string, FieldDef>) {
     const request = pool.request();
 
     // create the update string
     let update = fields.map((x) => {
-        return x.toUpdateString();
+        const def = definitions.get(x.field_id.toString()) ? definitions.get(x.field_id.toString()) : undefined;
+        return x.toUpdateString(x.field_id, def);
     }).join("\r\n");
+
 
     // bind the input parameters (sql injection prevention)
     fields.forEach( x => {
@@ -163,12 +182,25 @@ const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: A
     return request.query(update);
 };
 
+const getProjectType = function (pool: sql.ConnectionPool, id: Number) {
+    const select = `
+        SELECT project_type FROM projects
+        WHERE id = @id
+`;
+
+    const request = pool.request();
+    request.input('id', sql.Int, id);
+    request.multiple = true;
+    return request.query(select);
+}
+
 
 const _ = {
     newProject,
     getProjectCount,
     getProjects,
     getProjectById,
+    getProjectType,
     updateProject
 }
 

@@ -1,8 +1,10 @@
 <div class='zone editing'>
     <div class="zone-container">
         <div v-if="item.components">
-            <div v-for="(child, i) in item.components">
-                <div 
+            <div v-for="(child, i) in item.components"
+                class="field-item"
+                v-bind:class="`field_${child.id}`">
+                <div
                 :field="getLayoutFieldDef(child.id)"
                 :type="getLayoutFieldType(child.id)"
                 :is="getLayoutComponent(child.id)">
