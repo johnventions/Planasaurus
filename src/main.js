@@ -23,6 +23,7 @@ import {
   faCalendarAlt,
   faToggleOn,
   faCaretSquareDown,
+  faLayerGroup,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -41,7 +42,8 @@ library.add(
   faHashtag,
   faCalendarAlt,
   faToggleOn,
-  faCaretSquareDown
+  faCaretSquareDown,
+  faLayerGroup
 );
 
 Vue.use(GoogleAuth, {

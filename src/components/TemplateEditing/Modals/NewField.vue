@@ -37,7 +37,11 @@
         width: 100%;
         margin-bottom: 10px;
         text-align: left;
-        padding: 15px;
+        padding: 5px 15px;
+        
+        h4 {
+            margin-bottom: 0;
+        }
 
         .field-icon {
             text-align: center;

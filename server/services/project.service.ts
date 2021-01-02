@@ -63,6 +63,20 @@ export default class ProjectService {
         return 1;
     }
 
+    async getProjectChildren(id: Number) {
+        const pool = await getSQLPool;
+        const children = await projectQueries.getProjectChildData(pool, id);
+        children.recordset.forEach(x => {
+            // let jsonArray = JSON.parse(x.child_meta);
+            x.child_meta = JSON.parse(x.child_meta);
+            // jsonArray.reduce((obj: any, item: any) => {
+            //     obj[item.field_id] = item;
+            //     return obj;
+            // }, {});
+        });
+        return children.recordset;
+    }
+
     ToModel(data : any) : Project {
         return Project.fromData(data);
     }

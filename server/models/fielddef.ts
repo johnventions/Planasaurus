@@ -4,6 +4,7 @@ export default class FieldDef {
     data_type: Number = 1;
     relationship_type: Number | null = null;
     metadata: any = {};
+    related_keys: Number | null = null;
 
     static fromData(data: any) : FieldDef {
         let d = new FieldDef();
@@ -11,6 +12,7 @@ export default class FieldDef {
         d.name = data.name;
         d.data_type = data.data_type;
         d.relationship_type = data.relationship_type;
+        d.related_keys = data.related_keys ? parseInt(data.related_keys) : null;
         if (data.metadata != null) {
             try {
                 d.metadata = JSON.parse(data.metadata);

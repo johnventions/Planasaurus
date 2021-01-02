@@ -43,6 +43,19 @@ const baseLookup = function() {
                         field_defs d ON f2.field_id = d.id
                     WHERE
                         f2.project_id = l.id
+                    
+                    UNION ALL
+                    SELECT 
+                        f3.id as 'id',
+                        d.id as 'field_id',
+                        d.name as 'key',
+                        CAST(f3.value as varchar) as 'value'
+                    FROM
+                        field_related f3
+                    INNER JOIN
+                        field_defs d ON f3.field_id = d.id
+                    WHERE
+                        f3.project_id = l.id
                 ) as nested
             ) as json_data
             FOR JSON AUTO
@@ -157,6 +170,8 @@ const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
     const request = pool.request();
     request.input('id', sql.Int, id);
     request.multiple = true;
+    console.log(select);
+
     return request.query(select);
 };
 
@@ -194,6 +209,28 @@ const getProjectType = function (pool: sql.ConnectionPool, id: Number) {
     return request.query(select);
 }
 
+const getProjectChildData = function (pool: sql.ConnectionPool, id: Number) {
+    const select = `
+    SELECT
+        rel.field_id as 'field_id',
+        rel.id as 'attribute_id',
+        rel.value as 'project_id',
+        (
+            SELECT *
+            FROM View_Field_Output v
+            WHERE v.project_id = rel.value			
+            FOR JSON AUTO
+        ) as child_meta
+    FROM field_related rel
+    INNER JOIN field_defs defs ON rel.field_id = defs.id
+    WHERE rel.project_id = @id
+`;
+
+    const request = pool.request();
+    request.input('id', sql.Int, id);
+    request.multiple = true;
+    return request.query(select);
+}
 
 const _ = {
     newProject,
@@ -201,7 +238,8 @@ const _ = {
     getProjects,
     getProjectById,
     getProjectType,
-    updateProject
+    updateProject,
+    getProjectChildData
 }
 
 export default _;

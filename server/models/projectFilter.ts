@@ -1,3 +1,4 @@
+import tableMap from "../data/tableMap";
 import FieldDef from "./fielddef";
 
 export default class ProjectFilter {
@@ -18,9 +19,11 @@ export default class ProjectFilter {
         this.param = "param_" + _param;
         this.value = _value
         this.def = def;
-        let table_name = "field_data";
+        let table_name = "field_dates";
+        if (def) {
+            table_name = tableMap(def.data_type);
+        }
         if (def && def.data_type == 3) {
-            table_name = "field_dates";
             this.checkOperator();
             this.whereStatement = `
                 AND fd_${index}.field_id = ${_fieldid} AND fd_${index}.value ${this.operator} @${this.param}

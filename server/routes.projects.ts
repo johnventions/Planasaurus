@@ -40,9 +40,12 @@ module.exports = function () {
         const id = parseInt(req.params.id);
         const service = new ProjectService();
         const result = await service.getProjectById(id);
+        const children =  await service.getProjectChildren(id);
+
         res.status(200).json({
             success: true,
-            project: result
+            project: result,
+            children: children
         });
     });
 

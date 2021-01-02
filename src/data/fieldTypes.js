@@ -10,12 +10,14 @@ import BasicInputEditable from "@/components/ContentEditing/FieldTypes/BasicInpu
 // import DateInputEditable from "@/components/ContentEditing/FieldTypes/DateInput.vue";
 import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/DropdownInput.vue";
 import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
+import ChildComponentInput from "@/components/ContentEditing/FieldTypes/ChildComponentInput.vue";
 
 
 // Metacomponents
 import NameCodename from "@/components/TemplateEditing/MetaComponents/NameCodename.vue";
 import KeyValueOptions from "@/components/TemplateEditing/MetaComponents/KeyValueOptions.vue";
 import OneToOne from "@/components/TemplateEditing/MetaComponents/OneToOne.vue";
+import FieldsToDisplay from "@/components/TemplateEditing/MetaComponents/FieldsToDisplay.vue";
 
 
 const fieldTypes = [
@@ -87,6 +89,19 @@ const fieldTypes = [
         metaComponents: [
             NameCodename,
             OneToOne
+        ]
+    },
+    {
+        id: 7,
+        name: "Connected Data",
+        layoutComponent: TextInput,
+        editingComponent: ChildComponentInput,
+        icon: "layer-group",
+        description: "Connect your record to multiple other records (for example: participants, ingredients, bill of materials)",
+        metaComponents: [
+            NameCodename,
+            OneToOne,
+            FieldsToDisplay
         ]
     }
 ];

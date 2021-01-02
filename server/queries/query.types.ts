@@ -85,7 +85,8 @@ const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
             fd.name,
             fd.data_type,
             fd.relationship_type,
-            fd.metadata
+            fd.metadata,
+            fd.related_keys
         FROM field_defs fd
         WHERE fd.project_type = @id
 `;
@@ -121,7 +122,8 @@ const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Numbe
         UPDATE field_defs
         SET name = @fieldName,
             metadata = @meta,
-            relationship_type = @reltype
+            relationship_type = @reltype,
+            related_keys = @keys
         WHERE id = @id;
 `;
 
@@ -130,6 +132,7 @@ const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Numbe
     request.input('meta', sql.VarChar, JSON.stringify(field.metadata));
     request.input('id', sql.Int, fieldID);
     request.input('reltype', sql.Int, field.relationship_type);
+    request.input('keys', sql.Int, field.related_keys);
     request.multiple = true;
     return request.query(update);
 
@@ -177,7 +180,7 @@ const getOptionsForProjectType = function (pool: sql.ConnectionPool, typeID: Num
         FROM project_types t
         INNER JOIN field_defs defs ON t.id = defs.project_type
         WHERE t.id = @pt
-        AND defs.data_type = 6;
+        AND defs.data_type IN(6, 7);
     `;
 
     const request = pool.request();

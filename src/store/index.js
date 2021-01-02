@@ -9,6 +9,18 @@ Vue.use(Vuex)
 import viewModes from "../data/viewModes";
 import Layout from "@/models/class.layout";
 
+const processRecordChildren = function(childRecords) {
+	childRecords.forEach((x) => {
+		// convert child_meta into key indexed, for easier lookup later
+		let processed = x.child_meta.reduce((obj, item) => {
+			obj[item.field_id] = item;
+			return obj;
+		}, {});
+		x.child_meta = processed;
+	});
+	return childRecords;
+}
+
 export default new Vuex.Store({
 	state: {
 		authLogin: null, // promise for login lookup
@@ -53,6 +65,7 @@ export default new Vuex.Store({
 		SET_TYPES: function (state, pkg) {
 			state.projectTypes = pkg;
 		},
+		
 		UPDATE_ACTIVE_TYPE: function(state, type) {
 			state.activeProjectType = type;
 		},
@@ -268,7 +281,12 @@ export default new Vuex.Store({
 		getProjectRecord({ commit }, id) {
 			return axios.get(`/api/projects/${id}`)
 				.then(response => {
-					commit('SET_RECORD', response.data.project);
+					const children = processRecordChildren(response.data.children);
+					commit('SET_RECORD', {
+						...response.data.project,
+						children
+						}
+					);
 					return true;
 				});
 		},
@@ -369,12 +387,31 @@ export default new Vuex.Store({
 			}
 			return f;
 		},
+		getFieldArrayVal: (state) => (id) => {
+			let f = [];
+			if (state.viewMode == viewModes.FIND) {
+				f = state.pendingFind[id];
+			} else if (state.activeProject.children) {
+				f = state.activeProject.children.filter(x => x.field_id == id);
+			}
+			return f;
+		},
 		getFieldDefintion: (state) => (id) => {
 			if (state.projectFields[state.activeProjectType]) {
 				return state.projectFields[state.activeProjectType].fields.find(x => x.id == id);
 			}
 			return {};
 		},
+		getFieldsByTypeId: (state) => (id) => {
+			const relatedTypeCode = state.projectTypes.find(x => x.id == id);
+			if (relatedTypeCode != null) {
+				const relatedFields = state.projectFields[relatedTypeCode.codename];
+				if (relatedFields && relatedFields.fields) {
+					return relatedFields.fields;
+				}
+			}
+			return [];
+		}
 	},
 	modules: {
 	}
