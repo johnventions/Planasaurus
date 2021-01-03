@@ -82,6 +82,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.params.type !== from.params.type) {
+    console.log(to.params);
     store.commit('UPDATE_ACTIVE_TYPE', to.params.type)
   }
   next();

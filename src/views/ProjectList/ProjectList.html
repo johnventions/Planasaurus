@@ -3,7 +3,7 @@
         <div v-for="(project, i) in activeList.list"
             :key="project.id">
             <router-link :to="parseUrl(project)">
-                {{ activeType.name }} #{{ project.id }}
+                {{ activeProjectType.name }} #{{ project.id }}
             </router-link>
         </div>
     </div>

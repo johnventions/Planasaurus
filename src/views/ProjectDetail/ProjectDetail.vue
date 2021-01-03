@@ -19,7 +19,7 @@ export default {
             this.processPath();
         // react to route changes...
         },
-        activeType() {
+        activeProjectType() {
             this.processPath();
         }
     },
@@ -28,7 +28,6 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'activeType',
             'activeFields',
             'activeLayout'
         ]),
@@ -55,14 +54,14 @@ export default {
         }),
         processPath: async function() {
             this.activeID = this.$route.params.id;
-            await this.ensureProjectLayoutDisplay(this.activeType.codename);
-            if (this.activeID == "new" && this.activeType) {
+            await this.ensureProjectLayoutDisplay(this.activeProjectType.codename);
+            if (this.activeID == "new" && this.activeProjectType) {
                 this.setRecord(
-                    new Project(this.activeType.id)
+                    new Project(this.activeProjectType.id)
                     );
-            } else if (this.activeID == "find" && this.activeType) {
+            } else if (this.activeID == "find" && this.activeProjectType) {
                 this.startFind();
-            } else if (this.activeType && this.activeID) {
+            } else if (this.activeProjectType && this.activeID) {
                 this.queryList();
             }
         },
@@ -73,8 +72,8 @@ export default {
         },
         queryTypes: function() {
             // get the types
-            if (this.activeType) {
-                this.ensureProjectLayoutDisplay(this.activeType.codename);
+            if (this.activeProjectType) {
+                this.ensureProjectLayoutDisplay(this.activeProjectType.codename);
             }
         },
 

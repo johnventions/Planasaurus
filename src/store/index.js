@@ -28,7 +28,8 @@ export default new Vuex.Store({
 		user: null,
 		activeWorkspace: null,
 
-		activeProjectType: null, //string
+		activeTypeCodename: '',
+		activeProjectType: {},
 
 		activeProject: null,
 		pendingUpdates: {},
@@ -36,6 +37,10 @@ export default new Vuex.Store({
 
 		// objects to track various project data
 		projectTypes: [],
+		projectTypesMap: {
+			name: {},
+			id: {}
+		},
 		projectFields: {},
 		projectLists: {},
 		projectLayouts: {},
@@ -62,50 +67,79 @@ export default new Vuex.Store({
 		},
 
 		/* TYPES */
-		SET_TYPES: function (state, pkg) {
-			state.projectTypes = pkg;
+		SET_TYPES: function (state, types) {
+			// set TYPES to be key'ed off of type ID
+			const mappedIDs = types.reduce((obj, x) => {
+				obj[x.id] = x;
+				return obj;
+			}, {});
+
+			// set TYPES to be key'ed off of type URL
+			const mappedNames = types.reduce((obj, x) => {
+				obj[x.codename] = x;
+				return obj;
+			}, {});
+			state.projectTypesMap = {
+				name: mappedNames,
+				id: mappedIDs,
+			};
+			state.projectTypes = types;
+			if (state.activeProjectType.id == null && state.activeTypeCodename != '') {
+				state.activeProjectType = state.projectTypesMap.name[state.activeTypeCodename];
+			}
 		},
 		
-		UPDATE_ACTIVE_TYPE: function(state, type) {
-			state.activeProjectType = type;
+		UPDATE_ACTIVE_TYPE: function(state, typeName) {
+			const activeType = state.projectTypesMap.name[typeName];
+			state.activeTypeCodename = typeName;
+			state.activeProjectType = activeType || {};
 		},
 
 		/* PROJECTS */
-		LOADING_LIST: function (state, type) {
-			let currentList = state.projectLists[type] || {};
+		LOADING_LIST: function (state, pkg) {
+			// { id, fetch }
+			const { id , fetch } = pkg;
+			let currentList = state.projectLists[id] || {};
 			let newList = {
 				...currentList,
-				loading: true
+				loading: true,
+				fetch: fetch
 			};
-			Vue.set(state.projectLists, type, newList);
+			Vue.set(state.projectLists, id, newList);
 		},
 
 		SET_LIST: function (state, pkg) {
-			Vue.set(state.projectLists, pkg.type, {
+			const { id, list, total } = pkg;
+			Vue.set(state.projectLists, id, {
 				loading: false,
+				fetch: null,
 				lastUpdate: Date.now(),
-				list: pkg.list,
-				total: pkg.total
+				list: list,
+				total: total
 			});
 			state.viewMode = viewModes.VIEW;
 		},
 
 
 		/* FIELDS */
-		LOADING_FIELDS: function (state, type) {
-			let currentFields = state.projectFields[type] || {};
+		LOADING_FIELDS: function (state, pkg) {
+			const { id, fetch } = pkg;
+			let currentFields = state.projectFields[id] || {};
 			let newList = {
 				...currentFields,
-				loading: true
+				loading: true,
+				fetch
 			};
-			Vue.set(state.projectFields, type, newList);
+			Vue.set(state.projectFields, id, newList);
 		},
 
 		SET_FIELDS: function (state, pkg) {
-			Vue.set(state.projectFields, pkg.type, {
+			const { id, fields } = pkg;
+			Vue.set(state.projectFields, id, {
 				loading: false,
 				lastUpdate: Date.now(),
-				fields: pkg.fields
+				fields: fields,
+				fetch: null
 			});
 		},
 
@@ -123,21 +157,24 @@ export default new Vuex.Store({
 		},
 
 		/* LAYOUTS */
-		LOADING_LAYOUT: function (state, type) {
-			let currentLayout = state.projectLayouts[type] || {};
+		LOADING_LAYOUT: function (state, pkg) {
+			const { id, fetch } = pkg;
+			let currentLayout = state.projectLayouts[id] || {};
 			let newLayout = {
 				...currentLayout,
-				loading: true
+				loading: true,
+				fetch
 			};
-			Vue.set(state.projectLayouts, type, newLayout);
+			Vue.set(state.projectLayouts, id, newLayout);
 		},
 		
 		SET_LAYOUT: function (state, pkg) {
-			Vue.set(state.projectLayouts, pkg.type, {
+			const { id, layout, related } = pkg;
+			Vue.set(state.projectLayouts, id, {
 				loading: false,
 				lastUpdate: Date.now(),
-				layout: new Layout(pkg.layout),
-				related: pkg.related
+				layout: new Layout(layout),
+				related: related
 			});
 		},
 
@@ -211,31 +248,34 @@ export default new Vuex.Store({
 				});
 		},
 
-		getProjectList({ commit }, type) {
-			const searchType = this.state.projectTypes.find(x => x.codename == type);
-			if (searchType == null) return;
-			commit('LOADING_LIST', type);
-			axios.get(`/api/projects?type=${searchType.id}`)
+		getProjectListById({ commit }, id) {
+			// pull in latest list
+			const fetch = axios.get(`/api/projects?type=${id}`)
 				.then(result => {
 					commit('SET_LIST', {
-						type,
+						id: id,
 						list: result.data.list,
 						total: result.data.total,
 					});
 				});
+			commit('LOADING_LIST', {
+				id,
+				fetch
+			});
 		},
 
-		getProjectFields({ commit }, type) {
-			const searchType = this.state.projectTypes.find(x => x.codename == type);
-			if (searchType == null) return;
-			commit('LOADING_FIELDS', type);
-			axios.get(`/api/types/${searchType.id}/fields`)
+		getProjectFieldsByType({ commit }, type) {
+			const fetch = axios.get(`/api/types/${type.id}/fields`)
 				.then(result => {
 					commit('SET_FIELDS', {
-						type: type,
+						id: type.id,
 						fields: result.data.fields
 					});
 				});
+			commit('LOADING_FIELDS', {
+				id: type.id,
+				fetch
+			});
 		},
 
 		createField({ commit }, pkg) {
@@ -248,26 +288,27 @@ export default new Vuex.Store({
 				});
 		},
 
-		getProjectLayout({ commit }, type) {
-			const searchType = this.state.projectTypes.find(x => x.codename == type);
-			if (searchType == null) return;
-			commit('LOADING_LAYOUT', type);
-			axios.get(`/api/types/${searchType.id}/layout`)
+		getProjectLayoutByType({ commit }, type) {
+			const fetch = axios.get(`/api/types/${type.id}/layout`)
 				.then(result => {
 					commit('SET_LAYOUT', {
-						type: type,
+						id: type.id,
 						layout: result.data.layout,
 						related: result.data.related
 					});
 				});
+			commit('LOADING_LAYOUT', {
+				id: type.id,
+				fetch 
+			});
 		},
 
 		ensureProjectLayoutDisplay({ dispatch }, type) {
 			// looks up the fields and the layout for a project type
-			const searchType = this.state.projectTypes.find(x => x.codename == type);
+			const searchType = this.state.projectTypesMap.name[type];
 			if (searchType == null) return;
-			const fieldLookup = dispatch('getProjectFields', type);
-			const layoutLookup = dispatch('getProjectLayout', type);
+			const fieldLookup = dispatch('getProjectFieldsByType', searchType);
+			const layoutLookup = dispatch('getProjectLayoutByType', searchType);
 			return Promise.all([fieldLookup, layoutLookup]);
 		},
 
@@ -336,8 +377,9 @@ export default new Vuex.Store({
 	},
 	getters: {
 		activeList: state => {
-			if (state.projectLists[state.activeProjectType]) {
-				return state.projectLists[state.activeProjectType];
+			const { id } = state.activeProjectType;
+			if (id && state.projectLists[id]) {
+				return state.projectLists[id];
 			}
 			return {};
 		},
@@ -362,8 +404,9 @@ export default new Vuex.Store({
 			return null;
 		},
 		activeFields: state => {
-			if (state.projectFields[state.activeProjectType]) {
-				return state.projectFields[state.activeProjectType];
+			const { id } = state.activeProjectType;
+			if (id && state.projectFields[id]) {
+				return state.projectFields[id];
 			}
 			return {};
 		},
@@ -372,8 +415,9 @@ export default new Vuex.Store({
 			return t || {};
 		},
 		activeLayout: state => {
-			if (state.projectLayouts[state.activeProjectType]) {
-				return state.projectLayouts[state.activeProjectType];
+			const { id } = state.activeProjectType;
+			if (id && state.projectLayouts[id]) {
+				return state.projectLayouts[id];
 			}
 			return {};
 		},

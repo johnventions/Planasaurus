@@ -33,7 +33,7 @@ export default {
             'startViewMode': 'START_VIEW_MODE'
         }),
         ...mapActions([
-            'getProjectList'
+            'getProjectListById'
         ]),
         processPath: function() {
             if (this.activeProjectType != null && this.$route.query.search == null) {
@@ -41,10 +41,10 @@ export default {
             }
         },
         queryList() {
-            this.getProjectList(this.activeProjectType);
+            this.getProjectListById(this.activeProjectType.id);
         },
         parseUrl(project) {
-            return `${this.activeProjectType}/${project.id}`;
+            return `${this.activeProjectType.codename}/${project.id}`;
         },
     },
     mounted: function() {
