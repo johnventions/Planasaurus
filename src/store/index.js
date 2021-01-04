@@ -9,6 +9,15 @@ Vue.use(Vuex)
 import viewModes from "../data/viewModes";
 import Layout from "@/models/class.layout";
 
+const refreshWindow = 60000;
+const refreshValidator = function(fetch, loading, lastUpdate, window) {
+	console.log(fetch);
+	if (fetch) return true; // return if already loading
+	if (loading) return true;
+	if (Date.now() - lastUpdate < (window || refreshWindow)) return true;
+	return false;
+}
+
 const processRecordChildren = function(childRecords) {
 	childRecords.forEach((x) => {
 		// convert child_meta into key indexed, for easier lookup later
@@ -148,11 +157,11 @@ export default new Vuex.Store({
 		},
 
 		PUSH_FIELD: function(state, pkg) {
-			const { type, field } = pkg;
-			if (state.projectFields[type]) {
-				let currentFields = state.projectFields[type];
+			const { id, field } = pkg;
+			if (state.projectFields[id]) {
+				let currentFields = state.projectFields[id];
 				currentFields.fields.push(field);
-				Vue.set(state.projectFields, type, currentFields);
+				Vue.set(state.projectFields, id, currentFields);
 			}
 		},
 
@@ -171,6 +180,7 @@ export default new Vuex.Store({
 		SET_LAYOUT: function (state, pkg) {
 			const { id, layout, related } = pkg;
 			Vue.set(state.projectLayouts, id, {
+				fetch: null,
 				loading: false,
 				lastUpdate: Date.now(),
 				layout: new Layout(layout),
@@ -179,8 +189,9 @@ export default new Vuex.Store({
 		},
 
 		MODIFY_LAYOUT_AREA: function (state, pkg) {
-			let currentLayout = state.projectLayouts[pkg.type].layout;
-			Vue.set(currentLayout, pkg.areaName, pkg.area);
+			const { type, area, areaName } = pkg; 
+			let currentLayout = state.projectLayouts[type.id].layout;
+			Vue.set(currentLayout, areaName, area);
 		},
 
 		SET_RECORD: function(state, project) {
@@ -265,41 +276,52 @@ export default new Vuex.Store({
 		},
 
 		getProjectFieldsByType({ commit }, type) {
-			const fetch = axios.get(`/api/types/${type.id}/fields`)
+			const { id } = type;
+			if (this.state.projectFields[id]) {
+				const { fetch, lastUpdate, loading } = this.state.projectFields[id];
+				if (refreshValidator(fetch, loading, lastUpdate)) return; 
+			}
+			const fetchNew = axios.get(`/api/types/${id}/fields`)
 				.then(result => {
 					commit('SET_FIELDS', {
-						id: type.id,
+						id: id,
 						fields: result.data.fields
 					});
 				});
 			commit('LOADING_FIELDS', {
 				id: type.id,
-				fetch
+				fetchNew
 			});
 		},
 
 		createField({ commit }, pkg) {
-			let typeName = this.state.activeProjectType;
-			return axios.post(`/api/types/${this.getters.activeType.id}/fields`, pkg)
+			const { id } = this.state.activeProjectType;
+
+			return axios.post(`/api/types/${id}/fields`, pkg)
 				.then(result => {
 					let fieldPush = result.data.field;
-					commit('PUSH_FIELD', { type: typeName, field: fieldPush}); // send field to the fieldList
+					commit('PUSH_FIELD', { id, field: fieldPush}); // send field to the fieldList
 					return fieldPush;
 				});
 		},
 
 		getProjectLayoutByType({ commit }, type) {
-			const fetch = axios.get(`/api/types/${type.id}/layout`)
+			const { id } = type;
+			if (this.state.projectLayouts[id]) {
+				const { fetch, lastUpdate, loading } = this.state.projectLayouts[id];
+				if (refreshValidator(fetch, loading, lastUpdate)) return;
+			}
+			const fetchNew = axios.get(`/api/types/${id}/layout`)
 				.then(result => {
 					commit('SET_LAYOUT', {
-						id: type.id,
+						id: id,
 						layout: result.data.layout,
 						related: result.data.related
 					});
 				});
 			commit('LOADING_LAYOUT', {
-				id: type.id,
-				fetch 
+				id: id,
+				fetch: fetchNew 
 			});
 		},
 
@@ -313,7 +335,8 @@ export default new Vuex.Store({
 		},
 
 		saveLatestLayout(_, pkg) {
-			return axios.post(`/api/types/${this.getters.activeType.id}/layout`, pkg)
+			const { id } = this.state.activeProjectType;
+			return axios.post(`/api/types/${id}/layout`, pkg)
 				.then(result => {
 					return result.data;
 				})
@@ -334,7 +357,7 @@ export default new Vuex.Store({
 
 		searchProjectRecords({ commit }) {
 			const searchParams = {
-				type: this.getters.activeType.id,
+				type: this.state.activeProjectType.id,
 				...this.state.pendingFind
 			};
 			const qs = objectToQuerystring(searchParams);
@@ -343,7 +366,7 @@ export default new Vuex.Store({
 				.then(response => {
 					console.log(response);
 					const pkg = {
-						type: this.getters.activeType.codename,
+						id: this.state.activeProjectType.id,
 						list: response.data.list,
 						total: response.data.total,
 					};
@@ -367,7 +390,9 @@ export default new Vuex.Store({
 				fields
 			};
 
-			return axios.post(`/api/projects/${this.state.activeProject.id}`, updatedProject)
+			const { id } = this.state.activeProject;
+
+			return axios.post(`/api/projects/${id}`, updatedProject)
 				.then((response) => {
 					commit('RESET_UPDATES');
 					//commit('SET_RECORD', updatedProject);
@@ -384,8 +409,8 @@ export default new Vuex.Store({
 			return {};
 		},
 		prevItem: state => {
-			if (state.activeProject && state.projectLists[state.activeProjectType]) {
-				const list = state.projectLists[state.activeProjectType].list;
+			if (state.activeProject && state.projectLists[state.activeProjectType.id]) {
+				const list = state.projectLists[state.activeProjectType.id].list;
 				const index = list.findIndex(x => x.id == state.activeProject.id);
 				if (index == 0) return null;
 				const prevItem = Math.max(index - 1, 0);
@@ -394,8 +419,8 @@ export default new Vuex.Store({
 			return null;
 		},
 		nextItem: state => {
-			if (state.activeProject && state.projectLists[state.activeProjectType]) {
-				const list = state.projectLists[state.activeProjectType].list;
+			if (state.activeProject && state.projectLists[state.activeProjectType.id]) {
+				const list = state.projectLists[state.activeProjectType.id].list;
 				const index = list.findIndex(x => x.id == state.activeProject.id);
 				if (index + 1 == list.length) return null;
 				const nextItem = Math.min(index + 1, list.length - 1);
@@ -441,15 +466,15 @@ export default new Vuex.Store({
 			return f;
 		},
 		getFieldDefintion: (state) => (id) => {
-			if (state.projectFields[state.activeProjectType]) {
-				return state.projectFields[state.activeProjectType].fields.find(x => x.id == id);
+			if (state.projectFields[state.activeProjectType.id]) {
+				return state.projectFields[state.activeProjectType.id].fields.find(x => x.id == id);
 			}
 			return {};
 		},
 		getFieldsByTypeId: (state) => (id) => {
 			const relatedTypeCode = state.projectTypes.find(x => x.id == id);
 			if (relatedTypeCode != null) {
-				const relatedFields = state.projectFields[relatedTypeCode.codename];
+				const relatedFields = state.projectFields[relatedTypeCode.id];
 				if (relatedFields && relatedFields.fields) {
 					return relatedFields.fields;
 				}

@@ -28,6 +28,11 @@ export default class ProjectFilter {
             this.whereStatement = `
                 AND fd_${index}.field_id = ${_fieldid} AND fd_${index}.value ${this.operator} @${this.param}
             `;
+        } else if (def && def.data_type == 6) {
+                this.checkOperator();
+                this.whereStatement = `
+                AND fd_${index}.field_id = ${_fieldid} AND fd_${index}.value = @${this.param}
+            `;
         } else {
             this.whereStatement = `
                 AND fd_${index}.field_id = ${_fieldid} AND fd_${index}.value LIKE '%' + @${this.param} + '%'

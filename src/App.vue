@@ -10,7 +10,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios';
-import { mapActions, mapMutations, mapGetters } from "vuex";
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import Nav from "./components/Structure/Nav/Nav";
 
 export default {
@@ -34,6 +34,9 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+          'activeProjectType',
+    ]),
     ...mapGetters([
           'activeType',
     ])
@@ -52,7 +55,7 @@ export default {
     // return to LIST after perfoming search
     this.$store.subscribe((mutation) => {
       if (mutation.type == "SET_LIST") {
-        let type = this.activeType;
+        let type = this.activeProjectType;
         if (this.$route.name != "Projects") {
           this.$router.push({ path: `/dash/${ type.codename }` , query: { search: '1' } }) 
         }

@@ -35,7 +35,7 @@ export default class ProjectService {
     async getProjectById(id: Number) : Promise<Project> {
         const pool = await getSQLPool;
         const project = await projectQueries.getProjectById(pool, id);
-        const firstProject= project.recordset[0];
+        const firstProject = project.recordset[0];
         return this.ToModel(firstProject);
     }
 

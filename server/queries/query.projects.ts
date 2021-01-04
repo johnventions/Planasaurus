@@ -170,7 +170,6 @@ const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
     const request = pool.request();
     request.input('id', sql.Int, id);
     request.multiple = true;
-    console.log(select);
 
     return request.query(select);
 };

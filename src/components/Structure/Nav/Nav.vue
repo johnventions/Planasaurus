@@ -15,7 +15,6 @@ export default {
     },
     computed: {
         ... mapGetters([
-            'activeType',
             'activeLayout',
             'activeList',
             'prevItem',
@@ -27,7 +26,7 @@ export default {
             navItems: state => state.projectTypes.filter( x => x.parent_id == null),
             activeProjectType: state => state.activeProjectType,
             projectTypeDisplayName: state => state.activeProjectType ? state.activeProjectType.name : '',
-            layoutUrl: function(state) { return  `/dash/${state.activeProjectType}/layout`; }
+            layoutUrl: function(state) { return  `/dash/${state.activeProjectType.codename}/layout`; }
         }),
         layoutEditing: function() {
             if (this.$route.name == "Project Layout") {
@@ -62,9 +61,9 @@ export default {
         ]),
         handleScroll(){
                 const scrollPosition = window.scrollY;
-                if(scrollPosition>=100){
+                if(scrollPosition>=120){
                     this.isSticky = true
-                }else{
+                }else if (scrollPosition < 100) {
                     this.isSticky = false
                 }
         },
@@ -91,14 +90,14 @@ export default {
             if (this.prevItem) {
                 const id = this.prevItem.id;
                 this.setRecord(this.prevItem);
-                this.$router.push(`/dash/${this.activeType.codename}/${id}`)
+                this.$router.push(`/dash/${this.activeProjectType.codename}/${id}`)
             }
         },
         goNext() {
             if (this.nextItem) {
                 const id = this.nextItem.id;
                 this.setRecord(this.nextItem);
-                this.$router.push(`/dash/${this.activeType.codename}/${id}`)
+                this.$router.push(`/dash/${this.activeProjectType.codename}/${id}`)
             }
         }
     },

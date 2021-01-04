@@ -67,16 +67,16 @@
                     <span v-html="currentItemDisplay"></span>
                 </li>
                 <li class="nav-item" v-if="activeProjectType">
-                    <router-link :to="`/dash/${activeProjectType}/new`" class="nav-link">
+                    <router-link :to="`/dash/${activeProjectType.codename}/new`" class="nav-link">
                         <font-awesome-icon icon="plus-square" size="2x"/>
-                        New {{ activeType ? activeType.name : '' }}
+                        New {{ activeProjectType ? activeProjectType.name : '' }}
                     </router-link>
                 </li>
                 <template v-if="viewMode != 'find'">
                     <li class="nav-item">
-                        <router-link :to="`/dash/${activeProjectType}/find`" class="nav-link">
+                        <router-link :to="`/dash/${activeProjectType.codename}/find`" class="nav-link">
                             <font-awesome-icon icon="search" size="2x"/>
-                            Search {{ activeType ? activeType.name : '' }}
+                            Search {{ activeProjectType ? activeProjectType.name : '' }}
                         </router-link>
                     </li>
                 </template>
