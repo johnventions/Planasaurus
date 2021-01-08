@@ -67,7 +67,6 @@ export default {
         },
         queryList: async function() {
             this.getProjectRecord(this.activeID).then(() => {
-                console.log("Record retrieved");
             });
         },
         queryTypes: function() {

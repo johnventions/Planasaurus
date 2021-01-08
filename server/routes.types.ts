@@ -90,11 +90,7 @@ module.exports = function () {
 
     routes.put('/fields/:fid', async (req: Request, res: Response) => {
         const fid = parseInt(req.params.fid);
-        const fieldDef: FieldDef = {
-            name: req.body.name,
-            metadata: req.body.metadata,
-            relationship_type: req.body.relationship_type
-        } as FieldDef;
+        const fieldDef = FieldDef.fromData(req.body);
 
         const service = new TypeService();
         const result = await service.updateTypeField(fid, fieldDef);

@@ -9,9 +9,9 @@ Vue.use(Vuex)
 import viewModes from "../data/viewModes";
 import Layout from "@/models/class.layout";
 
-const refreshWindow = 60000;
+const refreshWindow = 90000;
+
 const refreshValidator = function(fetch, loading, lastUpdate, window) {
-	console.log(fetch);
 	if (fetch) return true; // return if already loading
 	if (loading) return true;
 	if (Date.now() - lastUpdate < (window || refreshWindow)) return true;
@@ -261,6 +261,7 @@ export default new Vuex.Store({
 
 		getProjectListById({ commit }, id) {
 			// pull in latest list
+			if (id == null) return;
 			const fetch = axios.get(`/api/projects?type=${id}`)
 				.then(result => {
 					commit('SET_LIST', {

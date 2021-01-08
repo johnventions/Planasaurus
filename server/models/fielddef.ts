@@ -14,13 +14,16 @@ export default class FieldDef {
         d.relationship_type = data.relationship_type;
         d.related_keys = data.related_keys ? parseInt(data.related_keys) : null;
         if (data.metadata != null) {
-            try {
-                d.metadata = JSON.parse(data.metadata);
-            } catch {
-                d.metadata = {};
+            if (typeof data.metadata == "string") {
+                try {
+                    d.metadata = JSON.parse(data.metadata);
+                } catch {
+                    d.metadata = {};
+                }
+            } else if (typeof data.metadata == "object") {
+                d.metadata = data.metadata;
             }
         }
-
         return d;
     }
 }

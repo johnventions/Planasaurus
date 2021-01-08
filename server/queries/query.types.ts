@@ -182,7 +182,7 @@ const getOptionsForProjectType = function (pool: sql.ConnectionPool, typeID: Num
         WHERE t.id = @pt
         AND defs.data_type IN(6, 7);
     `;
-
+    console.log(select);
     const request = pool.request();
     request.input('pt', sql.Int, typeID);
     request.multiple = true;

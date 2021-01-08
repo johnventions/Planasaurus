@@ -1,8 +1,12 @@
 <template>
     <div class="form-group" 
-        v-bind:class="{ find: viewMode == 'find' }"
-    >
-        <label>{{ field.name }}</label><br/>
+        v-bind:class="{ find: viewMode == 'find' }">
+        <label>{{ field.name }}</label>
+        <button 
+            @click="startAddRecord"
+            class="btn btn-primary btn-add">
+            + Add
+        </button><br/>
         <div class="nested-input" v-if="value.length">
             <child-entry v-for="(child, i) in value"
                 :entry="child"
@@ -13,6 +17,21 @@
         <div v-else>
             No records
         </div>
+        <modal :name="addItemModalName" height="auto">
+            <label>
+                Select item to add
+            </label><br/>
+            <select v-model="pendingAdd">
+                <option v-for="opt in relatedOptions"
+                    :key="opt.project_id">
+                    {{ opt.meta[0].value }}
+                </option>
+            </select>
+            <br/>
+            <button class="btn btn-primary" v-if="pendingAdd">
+                Add Item
+            </button>
+        </modal>
     </div>
 </template>
 <script>
@@ -31,6 +50,7 @@ export default {
         return {
             value: this.$store.getters.getFieldArrayVal(this.field.id),
             touched: false,
+            pendingAdd: null,
         }
     },
     watch: {
@@ -45,6 +65,17 @@ export default {
         childFields: function() {
             return this.value;
         },
+        addItemModalName: function() {
+            return `addModal_${this.value.id}`;
+        },
+        relatedOptions: function() {
+            const { id } = this.$store.state.activeProjectType;
+            const activeLayout = this.$store.state.projectLayouts[id];
+            if (activeLayout && activeLayout.related[this.field.id]) {
+                return activeLayout.related[this.field.id];
+            }
+            return null;
+        }
     },
     methods: {
         ...mapMutations({
@@ -57,9 +88,12 @@ export default {
             });
             this.touched = true;
         },
-        resetValue() {
+        resetValue: function() {
             this.value = this.$store.getters.getFieldArrayVal(this.field.id);
             this.touched = false;
+        },
+        startAddRecord: function() {
+            this.$modal.show(this.addItemModalName);
         }
     },
     mounted: function() {
@@ -74,11 +108,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    .btn-add {
+        margin-left: 12px;
+        padding: 1px 8px;
+    }
+
     .nested-input {
         border: 1px solid black;
         display: table;
         width: 100%;
     }
+
     .form-group {
         &.find {
             .input-container {

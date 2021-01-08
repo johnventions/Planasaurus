@@ -47,7 +47,7 @@
         </div>
     </nav>
     <nav class="navbar utility-nav navbar-expand-lg navbar-light bg-grey"
-            v-if="activeProjectType"
+            v-if="activeProjectType && activeProjectType.id"
           :class="isSticky ? 'sticky' : ''">
         <div class="container">
             <ul class="navbar-nav">
