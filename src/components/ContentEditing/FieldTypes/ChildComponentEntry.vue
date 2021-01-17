@@ -5,6 +5,11 @@
             :key="i">
             {{ field.value }}
         </div>
+        <div class="child-col settings">
+            <button @click="removeElement">
+                <font-awesome-icon icon="cog" size="1x" />
+            </button>
+        </div>
     </div>
 </template>
 <script>
@@ -12,24 +17,31 @@ export default {
     props: ['entry', 'fieldmeta'],
     data: function() {
         return {
-            metaValues: []
+            fieldsDictionary: this.entry.fieldsMapped || {}
         };
     },
     computed: {
         fieldList: function() {
             const list = this.fieldmeta.fieldDisplay || [];
-
             // map display fields with their values
             return list.map( x => {
+                const existing = this.fieldsDictionary[x.id] || {};
                 return {
                     id: x.id,
-                    ... this.metaValues[x.id] || {}
+                    ... existing
                 }
             });
+        },
+    },
+
+    methods: {
+        removeElement: function() {
+            this.$emit('remove-me');
         }
     },
+
     mounted: function() {
-        this.metaValues = this.entry.child_meta;
+        this.fieldsDictionary = this.entry.fieldsMapped;
     }
 }
 </script>
@@ -41,6 +53,11 @@ export default {
             display: table-cell;
             flex-grow: 1;
             border: 1px solid grey;
+
+            &.settings {
+                width: 30px;
+                padding: 0 8px;
+            }
         }
     }
 </style>

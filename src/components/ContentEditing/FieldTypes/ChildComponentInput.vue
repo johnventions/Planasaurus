@@ -9,9 +9,10 @@
         </button><br/>
         <div class="nested-input" v-if="value.length">
             <child-entry v-for="(child, i) in value"
+                v-on:remove-me="removeElement(child, i)"
                 :entry="child"
                 :fieldmeta="field.metadata"
-                :key="i">
+                :key="child.id">
             </child-entry>
         </div>
         <div v-else>
@@ -23,12 +24,16 @@
             </label><br/>
             <select v-model="pendingAdd">
                 <option v-for="opt in relatedOptions"
+                    :value="opt.project_id"
                     :key="opt.project_id">
                     {{ opt.meta[0].value }}
                 </option>
             </select>
             <br/>
-            <button class="btn btn-primary" v-if="pendingAdd">
+            <button 
+                class="btn btn-primary"
+                @click="finishAddRecord"
+                v-if="pendingAdd">
                 Add Item
             </button>
         </modal>
@@ -36,6 +41,10 @@
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex';
+import api from '@/util/api';
+import Project from '@/models/class.project';
+
+
 import ChildComponentEntry from './ChildComponentEntry';
 
 export default {
@@ -49,6 +58,7 @@ export default {
     data: function() {
         return {
             value: this.$store.getters.getFieldArrayVal(this.field.id),
+            changes: [],
             touched: false,
             pendingAdd: null,
         }
@@ -84,7 +94,7 @@ export default {
         handleUpdate(){
             this.updateField({
                 id: this.field.id,
-                value: this.value
+                value: this.changes.join(',')
             });
             this.touched = true;
         },
@@ -94,6 +104,36 @@ export default {
         },
         startAddRecord: function() {
             this.$modal.show(this.addItemModalName);
+        },
+        finishAddRecord: async function() { 
+            if (this.pendingAdd) {
+                const { data } = await api.getProjectById(this.pendingAdd);
+                const newest = Project.FromData(data.project);
+                if (data && data.project) {
+                    // update the component
+                    this.value = [
+                        ... this.value,
+                        newest
+                    ];
+                    // add as a pending change
+                    this.changes = [
+                        ...this.changes,
+                        this.pendingAdd
+                    ];
+                    this.handleUpdate();
+                }
+            }
+        },
+        removeElement: function(proj, i) {
+            // remove from list of projects
+            console.log(this.value, i);
+            this.$delete(this.value, 0);
+
+            this.changes = [
+                ...this.changes,
+                proj.id * -1
+            ];
+            this.handleUpdate();
         }
     },
     mounted: function() {

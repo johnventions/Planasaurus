@@ -210,23 +210,40 @@ const getProjectType = function (pool: sql.ConnectionPool, id: Number) {
 
 const getProjectChildData = function (pool: sql.ConnectionPool, id: Number) {
     const select = `
-    SELECT
-        rel.field_id as 'field_id',
-        rel.id as 'attribute_id',
-        rel.value as 'project_id',
-        (
-            SELECT *
-            FROM View_Field_Output v
-            WHERE v.project_id = rel.value			
-            FOR JSON AUTO
-        ) as child_meta
-    FROM field_related rel
-    INNER JOIN field_defs defs ON rel.field_id = defs.id
-    WHERE rel.project_id = @id
+    /* SELECT THE LIST OF PROJECTS */
+    WITH project_list as (
+        SELECT
+            rel.value as id
+        FROM field_related rel
+        WHERE rel.project_id = @id
+    )
+    ${ baseLookup()}
 `;
 
     const request = pool.request();
     request.input('id', sql.Int, id);
+    request.multiple = true;
+    return request.query(select);
+}
+
+
+const getProjectMetaForField = function (pool: sql.ConnectionPool, fieldID: Number, projectID: Number) {
+    const select = `
+    SELECT
+        defs.id as 'field_id',
+        @proj as 'project_id',
+        (
+            SELECT *
+            FROM View_Field_Output v
+            WHERE v.project_id = @proj			
+            FOR JSON AUTO
+        ) as child_meta
+    FROM field_defs defs
+    WHERE defs.id = @field
+`;
+    const request = pool.request();
+    request.input('field', sql.Int, fieldID);
+    request.input('proj', sql.Int, projectID);
     request.multiple = true;
     return request.query(select);
 }
@@ -238,7 +255,8 @@ const _ = {
     getProjectById,
     getProjectType,
     updateProject,
-    getProjectChildData
+    getProjectChildData,
+    getProjectMetaForField
 }
 
 export default _;

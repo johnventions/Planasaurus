@@ -2,12 +2,16 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-import objectToQuerystring from '../util/objectToQuerystring';
 
 Vue.use(Vuex)
 
+import api from '@/util/api';
+
 import viewModes from "../data/viewModes";
 import Layout from "@/models/class.layout";
+import Project from '@/models/class.project';
+
+
 
 const refreshWindow = 90000;
 
@@ -19,15 +23,7 @@ const refreshValidator = function(fetch, loading, lastUpdate, window) {
 }
 
 const processRecordChildren = function(childRecords) {
-	childRecords.forEach((x) => {
-		// convert child_meta into key indexed, for easier lookup later
-		let processed = x.child_meta.reduce((obj, item) => {
-			obj[item.field_id] = item;
-			return obj;
-		}, {});
-		x.child_meta = processed;
-	});
-	return childRecords;
+	return childRecords.map(x => Project.FromData(x) );
 }
 
 export default new Vuex.Store({
@@ -201,7 +197,7 @@ export default new Vuex.Store({
 			if (state.activeProject && state.activeProject.id != project.id) {
 				//state.projectFields = {};
 			}
-			state.activeProject = project;
+			state.activeProject = Project.FromData(project);
 			//router.push(`/dash/${project.codename}/${project.id}`);
 		},
 
@@ -262,7 +258,10 @@ export default new Vuex.Store({
 		getProjectListById({ commit }, id) {
 			// pull in latest list
 			if (id == null) return;
-			const fetch = axios.get(`/api/projects?type=${id}`)
+			const searchParams = {
+				type: id
+			};
+			const fetch = api.getProjects(searchParams)
 				.then(result => {
 					commit('SET_LIST', {
 						id: id,
@@ -344,7 +343,7 @@ export default new Vuex.Store({
 		},
 
 		getProjectRecord({ commit }, id) {
-			return axios.get(`/api/projects/${id}`)
+			return api.getProjectById(id)
 				.then(response => {
 					const children = processRecordChildren(response.data.children);
 					commit('SET_RECORD', {
@@ -361,9 +360,7 @@ export default new Vuex.Store({
 				type: this.state.activeProjectType.id,
 				...this.state.pendingFind
 			};
-			const qs = objectToQuerystring(searchParams);
-			const url = `/api/projects${qs}`;
-			return axios.get(url)
+			return api.getProjects(searchParams)
 				.then(response => {
 					console.log(response);
 					const pkg = {
@@ -462,7 +459,8 @@ export default new Vuex.Store({
 			if (state.viewMode == viewModes.FIND) {
 				f = state.pendingFind[id];
 			} else if (state.activeProject.children) {
-				f = state.activeProject.children.filter(x => x.field_id == id);
+				let projectIDs = state.activeProject.fields.filter(x => x.field_id == id).map(y => parseInt(y.value));
+				f = state.activeProject.children.filter(x => projectIDs.indexOf(x.id) > -1);
 			}
 			return f;
 		},

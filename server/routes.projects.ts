@@ -49,6 +49,23 @@ module.exports = function () {
         });
     });
 
+    /**
+     * Look up a project record by its ID
+     * Return the Project object
+     *
+     * @param {number} id The id of the project
+     */
+    routes.get('/:id/meta', async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const service = new ProjectService();
+        const result = await service.getFieldMetaForProject(1, id);
+
+        res.status(200).json({
+            success: true,
+            project: result,
+        });
+    });
+
     routes.post('/:id', async (req: Request, res: Response) => {
         let id : Number = parseInt(req.params.id);
         const service = new ProjectService();

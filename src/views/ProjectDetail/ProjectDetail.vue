@@ -57,7 +57,7 @@ export default {
             await this.ensureProjectLayoutDisplay(this.activeProjectType.codename);
             if (this.activeID == "new" && this.activeProjectType) {
                 this.setRecord(
-                    new Project(this.activeProjectType.id)
+                    Project.New(this.activeProjectType.id)
                     );
             } else if (this.activeID == "find" && this.activeProjectType) {
                 this.startFind();
