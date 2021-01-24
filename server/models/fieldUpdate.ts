@@ -30,7 +30,10 @@ class FieldUpdate {
                     WHERE field_id = @${ this.paramID }_f AND project_id = @id
                 IF @@ROWCOUNT = 0
                 BEGIN
-                
+                INSERT INTO [${table_name}]
+                    (field_id, project_id, value)
+                VALUES (@${ this.paramID }_f, @id, @${ this.paramID }_v)
+                END
             COMMIT TRANSACTION;
         `
     }
@@ -45,7 +48,7 @@ class FieldUpdate {
                 INSERT INTO field_related
                     (field_id, project_id, value)
                 VALUES (@${ this.paramID }_f, @id, ${ parseInt(x) })
-                `
+                `;
             } else {
                 // if negative, delete
                 update += `

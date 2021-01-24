@@ -18,4 +18,10 @@ export default class WorkspaceService {
         const ws = await workspaceQueries.getWorkspacesByOwner(pool, ownerID);
         return ws.recordset as Workspace[];
     }
+
+    async getWorkspaceById(id: Number) : Promise<Workspace> {
+        const pool = await getSQLPool;
+        const ws = await workspaceQueries.getWorkspacesById(pool, id);
+        return ws.recordset[0] as Workspace;
+    }
 }

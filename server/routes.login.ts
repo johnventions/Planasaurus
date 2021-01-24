@@ -1,18 +1,22 @@
 import { Router, Request, Response, response } from 'express';
 
 //import Workspace from './models/workspace';
+import UsersService from "./services/users.service";
 import passport from './services/passport.service';
 
 module.exports = function () {
     let routes: Router = require('express').Router();
 
-    routes.get('/status', (req: any, res: any) => {
+    routes.get('/status', async (req: any, res: any) => {
         const sessionUser = req.user ? req.user : null;
         if (sessionUser == null) {
             return res.status(200).json({});
         }
+        const service = new UsersService();
+        const profile = await service.getUserById(sessionUser.id);
         return res.status(200).json({
-            user: sessionUser.user,
+            user: sessionUser.id,
+            profile,
             workspace: sessionUser.workspace
         });
     });

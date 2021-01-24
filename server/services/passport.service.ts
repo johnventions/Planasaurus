@@ -25,7 +25,8 @@ passport.serializeUser(async function (user: any, done: any) {
 
     done(null, {
         id: userLogin.id,
-        workspace: activeWorkspace
+        workspace: activeWorkspace,
+        lastCheck: Date.now()
     });
 });
 
@@ -36,6 +37,9 @@ passport.deserializeUser(async function (user: any, done: any) {
     then you use the id to select the user from the db and pass the user obj to the done callback
     PS: You can later access this data in any routes in: req.user
     */
+    console.log("user", user);
+    done(null, user);
+    /*
     const service = new UsersService();
     const userLogin = await service.getUserById(user.id);
     const activeWorkspace: Number = userLogin.default_workspace ? userLogin.default_workspace : userLogin.workspaces[0].id;
@@ -44,6 +48,7 @@ passport.deserializeUser(async function (user: any, done: any) {
         user: userLogin,
         workspace: activeWorkspace
     });
+    */
 });
 
 

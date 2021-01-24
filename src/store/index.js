@@ -238,7 +238,7 @@ export default new Vuex.Store({
 			const lookup = axios.get('/signin/status')
 				.then(res => {
 					if (res.data && res.data.user) {
-						commit('SET_LOGIN', res.data.user);
+						commit('SET_LOGIN', res.data.profile);
 						commit('SET_WORKSPACE', res.data.workspace);
 						dispatch('getTypes');
 					}

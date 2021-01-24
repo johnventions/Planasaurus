@@ -15,6 +15,20 @@ const createWorkspace = function (pool: sql.ConnectionPool, owner: Number, name:
     return request.query(insert);
 }
 
+const getWorkspacesById = function (pool: sql.ConnectionPool, id: Number) {
+    const select = `
+        SELECT TOP 1 
+        *
+        FROM workspaces
+        WHERE
+            id = @id
+    `;
+    const request = pool.request();
+    request.input('id', sql.VarChar, id);
+    request.multiple = true;
+    return request.query(select);
+}
+
 
 const getWorkspacesByOwner = function (pool: sql.ConnectionPool, owner: Number) {
     const select = `
@@ -33,6 +47,7 @@ const getWorkspacesByOwner = function (pool: sql.ConnectionPool, owner: Number) 
 
 const _ = {
     createWorkspace,
+    getWorkspacesById,
     getWorkspacesByOwner
 }
 
