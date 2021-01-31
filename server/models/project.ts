@@ -7,6 +7,7 @@ export default class Project {
     project_type: Number = 0;
     status: Number = 0;
     fields: Array<FieldEntry> = [];
+    files: any = [];
 
     static fromData(data: any) : Project {
         let p =  new this();
@@ -16,6 +17,19 @@ export default class Project {
         p.name = data.name;
         p.project_type = data.project_type;
         p.status = data.status;
+        try {
+            if (typeof data.files == "string") {
+                try {
+                    p.files = JSON.parse(data.files);
+                } catch {
+                    p.files = [];
+                }
+            } else if (typeof data.files == "object" && Array.isArray(data.files)) {
+                p.files = data.files;
+            }
+        } catch {
+            p.files = [];
+        }
         if (data.fields) {
             p.fields = FieldEntry.arrayFromData(data.fields);
         }

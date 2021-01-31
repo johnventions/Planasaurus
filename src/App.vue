@@ -78,4 +78,7 @@ export default {
 .vm--modal {
   padding: 15px;
 }
+img {
+  max-width: 100%;
+}
 </style>

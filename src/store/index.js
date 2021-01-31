@@ -464,6 +464,16 @@ export default new Vuex.Store({
 			}
 			return f;
 		},
+		getFieldFiles: (state) => (id) => {
+			let f = null;
+			if (state.viewMode == viewModes.FIND) {
+				f = state.pendingFind[id];
+			} else {
+				let files = state.activeProject.files.filter(x => x.field_id == id);
+				f = files || [];
+			}
+			return f;
+		},
 		getFieldDefintion: (state) => (id) => {
 			if (state.projectFields[state.activeProjectType.id]) {
 				return state.projectFields[state.activeProjectType.id].fields.find(x => x.id == id);

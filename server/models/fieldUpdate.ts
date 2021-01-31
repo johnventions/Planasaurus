@@ -5,7 +5,7 @@ import FieldDef from "./fielddef";
 class FieldUpdate {
     paramID: string;
     field_id: Number = 0;
-    value: string = '';
+    value: any = '';
 
     constructor(field_id: Number, value: string) {
         this.paramID = v4().replace(/-/g, '');
@@ -19,8 +19,9 @@ class FieldUpdate {
 
     toUpdateString(fieldID: any, definition?: FieldDef) {
         let table_name = tableMap(definition ? definition.data_type : 0);
-        if (table_name == 'field_related') {
-            return this.toRelatedUpdateStrings()
+        if (table_name == 'field_related' || table_name == 'field_uploads') {
+            // related items will send an array of changes, not a string value
+            return this.toRelatedUpdateStrings(table_name);
         }
         return `
             SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
@@ -38,24 +39,25 @@ class FieldUpdate {
         `
     }
 
-    toRelatedUpdateStrings() {
-        const updates = this.value.split(',');
+    toRelatedUpdateStrings(table_name: string) {
         let update = '';
-        updates.forEach(x => {
-            if (parseInt(x) > 0) {
+        console.log(this.value);
+        if (!Array.isArray(this.value)) return '';
+        this.value.forEach(x => {
+            if (parseInt(x.value) > 0) {
                 // if positive, insert
                 update += `
-                INSERT INTO field_related
+                INSERT INTO [${table_name}]
                     (field_id, project_id, value)
-                VALUES (@${ this.paramID }_f, @id, ${ parseInt(x) })
+                VALUES (@${ this.paramID }_f, @id, ${ parseInt(x.value) })
                 `;
             } else {
                 // if negative, delete
                 update += `
-                DELETE FROM field_related
+                DELETE FROM [${table_name}]
                 WHERE field_id = @${ this.paramID }_f
                 AND project_id = @id
-                AND value =  ${ parseInt(x) * -1 }
+                AND value =  ${ parseInt(x.value) * -1 }
                 `
             }
         });

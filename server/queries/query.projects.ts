@@ -18,48 +18,59 @@ const baseLookup = function() {
         p.status,
         p.date_created,
         (
-        SELECT * FROM (
-                SELECT * FROM (
-                    SELECT 
-                        f.id as 'id',
-                        d.id as 'field_id',
-                        d.name as 'key',
-                        f.value as 'value'
-                    FROM
-                        field_data f
-                    INNER JOIN
-                        field_defs d ON f.field_id = d.id
-                    WHERE
-                        f.project_id = l.id
-                    UNION ALL
-                    SELECT 
-                        f2.id as 'id',
-                        d.id as 'field_id',
-                        d.name as 'key',
-                        convert(varchar, f2.value, 23) as 'value'
-                    FROM
-                        field_dates f2
-                    INNER JOIN
-                        field_defs d ON f2.field_id = d.id
-                    WHERE
-                        f2.project_id = l.id
-                    
-                    UNION ALL
-                    SELECT 
-                        f3.id as 'id',
-                        d.id as 'field_id',
-                        d.name as 'key',
-                        CAST(f3.value as varchar) as 'value'
-                    FROM
-                        field_related f3
-                    INNER JOIN
-                        field_defs d ON f3.field_id = d.id
-                    WHERE
-                        f3.project_id = l.id
-                ) as nested
-            ) as json_data
-            FOR JSON AUTO
-        ) as fields
+            SELECT * FROM (
+                SELECT 
+                f.id as 'id',
+                d.id as 'field_id',
+                d.name as 'key',
+                f.value as 'value'
+            FROM
+                field_data f
+            INNER JOIN
+                field_defs d ON f.field_id = d.id
+            WHERE
+                f.project_id = l.id
+            UNION ALL
+            SELECT 
+                f2.id as 'id',
+                d.id as 'field_id',
+                d.name as 'key',
+                convert(varchar, f2.value, 23) as 'value'
+            FROM
+                field_dates f2
+            INNER JOIN
+                field_defs d ON f2.field_id = d.id
+            WHERE
+                f2.project_id = l.id
+            
+            UNION ALL
+            SELECT 
+                f3.id as 'id',
+                d.id as 'field_id',
+                d.name as 'key',
+                CAST(f3.value as varchar) as 'value'
+            FROM
+                field_related f3
+            INNER JOIN
+                field_defs d ON f3.field_id = d.id
+            WHERE
+                f3.project_id = l.id
+            ) as nested
+            FOR JSON PATH
+        ) as fields,
+        (
+            SELECT
+                u.id,
+                fu.field_id,
+                u.uuid,
+                u.filename,
+                u.original_filename,
+                CONCAT('/upload/', u.uuid, '/', u.filename) as publicPath
+            FROM field_uploads fu
+            INNER JOIN uploads u ON u.id = fu.value
+            WHERE fu.project_id = l.id
+            FOR JSON PATH
+        ) as files
     FROM
         project_list l
     INNER JOIN projects p ON l.id = p.id

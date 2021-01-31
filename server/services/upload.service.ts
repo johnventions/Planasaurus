@@ -3,6 +3,7 @@ const { getSQLPool } = require('../sql');
 import Upload from '../models/upload';
 
 import uploadQueries from '../queries/query.upload';
+import MediaFile from '../models/mediafile';
 
 export default class WorkspaceService {
     constructor() {
@@ -15,10 +16,11 @@ export default class WorkspaceService {
         return parseInt(uploadId.recordset[0].id);
     }
 
-    async getUploadByGuid(guid: string) {
+    async getUploadByGuid(guid: string) : Promise<MediaFile> {
         const pool = await getSQLPool;
         const upload = await uploadQueries.getUploadByGuid(pool, guid);
-        return upload.recordset[0];
+        const mf = new MediaFile(upload.recordset[0]);
+        return mf;
     }
 
 }

@@ -64,6 +64,9 @@ class App {
 
         const loginRoutes = require('./server/routes.login')();
         this.app.use('/signin', loginRoutes);
+
+        const uploadRoutes = require('./server/routes.upload')();
+        this.app.use('/upload', uploadRoutes);
     }
 
     addRoutes() {

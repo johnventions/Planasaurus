@@ -72,7 +72,6 @@ module.exports = function () {
 
         let p = Project.fromData(req.body);
         if (id == 0) {
-            console.log('creating new');
             let newProj = await service.createProject(p);
             id = newProj.id;
         }

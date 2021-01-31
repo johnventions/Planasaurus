@@ -1,0 +1,176 @@
+<template>
+    <div class="form-group"
+        v-bind:class="{ find: viewMode == 'find' }"
+    >
+        <label>{{ field.name }}</label><br/>
+        <div class="input-container" v-if="maxQty == 0 || maxQty > value.length">
+            <input type="file"
+                ref="fileInput"
+                class="form-control"
+                v-on:change="selectFileHandler"/>
+                <button 
+                    class="btn btn-primary"
+                    v-if="fileSelected"
+                    @click="uploadFile">
+                    Upload
+                </button>
+        </div>
+        <div v-if="value.length" v-bind:class="`uploads-${displayType}`">
+            <div v-for="(file, i) in value" :key="file.uuid" class="file-container">
+                <img v-bind:src="file.publicPath">
+                <div class="file-details">
+                    {{ file.original_filename }} - <a target="_blank" :href="file.publicPath">View</a>
+                    <br/>
+                    <button
+                        v-on:click="removeElement(file, i)">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import { mapMutations, mapState } from 'vuex';
+export default {
+    name: 'UploadInput',
+    props: [
+        'field'
+    ],
+    data: function() {
+        return {
+            value: this.$store.getters.getFieldFiles(this.field.id),
+            touched: false,
+            changes: [],
+            fileSelected: false,
+        }
+    },
+    watch: {
+        viewMode: function() {
+            this.resetValue();
+        }
+    },
+    computed: {
+        ... mapState({
+            viewMode: state => state.viewMode,
+        }),
+        maxQty: function() {
+            const meta = this.field.metadata || {};
+            if (meta.itemQty == null || meta.itemQty == "") return 1;
+            return Number.isNaN(parseInt(meta.itemQty)) ? 1 : parseInt(meta.itemQty);
+        },
+        displayType: function() {
+            const meta = this.field.metadata || {};
+            const validOptions = ['list', 'thumbnail'];
+            if (validOptions.indexOf(meta.display) > -1) return meta.display;
+            return 'list';
+        }
+    },
+    methods: {
+        ...mapMutations({
+           updateField: 'UPDATE_FIELD'
+        }),
+        handleUpdate(){
+            this.updateField({
+                id: this.field.id,
+                value: this.changes
+            });
+            this.touched = true;
+        },
+        selectFileHandler() {
+            if (this.$refs.fileInput.files && this.$refs.fileInput.files.length) {
+                this.fileSelected = true;
+            }
+        },
+        uploadFile: function() {
+            const formData = new FormData();
+            const file = this.$refs.fileInput.files[0];
+            formData.append('attachment', file);
+            this.$http.post('/upload', formData, {
+                headers: {
+                     'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => {
+                this.value = [
+                        ... this.value,
+                        res.data.file
+                    ];
+                    // add as a pending change
+                    this.changes = [
+                        ...this.changes,
+                        {
+                            value: res.data.file.id,
+                            order: this.value.length
+                        }
+                    ];
+                this.handleUpdate();
+                if (this.$refs.fileInput) {
+                    this.$refs.fileInput.value = null;
+                }
+            })
+        },
+        removeElement: function(file, i) {
+            // remove from list of projects
+            this.$delete(this.value, i);
+            this.changes = [
+                ...this.changes.filter(x => x.value != file.id),
+                {
+                    value: file.id * -1
+                }
+            ];
+            this.handleUpdate();
+        },
+        resetValue() {
+            this.value = this.$store.getters.getFieldFiles(this.field.id);
+        }
+    },
+    mounted: function() {
+        this.$store.subscribe((mutation) => {
+            if (mutation.type == "SET_RECORD") {
+                this.resetValue();
+            }
+        });
+    }
+}
+</script>
+<style lang="scss" scoped>
+    .form-group {
+        &.find {
+            .input-container {
+                position: relative;
+                &:after {
+                    display: block;
+                    position: absolute;
+                    content: 'X';
+                    height: 20px;
+                    width: 20px;
+                    right: 5px;
+                    top: 5px;
+                }
+            }
+            input {
+                    background-color: #d9f6ff;
+                }
+        }
+        input {
+            margin-bottom: 15px;
+        }
+        .uploads-list {
+            img {
+                max-width: 100px;
+            }
+            .file-container {
+                display: flex;
+                margin-bottom: 8px;
+                .file-details {
+                    padding: 0 5px;
+                }
+            }
+        }
+        .uploads-thumnail {
+            img {
+                max-width: 150px;
+            }
+        }
+    }
+</style>

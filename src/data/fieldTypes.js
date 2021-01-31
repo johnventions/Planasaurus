@@ -11,6 +11,7 @@ import BasicInputEditable from "@/components/ContentEditing/FieldTypes/BasicInpu
 import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/DropdownInput.vue";
 import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
 import ChildComponentInput from "@/components/ContentEditing/FieldTypes/ChildComponentInput.vue";
+import UploadInputEditable from "@/components/ContentEditing/FieldTypes/UploadInput.vue";
 
 
 // Metacomponents
@@ -18,6 +19,7 @@ import NameCodename from "@/components/TemplateEditing/MetaComponents/NameCodena
 import KeyValueOptions from "@/components/TemplateEditing/MetaComponents/KeyValueOptions.vue";
 import OneToOne from "@/components/TemplateEditing/MetaComponents/OneToOne.vue";
 import FieldsToDisplay from "@/components/TemplateEditing/MetaComponents/FieldsToDisplay.vue";
+import UploadAttributes from "@/components/TemplateEditing/MetaComponents/UploadAttributes.vue";
 
 
 const fieldTypes = [
@@ -103,7 +105,20 @@ const fieldTypes = [
             OneToOne,
             FieldsToDisplay
         ]
+    },
+    {
+        id: 8,
+        name: "File / Image Upload",
+        layoutComponent: TextInput,
+        editingComponent: UploadInputEditable,
+        icon: "file-upload",
+        description: "Upload images, documents, or other files related to your data",
+        metaComponents: [
+            NameCodename,
+            UploadAttributes
+        ]
     }
+
 ];
 
 export default fieldTypes

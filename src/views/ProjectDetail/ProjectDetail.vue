@@ -79,7 +79,7 @@ export default {
         saveChanges: async function() {
             const update = await this.updateProject();
             if (this.activeProject.id == 0) {
-                this.$router.push(`/dash/${this.activeProjectType}/${update.id}`);
+                this.$router.push(`/dash/${this.activeProjectType.codename}/${update.id}`);
             }
         },
 

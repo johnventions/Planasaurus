@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 export default class Upload {
     id: Number = 0;
     workspace: Number = 0;
@@ -7,6 +9,7 @@ export default class Upload {
     filename: string = '';
     bucket: Number = 0;
     date_created: any = null;
+    uuid: string = v4();
 
     constructor(u: any) {
         this.id = u.id || 0;
@@ -17,5 +20,6 @@ export default class Upload {
         this.filename = u.filename;
         this.bucket = u.bucket;
         this.date_created = u.date_created;
+        this.uuid = u.uuid || v4();
     }
 }

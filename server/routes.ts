@@ -13,8 +13,5 @@ module.exports = function () {
     const types = require('./routes.types')();
     routes.use('/types', types);
 
-    const upload = require('./routes.upload')();
-    routes.use('/upload', upload);
-
     return routes;
 }

@@ -7,6 +7,7 @@ export default class Project {
     fields = [];
     fieldsMapped = {};
     children = [];
+    files = [];
 
     constructor() {
     }
@@ -21,12 +22,14 @@ export default class Project {
         let p = new Project();
         p.id = proj.id;
         p.name = proj.name;
+        p.project_type = proj.project_type;
         p.status = proj.status;
         p.fields = proj.fields;
         p.mapFields();
         if (proj.children) {
             p.children = proj.children.map(x => this.FromData(x));
         }
+        p.files = proj.files || [];
         return p;
     }
 

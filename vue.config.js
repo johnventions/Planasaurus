@@ -19,6 +19,11 @@ module.exports = {
                 ws: true,
                 changeOrigin: true
             },
+            '^/upload': {
+                target: 'http://localhost:3366/',
+                ws: true,
+                changeOrigin: true
+            },
         }
     }
 }

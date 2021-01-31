@@ -94,7 +94,7 @@ export default {
         handleUpdate(){
             this.updateField({
                 id: this.field.id,
-                value: this.changes.join(',')
+                value: this.changes
             });
             this.touched = true;
         },
@@ -118,7 +118,10 @@ export default {
                     // add as a pending change
                     this.changes = [
                         ...this.changes,
-                        this.pendingAdd
+                        {
+                            value: this.pendingAdd,
+                            order: this.value.length
+                        }
                     ];
                     this.handleUpdate();
                 }
@@ -126,12 +129,12 @@ export default {
         },
         removeElement: function(proj, i) {
             // remove from list of projects
-            console.log(this.value, i);
-            this.$delete(this.value, 0);
-
+            this.$delete(this.value, i);
             this.changes = [
                 ...this.changes,
-                proj.id * -1
+                {
+                    value: proj.id * -1
+                }
             ];
             this.handleUpdate();
         }

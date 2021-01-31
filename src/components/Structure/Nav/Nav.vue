@@ -61,7 +61,7 @@ export default {
         ]),
         handleScroll(){
                 const scrollPosition = window.scrollY;
-                if(scrollPosition>=120){
+                if(scrollPosition>=200){
                     this.isSticky = true
                 }else if (scrollPosition < 100) {
                     this.isSticky = false
