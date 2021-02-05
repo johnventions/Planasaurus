@@ -3,8 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Axios from 'axios';
+
 import VModal from 'vue-js-modal';
-import GoogleAuth from 'vue-google-auth';
+import DropdownMenu from '@innologica/vue-dropdown-menu';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
@@ -46,12 +47,8 @@ library.add(
   faLayerGroup
 );
 
-Vue.use(GoogleAuth, {
-  client_id: '43281342662-rgtjnfe4eojqe7vj33he5t0m82q55fvk.apps.googleusercontent.com'
-});
-Vue.googleAuth().load();
-
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('dropdown-menu', DropdownMenu);
 
 import './registerServiceWorker'
 

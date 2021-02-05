@@ -1,6 +1,7 @@
 import {  Options, OptionsJson } from 'body-parser';
 import { stringify } from 'querystring';
 import FieldDef from '../models/fielddef';
+import ProjectFilter from '../models/projectFilter';
 
 export default class ProjectSpecification {
     type: Number;
@@ -34,7 +35,13 @@ export default class ProjectSpecification {
         );
         const skipList = ['type', 'sortBy', 'sortByDir'];
         for (const [key, value] of Object.entries(qs)) {
-            if (skipList.indexOf(key) == -1) {
+            if (skipList.indexOf(key) != -1) { continue; }
+            if (key.indexOf('_') > - 1) {
+                let currentValue = proj.fields.get(key) || {};
+                const [baseKey, fieldKey] = key.split('_');
+                currentValue[fieldKey] = value;
+                proj.fields.set(baseKey, currentValue);
+            } else {
                 proj.fields.set(key, value);
             }
         }
@@ -42,5 +49,18 @@ export default class ProjectSpecification {
             proj.definitions = fieldDefs;
         }
         return proj;
+    }
+
+    public getFilters() : ProjectFilter[] {
+        const projectFilters: ProjectFilter[] = [];
+        let i = 0;
+        this.fields.forEach((value, key) => {
+            const def = this.definitions.has(key) ? this.definitions.get(key) : undefined;
+            projectFilters.push(
+                 new ProjectFilter(i, key, key, value, def)
+            );
+            i++;
+        });
+        return projectFilters;
     }
 }

@@ -26,6 +26,7 @@ module.exports = function () {
         res.status(200).json({
             success: true,
             total: total,
+            match: result.length,
             list: result,
         });
     });

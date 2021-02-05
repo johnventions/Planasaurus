@@ -6,7 +6,7 @@ import FieldUpdate from "../models/fieldUpdate";
 import Project from "../models/project";
 import ProjectFilter from '../models/projectFilter';
 import ProjectSpecification from '../specifications/specification.project';
-
+import ProjectQuery from '../models/projectQuery';
 
 const baseLookup = function() {
     return `
@@ -78,21 +78,6 @@ const baseLookup = function() {
     `;
 }
 
-const getFilters = function (filters: Map<string, any>, definitions: Map<string, FieldDef>): ProjectFilter[] {
-    const projectFilters: ProjectFilter[] = [];
-    let i = 0;
-    filters.forEach((value, key) => {
-        const def = definitions.has(key) ? definitions.get(key) : undefined;
-        console.log(def);
-        projectFilters.push(
-             new ProjectFilter(i, key, key, value.toString(), def)
-        )
-        i++;
-    });
-    return projectFilters;
-}
-
-
 const newProject = function (pool: sql.ConnectionPool, project: Project) {
     const insert = `
     INSERT INTO projects
@@ -109,28 +94,6 @@ const newProject = function (pool: sql.ConnectionPool, project: Project) {
     return request.query(insert);
 }
 
-const expandFilters = function (filters: ProjectFilter[]) {
-    if (filters.length > 0) {
-        const joins: string[] = [];
-        const wheres: string[] = [];
-        filters.forEach(
-            x => {
-                joins.push(x.joinStatement);
-                wheres.push(x.whereStatement);
-            }
-        )
-        return {
-            joins: joins.join(" "),
-            wheres: wheres.join(" ")
-        };
-    }
-    return {
-        joins: '',
-        wheres: ''
-    };
-}
-
-
 const getProjectCount = function (pool: sql.ConnectionPool, type: Number) {
     const select = `
     SELECT COUNT(id) as 'total'
@@ -144,28 +107,24 @@ const getProjectCount = function (pool: sql.ConnectionPool, type: Number) {
 }
 
 const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecification) {
-    const filters = spec.fields ? getFilters(spec.fields, spec.definitions) : [];
-    const filterStrings: any = expandFilters(filters);
+    const filters = spec.getFilters();
+    const query: ProjectQuery = new ProjectQuery( pool.request(), spec.type );
+    query.expandFilters(filters);
+
+    // set up filters
     const select = `
     /* SELECT THE LIST OF PROJECTS */
     WITH project_list as (
-        SELECT
+        SELECT DISTINCT
             p.id FROM projects p
-            ${ filterStrings.joins }
+            ${ query.joinString() }
         WHERE
             project_type = @ptype
-        ${ filterStrings.wheres }
+        ${ query.whereString() }
     )
-    ${ baseLookup()}
+    ${ baseLookup() }
 `;
-
-    const request : sql.Request = pool.request();
-    request.input('ptype', sql.Int, spec.type);
-    request.multiple = true;
-    filters.forEach( f => {
-        request.input(f.param, `${ f.value }`);
-    })
-    return request.query(select);
+    return query.request.query(select);
 }
 
 const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
