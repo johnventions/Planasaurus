@@ -40,8 +40,19 @@ export default class TypeService {
     async getTypeFieldsMapById(id: Number): Promise<Map<string, FieldDef>> {
         const fields = await this.getTypeFieldsById(id);
         let fieldMap = new Map<string, FieldDef>();
-        fields.forEach(x => {
-            fieldMap.set(x.id.toString(), x); 
+        fields.filter(f => f.parent == null).forEach(x => {
+            const fieldPut = x;
+
+            let related_fields = new Map<string, FieldDef>();
+            if (x.data_type == 7) {
+                // get child fields
+                fields.filter(c => c.parent == x.id).forEach( r => {
+                    related_fields.set(r.id.toString(), r);
+                });
+                fieldPut.related_fields = related_fields;
+            }
+
+            fieldMap.set(x.id.toString(), fieldPut); 
         });
         return fieldMap;
 

@@ -86,9 +86,23 @@ const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
             fd.data_type,
             fd.relationship_type,
             fd.metadata,
-            fd.related_keys
+            fd.related_keys,
+            null as parent
         FROM field_defs fd
         WHERE fd.project_type = @id
+    /* SELECT ONE-DEGREE FIELDS FOR RELATED TYPES */
+        UNION 
+        SELECT 
+            fd2.id,
+            fd2.name,
+            fd2.data_type,
+            fd2.relationship_type,
+            fd2.metadata,
+            fd2.related_keys,
+            fdr.id as parent
+        FROM field_defs fdr
+        INNER JOIN field_defs fd2 ON fd2.project_type = fdr.relationship_type
+        WHERE fdr.project_type = @id AND fdr.data_type = 7
 `;
 
     const request = pool.request();
@@ -182,7 +196,6 @@ const getOptionsForProjectType = function (pool: sql.ConnectionPool, typeID: Num
         WHERE t.id = @pt
         AND defs.data_type IN(6, 7);
     `;
-    console.log(select);
     const request = pool.request();
     request.input('pt', sql.Int, typeID);
     request.multiple = true;

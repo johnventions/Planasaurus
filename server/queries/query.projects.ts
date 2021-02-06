@@ -123,7 +123,8 @@ const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecificati
         ${ query.whereString() }
     )
     ${ baseLookup() }
-`;
+    `;
+
     return query.request.query(select);
 }
 

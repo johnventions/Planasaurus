@@ -5,6 +5,8 @@ export default class FieldDef {
     relationship_type: Number | null = null;
     metadata: any = {};
     related_keys: Number | null = null;
+    parent: Number | null = null;
+    related_fields: Map<string, FieldDef> = new Map<string, FieldDef>();
 
     static fromData(data: any) : FieldDef {
         let d = new FieldDef();
@@ -13,6 +15,7 @@ export default class FieldDef {
         d.data_type = data.data_type;
         d.relationship_type = data.relationship_type;
         d.related_keys = data.related_keys ? parseInt(data.related_keys) : null;
+        d.parent = data.parent ? parseInt(data.parent) : null;
         if (data.metadata != null) {
             if (typeof data.metadata == "string") {
                 try {

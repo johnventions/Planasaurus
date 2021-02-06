@@ -41,7 +41,6 @@ class FieldUpdate {
 
     toRelatedUpdateStrings(table_name: string) {
         let update = '';
-        console.log(this.value);
         if (!Array.isArray(this.value)) return '';
         this.value.forEach(x => {
             if (parseInt(x.value) > 0) {

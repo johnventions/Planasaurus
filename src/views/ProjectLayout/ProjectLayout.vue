@@ -68,7 +68,6 @@ export default {
             }
         },
         handleUpdateArea(name, obj) {
-            console.log(name, obj);
             let update = {
                 type: this.activeProjectType,
                 areaName: name,

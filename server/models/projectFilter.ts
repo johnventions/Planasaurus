@@ -11,7 +11,7 @@ export default class ProjectFilter {
     operator: string = "=";
     joinStatement: string = '';
     whereStatement: string = '';
-    def?: FieldDef;
+    def: FieldDef;
 
     constructor(
         i: Number,
@@ -24,7 +24,7 @@ export default class ProjectFilter {
         this.param = "param_" + _param;
         this.fieldID = typeof _fieldid == "string" ? parseInt(_fieldid) : _fieldid;
         this.value = _value
-        this.def = def;
+        this.def = def || new FieldDef();
     }
 
     process(request: sql.Request) : any {
@@ -74,6 +74,8 @@ export default class ProjectFilter {
     }
 
     generateRelatedStatements(request: sql.Request, table_name: string) {
+        if (this.def == null) return;
+
         const relatedAlias = `fr_${this.fieldID}`;
         this.joinStatement = `
             INNER JOIN field_related ${relatedAlias} ON p.id = ${relatedAlias}.project_id
@@ -81,15 +83,32 @@ export default class ProjectFilter {
         this.whereStatement = `
             AND ${relatedAlias}.field_id = ${this.fieldID}
         `;
+
         // create joins for all of the related data
         Object.keys(this.value).forEach((key: any) => {
             const tableAlias = `fd_${this.fieldID}_${key}`;
-            this.joinStatement += `
-                INNER JOIN field_data ${tableAlias} ON ${tableAlias}.project_id = ${relatedAlias}.value
-            `;
             const childParam = `${this.param}_${key}`;
+            const childDef = this.def.related_fields.get(key);
+
+            const sourceTable = tableMap(childDef ? childDef.data_type : 0);
+
+            this.joinStatement += `
+                INNER JOIN ${sourceTable} ${tableAlias} ON ${tableAlias}.project_id = ${relatedAlias}.value
+            `;
             // TODO: use the correct format based on the data type of the child field
-            this.makeLikeComparision(request, tableAlias, key, childParam, this.value[key]);
+            if (!childDef) return;
+            if (childDef.data_type == 1) { // Text
+                this.makeLikeComparision(request, tableAlias, key, childParam, this.value[key]);
+            } else if (childDef.data_type == 6 || childDef.data_type == 5) {
+                /* 
+                    data_type 5 = Dropdwon Static
+                    data_type 6 == Dropdown related
+                */
+                this.makeExactIntCompare(request, tableAlias, key, childParam, this.value[key]);
+            } else if (childDef.data_type == 3) {
+                /* data_type 3 == Date */
+                this.makeDateComparisonWhere(request, tableAlias, key, childParam, this.value[key]);
+            }
         });        
     }
 
@@ -121,7 +140,7 @@ export default class ProjectFilter {
         let v = value;
         let o = '=';
         const initial = value.charAt(0);
-        if ([">", "<"].includes(initial)) {
+        if ([">", "<", "="].includes(initial)) {
             v = value.substring(1);
             o = initial;
         }
