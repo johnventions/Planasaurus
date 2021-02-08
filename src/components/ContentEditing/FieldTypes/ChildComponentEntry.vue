@@ -1,9 +1,14 @@
 <template>
     <div class='child-entry'>
-        <div v-for="(field, i) in fieldList"
+        <div v-for="(f, i) in fieldList"
             class="child-col"
             :key="i">
-            {{ field.value }}
+            <div 
+                :field="f"
+                :isNested="true"
+                :parentField="field"
+                :is="displayField">
+            </div>
         </div>
         <div class="child-col settings">
             <dropdown-menu
@@ -22,8 +27,14 @@
     </div>
 </template>
 <script>
+import BasicInput from '@/components/ContentEditing/FieldTypes/BasicInput.vue';
+
+console.log(BasicInput);
 export default {
-    props: ['entry', 'fieldmeta'],
+    props: ['field', 'entry', 'fieldmeta'],
+    components: {
+       //BasicInput
+    },
     data: function() {
         return {
             show: false,
@@ -42,6 +53,9 @@ export default {
                 }
             });
         },
+        displayField: function() {
+            return BasicInput;
+        }
     },
 
     methods: {
@@ -51,7 +65,7 @@ export default {
     },
 
     mounted: function() {
-        this.fieldsDictionary = this.entry.fieldsMapped;
+        this.fieldsDictionary = this.entry.fieldsMapped || {};
     }
 }
 </script>
@@ -59,7 +73,7 @@ export default {
     .child-entry {
         display: table-row;
         .child-col {
-            padding: 2px 10px;
+            padding: 0px 0px;
             display: table-cell;
             flex-grow: 1;
             border: 1px solid grey;
@@ -67,6 +81,10 @@ export default {
             &.settings {
                 width: 30px;
                 padding: 0 8px;
+            }
+
+            .form-group {
+                margin-bottom: 0;
             }
         }
     }

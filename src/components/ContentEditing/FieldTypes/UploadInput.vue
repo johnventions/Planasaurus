@@ -15,7 +15,7 @@
                     Upload
                 </button>
         </div>
-        <div v-if="value.length" v-bind:class="`uploads-${displayType}`">
+        <div v-if="value && value.length" v-bind:class="`uploads-${displayType}`">
             <div v-for="(file, i) in value" :key="file.uuid" class="file-container">
                 <a target="_blank" :href="file.publicPath">
                     <img v-bind:src="file.publicPath">

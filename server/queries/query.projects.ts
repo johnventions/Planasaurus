@@ -160,6 +160,8 @@ const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: A
         request.input(`${x.paramID}_v`, sql.VarChar, x.value);
         request.input(`${x.paramID}_f`, sql.Int, x.field_id);
     });
+
+    console.log("UPDATE", update);
     
     request.multiple = true;
     request.input('id', sql.Int, id);

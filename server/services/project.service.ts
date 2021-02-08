@@ -58,7 +58,9 @@ export default class ProjectService {
         let fieldData : Array<FieldUpdate> = fields.map(x => {
             return FieldUpdate.fromData(x);
         });
+        
         const defs = await this.getProjectFieldDefinitions(id);
+        console.log(fieldData, defs);
         const update = await projectQueries.updateProject(pool, id, fieldData, defs);
         return 1;
     }

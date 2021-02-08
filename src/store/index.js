@@ -457,7 +457,7 @@ export default new Vuex.Store({
 		getFieldArrayVal: (state) => (id) => {
 			let f = [];
 			if (state.viewMode == viewModes.FIND) {
-				f = state.pendingFind[id];
+				f = state.pendingFind[id] || [{}];
 			} else if (state.activeProject.children) {
 				let projectIDs = state.activeProject.fields.filter(x => x.field_id == id).map(y => parseInt(y.value));
 				f = state.activeProject.children.filter(x => projectIDs.indexOf(x.id) > -1);

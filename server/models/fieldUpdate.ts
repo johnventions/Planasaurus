@@ -19,8 +19,9 @@ class FieldUpdate {
 
     toUpdateString(fieldID: any, definition?: FieldDef) {
         let table_name = tableMap(definition ? definition.data_type : 0);
-        if (table_name == 'field_related' || table_name == 'field_uploads') {
+        if ( (definition && definition.data_type == 7) || table_name == 'field_uploads') {
             // related items will send an array of changes, not a string value
+            // except related dropdowns, which are a single val
             return this.toRelatedUpdateStrings(table_name);
         }
         return `

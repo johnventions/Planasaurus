@@ -2,7 +2,9 @@
     <div class="form-group"
         v-bind:class="{ find: viewMode == 'find' }"
     >
-        <label>{{ field.name }}</label><br/>
+        <label v-if="!isNested && field.name">
+            {{ field.name }}<br/>
+        </label>
         <div class="input-container">
             <select v-model="searchOperator"
                 v-if="viewMode == 'find' && useSearchOperators">
@@ -22,13 +24,18 @@
 </template>
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
+
 export default {
+    name: 'BasicInput',
     props: [
-        'field', 'type'
+        'field',
+        'type',
+        'isNested',
+        'parentField'
     ],
     data: function() {
         return {
-            value: this.$store.getters.getFieldVal(this.field.id),
+            value: this.isNested ? this.field.value : this.$store.getters.getFieldVal(this.field.id),
             touched: false,
             searchOperator: null,
         }
@@ -50,6 +57,12 @@ export default {
                 return true;
             }
             return false;
+        },
+        fieldIdForUpdate: function() {
+            if (this.isNested) {
+                return `${this.parentField.id}_${this.field.id}`;
+            }
+            return this.field.id;
         }
     },
     methods: {
@@ -60,22 +73,22 @@ export default {
             'searchProjectRecords',
             'saveLatestLayout'
         ]),
-        handleUpdate(){
+        handleUpdate: function(){
             const newVal = (this.viewMode == 'find' && this.searchOperator) ? `${this.searchOperator}${this.value}` : this.value;
 
             this.updateField({
-                id: this.field.id,
+                id: this.fieldIdForUpdate,
                 value: newVal
             });
             this.touched = true;
         },
-        handleSubmit() {
+        handleSubmit: function() {
             if (this.viewMode == 'find') {
                 this.searchProjectRecords();
             }
         },
-        resetValue() {
-            this.value = this.$store.getters.getFieldVal(this.field.id);
+        resetValue: function() {
+            this.value = this.isNested ? this.field.value : this.$store.getters.getFieldVal(this.field.id),
             this.touched = false;
         }
     },
@@ -98,15 +111,6 @@ export default {
         &.find {
             .input-container {
                 position: relative;
-                &:after {
-                    display: block;
-                    position: absolute;
-                    content: 'X';
-                    height: 20px;
-                    width: 20px;
-                    right: 5px;
-                    top: 5px;
-                }
             }
             input, select {
                     background-color: #d9f6ff;

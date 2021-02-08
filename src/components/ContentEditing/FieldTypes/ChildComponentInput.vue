@@ -7,10 +7,11 @@
             class="btn btn-primary btn-add">
             + Add
         </button><br/>
-        <div class="nested-input" v-if="value.length">
+        <div class="nested-input" v-if="value && value.length">
             <child-entry v-for="(child, i) in value"
                 v-on:remove-me="removeElement(child, i)"
                 :entry="child"
+                :field="field"
                 :fieldmeta="field.metadata"
                 :key="child.id">
             </child-entry>
@@ -26,7 +27,9 @@
                 <option v-for="opt in relatedOptions"
                     :value="opt.project_id"
                     :key="opt.project_id">
-                    {{ opt.meta[0].value }}
+                    <template v-if="opt.meta">
+                        {{ opt.meta[0].value }}
+                    </template>
                 </option>
             </select>
             <br/>
@@ -76,7 +79,7 @@ export default {
             return this.value;
         },
         addItemModalName: function() {
-            return `addModal_${this.value.id}`;
+            return `addModal_${this.field.id}`;
         },
         relatedOptions: function() {
             const { id } = this.$store.state.activeProjectType;
