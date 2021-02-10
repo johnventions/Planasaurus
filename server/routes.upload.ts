@@ -1,7 +1,8 @@
 import * as sql from 'mssql';
 const aws = require('aws-sdk');
 var multer = require('multer');
-var multerS3 = require('multer-s3');
+var multerS3 = require('multer-s3-transform');
+const sharp = require('sharp');
 
 const S3Proxy = require('s3proxy');
 
@@ -56,7 +57,31 @@ const upload = async function(req: any, res: any, next:any) {
             key: function (req: any, file: any, cb: any) {
                 const filename = `${ wsDetails.uuid }/${Date.now().toString()}_${file.originalname}`; 
                 cb(null, filename);
-            }
+            },
+            shouldTransform: function (req: any, file: any, cb: any) {
+                cb(null, /^image/i.test(file.mimetype))
+            },
+            transforms: [{
+                id: 'original',
+                contentType: multerS3.AUTO_CONTENT_TYPE,
+                key: function (req: any, file: any, cb: any) {
+                    const filename = `${ wsDetails.uuid }/${Date.now().toString()}_${file.originalname}`; 
+                    cb(null, filename)
+                },
+                transform: function (req: any, file: any, cb: any) {
+                    cb(null, sharp());
+                }
+              }, {
+                id: 'thumbnail',
+                contentType: 'image/jpg',
+                key: function (req: any, file: any, cb: any) {
+                    const filename = `${ wsDetails.uuid }/${Date.now().toString()}t_${file.originalname}.jpeg`; 
+                    cb(null, filename);
+                },
+                transform: function (req: any, file: any, cb: any) {
+                    cb(null, sharp().resize(200, 200).jpeg())
+                }
+              }]
         })
     }).single('attachment')(req, res, next);
 };
@@ -73,9 +98,31 @@ module.exports = function () {
     routes.post('/', upload, async (req: any, res: Response) => {
         const workspace = Number(req.headers['pterobyte-workspace']);
         const { user, file } = req;
+        console.log(file);
 
-        const size = Math.floor(file.size / 1000);
-        const filename = file.key.split('/')[1];
+        let filename = file.originalname;
+        let thumbfile = null;
+        let size = 0;
+        let uuid;
+
+        if (file.transforms && file.transforms.length) {
+            const original = file.transforms.find((x: any) => x.id == 'original');
+            if (original) {
+                filename = original.key.split('/')[1];
+                size = Math.floor(original.size / 1000);
+                console.log(original.metadata);
+                if (original.metadata) {
+                    uuid = original.metadata.uuid;
+                }
+            }
+            const thumbnail = file.transforms.find((x: any) => x.id == 'thumbnail');
+            if (thumbnail) {
+                thumbfile = thumbnail.key.split('/')[1];
+            }
+        } else {
+            filename = file.key.split('/')[1];
+            size = Math.floor(file.size / 1000);
+        }
 
         const uploadedFile : Upload = new Upload({
             workspace,
@@ -84,8 +131,9 @@ module.exports = function () {
             size,
             filename,
             bucket: 1,
-            uuid: file.metadata.uuid
+            uuid
         });
+
 
         const service = new UploadService();
         const fileID = await service.createUpload(uploadedFile);
