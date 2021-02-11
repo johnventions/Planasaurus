@@ -131,7 +131,8 @@ module.exports = function () {
             size,
             filename,
             bucket: 1,
-            uuid
+            uuid,
+            preview_filename: thumbfile
         });
 
 
@@ -147,13 +148,14 @@ module.exports = function () {
     });
 
     routes.route('/:guid/:filename').get(async (req: Request, res: Response) => {
+        const preview = req.query.preview || 0;
         const service = new UploadService();
         const guid = req.params.guid;
 
         const uploadFile : MediaFile = await service.getUploadByGuid(guid);
-
+        
         const dest = {
-            path: uploadFile.filepath,
+            path: (preview && uploadFile.preview_filepath) ? uploadFile.preview_filepath : uploadFile.filepath,
             query: req.query
         };
 

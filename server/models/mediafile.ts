@@ -10,6 +10,7 @@ export default class MediaFile {
     filename: string = '';
     original_filename: string = '';
     date_created: string = '';
+    preview_filepath: string | null = null;
 
 
     constructor(u: any) {
@@ -22,6 +23,9 @@ export default class MediaFile {
         this.filename = u.filename;
         this.original_filename = u.original_filename;
         this.date_created = u.date_created;
+        if(u.preview_filepath) {
+            this.preview_filepath = u.preview_filepath;
+        }
     }
 
     toPublic() : any {

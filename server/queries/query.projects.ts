@@ -65,7 +65,11 @@ const baseLookup = function() {
                 u.uuid,
                 u.filename,
                 u.original_filename,
-                CONCAT('/upload/', u.uuid, '/', u.filename) as publicPath
+                CONCAT('/upload/', u.uuid, '/', u.filename) as publicPath,
+                CASE
+                    WHEN u.preview_filename is null THEN null
+                    ELSE CONCAT('/upload/', u.uuid, '/', u.preview_filename, '?preview=1')
+                END as previewPath
             FROM field_uploads fu
             INNER JOIN uploads u ON u.id = fu.value
             WHERE fu.project_id = l.id
