@@ -65,6 +65,7 @@ const baseLookup = function() {
                 u.uuid,
                 u.filename,
                 u.original_filename,
+                u.content_type,
                 CONCAT('/upload/', u.uuid, '/', u.filename) as publicPath,
                 CASE
                     WHEN u.preview_filename is null THEN null

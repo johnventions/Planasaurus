@@ -18,7 +18,10 @@
         <div v-if="value && value.length" v-bind:class="`uploads-${displayType}`">
             <div v-for="(file, i) in value" :key="file.uuid" class="file-container">
                 <a target="_blank" :href="file.publicPath">
-                    <img v-bind:src="(file.previewPath ? file.previewPath : file.publicPath)">
+                    <img v-if="file.previewPath" v-bind:src="file.previewPath">
+                    <span v-else class="document-icon">
+                        <font-awesome-icon icon="file" size="2x" />
+                    </span>
                 </a>
                 <div class="file-details">
                     {{ file.original_filename }} - <a target="_blank" :href="file.publicPath">View</a>
@@ -167,6 +170,16 @@ export default {
                 .file-details {
                     padding: 0 5px;
                 }
+
+                .document-icon {
+                    display: block;
+                    border: 1px solid blue;
+                    width: 100px;
+                    svg {
+                        margin: 10px auto;
+                        display: block;
+                    }
+                }
             }
         }
         .uploads-thumbnail {
@@ -189,6 +202,16 @@ export default {
             }
             .file-details {
                 display: none;
+            }
+        
+            .document-icon {
+                display: block;
+                width: 150px;
+                height: 150px;
+                border: 1px solid blue;
+                svg {
+                    margin: 10px 12px;
+                }
             }
         }
     }

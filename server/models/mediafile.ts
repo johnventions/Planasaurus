@@ -11,6 +11,7 @@ export default class MediaFile {
     original_filename: string = '';
     date_created: string = '';
     preview_filepath: string | null = null;
+    content_type: string = '';
 
 
     constructor(u: any) {
@@ -23,6 +24,7 @@ export default class MediaFile {
         this.filename = u.filename;
         this.original_filename = u.original_filename;
         this.date_created = u.date_created;
+        this.content_type = u.content_type;
         if(u.preview_filepath) {
             this.preview_filepath = u.preview_filepath;
         }
@@ -34,7 +36,9 @@ export default class MediaFile {
             uuid: this.uuid,
             filename: this.uuid,
             publicPath: `/upload/${this.uuid}/${this.filename}`,
-            original_filename: this.original_filename
+            previewPath: this.preview_filepath ? `/upload/${this.uuid}/${this.filename}?preview=1` : null,
+            original_filename: this.original_filename,
+            content_type: this.content_type
         };
     }
 }

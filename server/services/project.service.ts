@@ -60,7 +60,6 @@ export default class ProjectService {
         });
         
         const defs = await this.getProjectFieldDefinitions(id);
-        console.log(fieldData, defs);
         const update = await projectQueries.updateProject(pool, id, fieldData, defs);
         return 1;
     }

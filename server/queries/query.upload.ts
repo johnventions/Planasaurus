@@ -12,7 +12,8 @@ const createUpload = function (pool: sql.ConnectionPool, upload: Upload) {
                 filename,
                 bucket,
                 uuid,
-                preview_filename
+                preview_filename,
+                content_type
             )
         VALUES
             (
@@ -23,7 +24,8 @@ const createUpload = function (pool: sql.ConnectionPool, upload: Upload) {
                 @filename,
                 @bucket,
                 @uuid,
-                @preview
+                @preview,
+                @type
             );
         SELECT SCOPE_IDENTITY() as id;
     `;
@@ -36,6 +38,7 @@ const createUpload = function (pool: sql.ConnectionPool, upload: Upload) {
     request.input('bucket', sql.Int, upload.bucket);
     request.input('uuid', sql.VarChar, upload.uuid);
     request.input('preview', upload.preview_filename);
+    request.input('type', upload.content_type);
     request.multiple = true;
     return request.query(insert);
 }
@@ -55,7 +58,8 @@ const getUploadByGuid = function (pool: sql.ConnectionPool, guid: string) {
             CASE
                 WHEN preview_filename is null THEN null
                 ELSE CONCAT('/', w.uuid, '/', u.preview_filename)
-            END as preview_filepath
+            END as preview_filepath,
+            u.content_type
         FROM uploads u
         INNER JOIN workspaces w ON u.workspace = w.id
         INNER JOIN buckets b ON u.bucket = b.id

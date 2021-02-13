@@ -98,9 +98,9 @@ module.exports = function () {
     routes.post('/', upload, async (req: any, res: Response) => {
         const workspace = Number(req.headers['pterobyte-workspace']);
         const { user, file } = req;
-        console.log(file);
 
         let filename = file.originalname;
+        const content_type = file.mimetype;
         let thumbfile = null;
         let size = 0;
         let uuid;
@@ -110,7 +110,6 @@ module.exports = function () {
             if (original) {
                 filename = original.key.split('/')[1];
                 size = Math.floor(original.size / 1000);
-                console.log(original.metadata);
                 if (original.metadata) {
                     uuid = original.metadata.uuid;
                 }
@@ -132,7 +131,8 @@ module.exports = function () {
             filename,
             bucket: 1,
             uuid,
-            preview_filename: thumbfile
+            preview_filename: thumbfile,
+            content_type
         });
 
 
