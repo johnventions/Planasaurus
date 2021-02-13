@@ -4,7 +4,7 @@
         <label>{{ field.name }}</label>
         <button 
             @click="startAddRecord"
-            class="btn btn-primary btn-add">
+            class="btn btn-primary btn-add float-right">
             + Add
         </button><br/>
         <div class="nested-input" v-if="value && value.length">
