@@ -10,6 +10,7 @@ export default class Upload {
     bucket: Number = 0;
     date_created: any = null;
     uuid: string = v4();
+    preview_filename: string | null = null;
 
     constructor(u: any) {
         this.id = u.id || 0;
@@ -21,5 +22,6 @@ export default class Upload {
         this.bucket = u.bucket;
         this.date_created = u.date_created;
         this.uuid = u.uuid || v4();
+        this.preview_filename = u.preview_filename;
     }
 }

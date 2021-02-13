@@ -11,7 +11,8 @@ const createUpload = function (pool: sql.ConnectionPool, upload: Upload) {
                 size,
                 filename,
                 bucket,
-                uuid
+                uuid,
+                preview_filename
             )
         VALUES
             (
@@ -21,7 +22,8 @@ const createUpload = function (pool: sql.ConnectionPool, upload: Upload) {
                 @size,
                 @filename,
                 @bucket,
-                @uuid
+                @uuid,
+                @preview
             );
         SELECT SCOPE_IDENTITY() as id;
     `;
@@ -33,6 +35,7 @@ const createUpload = function (pool: sql.ConnectionPool, upload: Upload) {
     request.input('filename', sql.VarChar, upload.filename);
     request.input('bucket', sql.Int, upload.bucket);
     request.input('uuid', sql.VarChar, upload.uuid);
+    request.input('preview', upload.preview_filename);
     request.multiple = true;
     return request.query(insert);
 }
@@ -48,7 +51,11 @@ const getUploadByGuid = function (pool: sql.ConnectionPool, guid: string) {
             u.workspace,
             u.filename,
             u.original_filename,
-            u.date_created
+            u.date_created,
+            CASE
+                WHEN preview_filename is null THEN null
+                ELSE CONCAT('/', w.uuid, '/', u.preview_filename)
+            END as preview_filepath
         FROM uploads u
         INNER JOIN workspaces w ON u.workspace = w.id
         INNER JOIN buckets b ON u.bucket = b.id
