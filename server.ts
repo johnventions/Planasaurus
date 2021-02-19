@@ -1,13 +1,11 @@
 require('dotenv').config();
 
-import * as sql from 'mssql';
-
 const express = require('express');
-
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+
 
 const { getSQLPool } = require('./server/sql');
 
@@ -30,7 +28,6 @@ class App {
         this.app = express();
     }
 
-    
     appConfig() {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,7 +40,6 @@ class App {
 
         this.app.use(passport.initialize());
         this.app.use(passport.session());
-
         this.app.use(express.static('dist'));
     }
 
@@ -54,7 +50,6 @@ class App {
     }
 
     async startDB() {
-        // this.db = require('./server/db')(mongoose, session);
         await getSQLPool;
     }
 
@@ -71,7 +66,7 @@ class App {
 
     addRoutes() {
         this.app.get('/*', (req: any, res: any) => {
-            res.sendFile(path.join(__dirname, '/dist/index.html'));
+            res.sendFile(path.join(__dirname, './dist/index.html'));
         });
     }
 }
