@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
                 <layout-area 
                     v-if="activeLayout && activeLayout.layout"
                     v-on:updateArea="handleUpdateArea"

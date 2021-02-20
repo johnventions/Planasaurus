@@ -1,15 +1,18 @@
 <div class='zone editing'>
     <div class="zone-container">
-        <div v-if="item.components">
-            <div v-for="(child, i) in item.components"
+        <container group-name="fields" 
+            :get-child-payload="getChildPayload"
+            @drop="onDrop">
+            <draggable v-for="(child, i) in item.components"
                 class="zone-input"
+                :key="child.id"
                 v-on:click="editField(child.id)">
                 <div 
                 :field="getLayoutFieldDef(child.id)"
                 :is="getLayoutComponent(child.id)">
                 </div>
-            </div>
-        </div>
+            </draggable>
+        </container>
         <button class="btn-field-new" @click="newField">
             + New Field
         </button>

@@ -1,6 +1,8 @@
 <template src="./Zone.html"></template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { Container, Draggable } from "vue-smooth-dnd";
+
 import fieldTypes from "@/data/fieldTypes";
 
 import NewFieldModal from '../Modals/NewField'
@@ -17,7 +19,9 @@ export default {
     },
     components: {
         'new-field-modal': NewFieldModal,
-        'edit-field-modal': EditFieldModal
+        'edit-field-modal': EditFieldModal,
+        'container': Container,
+        'draggable': Draggable
     },
     computed: {
         ...mapGetters([
@@ -60,7 +64,7 @@ export default {
             this.creatingField = false;
 
             if (newField) {
-                // field was create
+                // field was created
                 // add field to Zone
                 let newItem = { ... this.item };
                 newItem.components.push({
@@ -80,6 +84,22 @@ export default {
         finishEdit: function() {
             this.editingField = false;
             this.$modal.hide(this.modalEditField);
+        },
+        getChildPayload: function(index) {
+            console.log(this.item.components[index]);
+            return this.item.components[index];
+        },
+        onDrop: function(event) {
+            let newItem = { ... this.item };
+            if (event.removedIndex != null) {
+                newItem.components.splice(event.removedIndex, 1);
+                // pass new definition up to parent SECTION
+                this.$emit('updatechild', this.index, newItem);
+            }
+            if (event.addedIndex != null) {
+                newItem.components.splice(event.addedIndex, 0, { ... event.payload});
+                this.$emit('updatechild', this.index, newItem);
+            }
         }
     }
 }
@@ -87,9 +107,9 @@ export default {
 <style lang="scss">
     .zone {
         .zone-input {
-            padding: 5px;
+            transition: opacity 0.5s ease;
             &:hover {
-                border: 1px dashed #3d3ae0;
+                opacity: 0.7;
             }
         }
         &.editing {
