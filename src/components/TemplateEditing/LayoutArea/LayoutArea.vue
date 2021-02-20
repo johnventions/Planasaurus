@@ -9,6 +9,8 @@ export default {
     props: ['area', 'areaname'],
     data: function() {
         return {
+            newSectionIndex: null,
+            targetSectionId: null,
         }
     },
     components: {
@@ -17,12 +19,50 @@ export default {
     methods: {
         newSection(i) {
             this.newSectionIndex = i + 1;
+            this.targetSectionId = null;
+            this.$modal.show('new-section-modal');
+        },
+        editSection(id) {
+            console.log(id);
+            this.newSectionIndex = null;
+            this.targetSectionId = id;
             this.$modal.show('new-section-modal');
         },
         createSection(type) {
             // create new section at the index
             let newArea = {...this.area };
-            newArea.sections.splice(this.newSectionIndex, 0, Section.create(type));
+            if (this.targetSectionId) {
+                const index = this.area.sections.findIndex(x => x.id == this.targetSectionId);
+                if (index != null) {
+                    // update the existing section
+                    const existing = { ... this.area.sections[index] };
+                    const newSection = Section.create(type);
+                    let maxIndex = -1;
+                    newSection.zones.forEach((x, i) => {
+                        // copy zones that exist in both
+                        if (existing.zones[i]) {
+                            newSection.zones[i] = { ... existing.zones[i] };
+                        }
+                        maxIndex++;
+                    });
+                    if (maxIndex < existing.zones.length - 1) {
+                        // example: old section had 3, new had 1
+                        // move items in 2 and 3 to zone 1o
+                        const lastZone = newSection.zones[maxIndex];
+                        for(var i = maxIndex + 1; i < existing.zones.length; i++) {
+                            // add components from existing slot
+                            lastZone.components = [
+                                ... lastZone.components,
+                                ... existing.zones[i].components
+                            ];
+                            newSection.zones[maxIndex] = lastZone;
+                        }
+                    }
+                    newArea.sections[index] = newSection;
+                } 
+            } else {
+                newArea.sections.splice(this.newSectionIndex, 0, Section.create(type));
+            }
             // push that bad boy live
             this.updateMe(newArea);
             this.$modal.hide('new-section-modal');
@@ -49,20 +89,42 @@ export default {
             margin-bottom: 10px;
         }
     }
+    .section-new, .section-edit {
+        border-radius: 20%;
+        border: 1px solid black;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        z-index: 20;
+        text-align: center;
+        color: white;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        padding: 0;
+    }
     .section-new {
-            border-radius: 20%;
-            border: 1px solid black;
-            width: 30px;
-            height: 30px;
-            position: absolute;
-            left: -35px;
-            bottom: -16px;
-            z-index: 20;
-            text-align: center;
-            color: white;
-            font-size: 18px;
-            font-weight: 800;
-            cursor: pointer;
-            padding: 0;
+        left: -35px;
+        bottom: -16px;
+        position: absolute;
+
+        &:hover {
+            &:before {
+                position: absolute;
+                content: '';
+                display: block;
+                height: 0px;
+                width: 70vw;
+                border-top: 1px dashed black;
+                z-index: 2;
+                top: 12px;
+                left: 35px;
+            }
         }
+    }
+    .section-edit {
+        right: -15px;
+        top: -5px;
+    }
+
 </style>

@@ -19,6 +19,9 @@ export default class Section {
         s.style = type || "full";
         if (s.style !== "full") {
             s.zones = [new Zone(), new Zone()];
+            if (s.style == "33-33-33") {
+                s.zones.push(new Zone());
+            }
         }
         return s;
     }

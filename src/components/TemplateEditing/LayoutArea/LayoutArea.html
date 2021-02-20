@@ -9,13 +9,16 @@
                 :index="i"
                 :item="item">
             </layout-section>
+            <button class="btn btn-primary section-edit" 
+                @click="editSection(item.id)">
+                <font-awesome-icon icon="cog" size="1x" class="inline" />
+            </button>
             <button class="btn btn-primary section-new" 
-                @click="newSection(i)">
+                @click="newSection(i, null)">
                 +
-        </button>
+            </button>
         </div>
         <modal name="new-section-modal">
-            Which section would you like to create?
             <div class="row section-choices">
                 <div class="col-6">
                     <button class="btn btn-primary" @click="createSection('full')">
@@ -35,6 +38,11 @@
                 <div class="col-6">
                     <button class="btn btn-primary" @click="createSection('66-33')">
                         66-33 split
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-primary" @click="createSection('33-33-33')">
+                        33-33-33 split
                     </button>
                 </div>
             </div>

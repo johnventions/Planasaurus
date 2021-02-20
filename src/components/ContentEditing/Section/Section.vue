@@ -12,6 +12,8 @@ export default {
         getClass(i) {
             if (this.item.style == "50-50") {
                 return "col-6";
+            } else if (this.item.style == "33-33-33") {
+                return "col-4";
             } else if (this.item.style == "33-66") {
                 return  i == 0 ? "col-4" : "col-8";
             } else if (this.item.style == "66-33") {
