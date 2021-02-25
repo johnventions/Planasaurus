@@ -25,7 +25,8 @@ import {
   faToggleOn,
   faCaretSquareDown,
   faLayerGroup,
-  faFile
+  faFile,
+  faArrowsAlt
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -46,7 +47,8 @@ library.add(
   faToggleOn,
   faCaretSquareDown,
   faLayerGroup,
-  faFile
+  faFile,
+  faArrowsAlt
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

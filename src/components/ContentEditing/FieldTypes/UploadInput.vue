@@ -161,6 +161,7 @@ export default {
             margin-bottom: 15px;
         }
         .uploads-list {
+            overflow: hidden;
             img {
                 max-width: 100px;
             }

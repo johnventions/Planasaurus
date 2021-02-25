@@ -11,13 +11,13 @@ export default {
     methods: {
         getClass(i) {
             if (this.item.style == "50-50") {
-                return "col-6";
+                return "col-sm-6";
             } else if (this.item.style == "33-33-33") {
-                return "col-4";
+                return "col-sm-4";
             } else if (this.item.style == "33-66") {
-                return  i == 0 ? "col-4" : "col-8";
+                return  i == 0 ? "col-sm-4" : "col-sm-8";
             } else if (this.item.style == "66-33") {
-                return  i == 0 ? "col-8" : "col-4";
+                return  i == 0 ? "col-sm-8" : "col-sm-4";
             }
             return "col-12";
         },
