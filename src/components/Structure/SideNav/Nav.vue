@@ -3,7 +3,7 @@
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 export default {
-    name: 'Nav',
+    name: 'SideNav',
     data: function() {
         return {
             isSticky: false,
@@ -102,18 +102,34 @@ export default {
         }
     },
     created () {
-            window.addEventListener('scroll', this.handleScroll);
+            //window.addEventListener('scroll', this.handleScroll);
     },
     destroyed () {
-            window.removeEventListener('scroll', this.handleScroll);
+            //window.removeEventListener('scroll', this.handleScroll);
     },
 }
 </script>
 <style lang="scss">
+    .sidenav {
+        height: 100%;
+        min-height: 100vh;
+        color: white;
+        font-size: 16px;
+
+        a {
+            color: white;
+            font-size: 16px;
+        }
+    }
+
+    .nav-menu {
+        ul { 
+            padding: 0;
+        }
+    }
     nav.utility-nav.sticky {
         position: fixed;
         width: 100%;
-        top: 0;
         z-index: 40;
     }
     .bg-grey {
@@ -127,8 +143,8 @@ export default {
         }
     }
     .nav-item {
-        display: inline-block;
-        padding: 0 12px;
+        display: block;
+        margin-bottom: 8px;
     }
     button.nav-link {
         background: none;

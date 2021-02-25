@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <app-nav></app-nav>
-    </div>
     <router-view />
   </div>
 </template>
@@ -11,12 +8,8 @@
 import Vue from 'vue'
 import axios from 'axios';
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
-import Nav from "./components/Structure/Nav/Nav";
 
 export default {
-  components: {
-    "app-nav": Nav,
-  },
   methods: {
     ...mapMutations({
       startFindMode: "START_FIND_MODE",

@@ -1,7 +1,7 @@
 <template src="./Zone.html"></template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { Container, Draggable } from "vue-smooth-dnd";
+import draggable from 'vuedraggable'
 
 import fieldTypes from "@/data/fieldTypes";
 
@@ -20,8 +20,7 @@ export default {
     components: {
         'new-field-modal': NewFieldModal,
         'edit-field-modal': EditFieldModal,
-        'container': Container,
-        'draggable': Draggable
+        'draggable': draggable
     },
     computed: {
         ...mapGetters([
@@ -85,31 +84,55 @@ export default {
             this.editingField = false;
             this.$modal.hide(this.modalEditField);
         },
-        getChildPayload: function(index) {
-            console.log(this.item.components[index]);
-            return this.item.components[index];
+        getComponentData: function(event) {
+            console.log(event);
+            //console.log(this.item.components[index]);
+            // return this.item.components[index];
         },
-        onDrop: function(event) {
-            let newItem = { ... this.item };
-            if (event.removedIndex != null) {
-                newItem.components.splice(event.removedIndex, 1);
-                // pass new definition up to parent SECTION
-                this.$emit('updatechild', this.index, newItem);
-            }
-            if (event.addedIndex != null) {
-                newItem.components.splice(event.addedIndex, 0, { ... event.payload});
-                this.$emit('updatechild', this.index, newItem);
-            }
+        onDrop: function() {//event, originalEvent
+            this.$emit('updatechild', this.index, this.item);
+        },
+        modifyDragItem (dataTransfer) {
+            console.log(dataTransfer);
+            let img = new Image()
+            img.src = '/IMG_20160211_222436.jpg'
+            dataTransfer.setDragImage(img, 0, 0)
         }
     }
 }
 </script>
 <style lang="scss">
+    .sortable-ghost {
+        border: 1px dashed blue;
+    }
     .zone {
         .zone-input {
-            transition: opacity 0.5s ease;
+            display: flex;
+            transition: opacity 0.5s ease, transform 0.25s ease;
             &:hover {
                 opacity: 0.7;
+            }
+
+            > div {
+                flex-grow: 1;
+            }
+
+            .handle {
+                cursor: move;
+                padding: 10px;
+                border: 1px solid grey;
+                border-radius: 4px;
+                height: 35px;
+                margin-right: 8px;
+                display: none;
+                @media screen and (min-width: 768px) {
+                    display: block;
+                }
+
+                > svg {
+                    display: block;
+                }
+
             }
         }
         &.editing {
