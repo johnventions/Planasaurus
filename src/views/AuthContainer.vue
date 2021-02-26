@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-import SideNav from "@/components/Structure/SideNav/Nav";
+import SideNav from "@/components/Structure/SideNav/SideNav";
 import ToolNav from "@/components/Structure/ToolNav/ToolNav";
 
 export default {
@@ -28,9 +28,8 @@ export default {
     flex-direction: row;
     
     #nav {
-      max-width: 200px;
+      width: 250px;
       margin-bottom: 0;
-      flex-grow: 1;
       height: 100%;
       > div {
         min-height: 100%;

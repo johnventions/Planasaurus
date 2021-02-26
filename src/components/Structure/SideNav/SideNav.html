@@ -9,7 +9,7 @@
                 class="nav-menu"
                 id="">
                 <ul class="">
-                    <li class="nav-item" v-if="authenticated">
+                    <li class="nav-item" v-if="false && authenticated">
                         <router-link to="/myq" class="nav-link">
                             My Q
                         </router-link>
@@ -17,12 +17,20 @@
                     <li class="nav-item" 
                         v-for="(item, i) in navItems" :key="item.id">
                         <router-link :to="parseUrl(item)" class="nav-link">
+                            <font-awesome-icon icon="caret-right" size="md" class="inline" />
                             {{ item.name }}
+                        </router-link>
+                    </li>
+                    
+                    <li class="nav-item ml-auto" v-if="authenticated">
+                        <router-link to="/dash/configure" class="nav-link">
+                            <font-awesome-icon icon="plus-square" size="md" class="inline" />
+                            New Type
                         </router-link>
                     </li>
                     <li class="nav-item ml-auto" v-if="authenticated">
                         <router-link to="/dash/configure" class="nav-link">
-                            <font-awesome-icon icon="cog" size="lg" class="inline" />
+                            <font-awesome-icon icon="cog" size="md" class="inline" />
                             Settings
                         </router-link>
                     </li>
