@@ -1,4 +1,4 @@
-<template src="./Nav.html">
+<template src="./SideNav.html">
 </template>
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
@@ -120,6 +120,14 @@ export default {
             color: white;
             font-size: 16px;
         }
+
+        a.nav-link {
+            transition: margin 0.5s ease;
+            &:hover {
+                text-decoration: underline;
+                margin-left: 5px;
+            }
+        }
     }
 
     .nav-menu {
@@ -144,7 +152,9 @@ export default {
     }
     .nav-item {
         display: block;
-        margin-bottom: 8px;
+        .nav-link {
+            padding: 0;
+        }
     }
     button.nav-link {
         background: none;
