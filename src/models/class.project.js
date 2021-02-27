@@ -38,4 +38,11 @@ export default class Project {
             this.fieldsMapped[x.field_id] = x;
         });
     }
+
+    getFieldValue(id) {
+        if (this.fieldsMapped[id]) {
+            return this.fieldsMapped[id].value;
+        }
+        return '';
+    }
 }
