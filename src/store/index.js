@@ -115,11 +115,12 @@ export default new Vuex.Store({
 
 		SET_LIST: function (state, pkg) {
 			const { id, list, total } = pkg;
+			const listProcessed = list.map(x => Project.FromData(x));
 			Vue.set(state.projectLists, id, {
 				loading: false,
 				fetch: null,
 				lastUpdate: Date.now(),
-				list: list,
+				list: listProcessed,
 				total: total
 			});
 			state.viewMode = viewModes.VIEW;
