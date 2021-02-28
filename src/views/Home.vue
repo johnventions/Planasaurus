@@ -8,8 +8,6 @@
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'Home',
-  data: function() {
-    },
+  name: 'Home'
 }
 </script>

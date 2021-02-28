@@ -32,10 +32,10 @@ export default {
     computed: {
         ...mapGetters([
             'activeFields',
-            'activeLayout'
+            'activeLayout',
+            'activeProjectType'
         ]),
         ...mapState({
-            activeProjectType: state => state.activeProjectType,
             projectTypes: state => state.projectTypes
         }),
         layoutUrl: function() { return  `/dash/${this.activeType}/layout`; }

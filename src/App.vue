@@ -28,10 +28,9 @@ export default {
   },
   computed: {
     ...mapState([
-          'activeProjectType',
     ]),
     ...mapGetters([
-          'activeType',
+          'activeProjectType',
     ])
   },
   mounted: function () {
