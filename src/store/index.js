@@ -34,7 +34,6 @@ export default new Vuex.Store({
 		activeWorkspace: null,
 
 		activeTypeCodename: '',
-		activeProjectType: {},
 
 		activeProject: null,
 		pendingUpdates: {},
@@ -74,30 +73,23 @@ export default new Vuex.Store({
 		/* TYPES */
 		SET_TYPES: function (state, types) {
 			// set TYPES to be key'ed off of type ID
-			const mappedIDs = types.reduce((obj, x) => {
-				obj[x.id] = x;
-				return obj;
-			}, {});
+			// const mappedIDs = types.reduce((obj, x) => {
+			// 	obj[x.id] = x;
+			// 	return obj;
+			// }, {});
 
 			// set TYPES to be key'ed off of type URL
 			const mappedNames = types.reduce((obj, x) => {
 				obj[x.codename] = x;
 				return obj;
 			}, {});
-			state.projectTypesMap = {
-				name: mappedNames,
-				id: mappedIDs,
-			};
+			state.projectTypesMap = mappedNames;
 			state.projectTypes = types;
-			if (state.activeProjectType.id == null && state.activeTypeCodename != '') {
-				state.activeProjectType = state.projectTypesMap.name[state.activeTypeCodename];
-			}
 		},
 		
 		UPDATE_ACTIVE_TYPE: function(state, typeName) {
-			const activeType = state.projectTypesMap.name[typeName];
+			//const activeType = state.projectTypesMap[typeName];
 			state.activeTypeCodename = typeName;
-			state.activeProjectType = activeType || {};
 		},
 
 		/* PROJECTS */
@@ -147,6 +139,21 @@ export default new Vuex.Store({
 				fields: fields,
 				fetch: null
 			});
+		},
+
+		
+		UPDATE_FIELD_LAYOUT(state, pkg) {
+			const { type, layout} = pkg;
+			const index = state.projectTypes.findIndex(x => x.id == type);
+			console.log(type, layout, index);
+			if (index >= 0) {
+				const newType = {
+					... state.projectTypes[index],
+					fieldLayout: layout
+				};
+
+				Vue.set(state.projectTypes, index, newType)
+			}
 		},
 
 		EDIT_LAYOUT_FIELD: function (state, field) {
@@ -296,7 +303,7 @@ export default new Vuex.Store({
 		},
 
 		createField({ commit }, pkg) {
-			const { id } = this.state.activeProjectType;
+			const { id } = this.getters.activeProjectType;
 
 			return axios.post(`/api/types/${id}/fields`, pkg)
 				.then(result => {
@@ -328,7 +335,7 @@ export default new Vuex.Store({
 
 		ensureProjectLayoutDisplay({ dispatch }, type) {
 			// looks up the fields and the layout for a project type
-			const searchType = this.state.projectTypesMap.name[type];
+			const searchType = this.state.projectTypesMap[type];
 			if (searchType == null) return;
 			const fieldLookup = dispatch('getProjectFieldsByType', searchType);
 			const layoutLookup = dispatch('getProjectLayoutByType', searchType);
@@ -336,9 +343,22 @@ export default new Vuex.Store({
 		},
 
 		saveLatestLayout(_, pkg) {
-			const { id } = this.state.activeProjectType;
+			const { id } = this.getters.activeProjectType;
 			return axios.post(`/api/types/${id}/layout`, pkg)
 				.then(result => {
+					return result.data;
+				})
+		},
+
+		modifyListLayout({ commit }, pkg) {
+			const { id } = this.getters.activeProjectType;
+			const { type, layout } = pkg;
+			return axios.post(`/api/types/${id}/fieldlayout`, { layout })
+				.then(result => {
+					commit('UPDATE_FIELD_LAYOUT', {
+						type,
+						layout
+					})
 					return result.data;
 				})
 		},
@@ -358,14 +378,14 @@ export default new Vuex.Store({
 
 		searchProjectRecords({ commit }) {
 			const searchParams = {
-				type: this.state.activeProjectType.id,
+				type: this.getters.activeProjectType.id,
 				...this.state.pendingFind
 			};
 			return api.getProjects(searchParams)
 				.then(response => {
 					console.log(response);
 					const pkg = {
-						id: this.state.activeProjectType.id,
+						id: this.getters.activeProjectType.id,
 						list: response.data.list,
 						total: response.data.total,
 					};
@@ -401,15 +421,19 @@ export default new Vuex.Store({
 	},
 	getters: {
 		activeList: state => {
-			const { id } = state.activeProjectType;
+			const apt = state.projectTypes.find(x => x.codename == state.activeTypeCodename) || {};
+			const { id } = apt;
 			if (id && state.projectLists[id]) {
 				return state.projectLists[id];
 			}
 			return {};
 		},
 		prevItem: state => {
-			if (state.activeProject && state.projectLists[state.activeProjectType.id]) {
-				const list = state.projectLists[state.activeProjectType.id].list;
+			const apt = state.projectTypes.find(x => x.codename == state.activeTypeCodename) || {};
+			const { id } = apt;
+
+			if (state.activeProject && state.projectLists[id]) {
+				const list = state.projectLists[id].list;
 				const index = list.findIndex(x => x.id == state.activeProject.id);
 				if (index == 0) return null;
 				const prevItem = Math.max(index - 1, 0);
@@ -418,8 +442,11 @@ export default new Vuex.Store({
 			return null;
 		},
 		nextItem: state => {
-			if (state.activeProject && state.projectLists[state.activeProjectType.id]) {
-				const list = state.projectLists[state.activeProjectType.id].list;
+			const apt = state.projectTypes.find(x => x.codename == state.activeTypeCodename) || {};
+			const { id } = apt;
+
+			if (state.activeProject && state.projectLists[id]) {
+				const list = state.projectLists[id].list;
 				const index = list.findIndex(x => x.id == state.activeProject.id);
 				if (index + 1 == list.length) return null;
 				const nextItem = Math.min(index + 1, list.length - 1);
@@ -428,18 +455,22 @@ export default new Vuex.Store({
 			return null;
 		},
 		activeFields: state => {
-			const { id } = state.activeProjectType;
+			const apt = state.projectTypes.find(x => x.codename == state.activeTypeCodename) || {};
+			const { id } = apt;
+
 			if (id && state.projectFields[id]) {
 				return state.projectFields[id];
 			}
 			return {};
 		},
-		activeType: state => {
-			const t = state.projectTypes.find(x => x.codename == state.activeProjectType);
+		activeProjectType: state  => {
+			const t = state.projectTypes.find(x => x.codename == state.activeTypeCodename);
 			return t || {};
 		},
 		activeLayout: state => {
-			const { id } = state.activeProjectType;
+			const apt = state.projectTypes.find(x => x.codename == state.activeTypeCodename) || {};
+			const { id } = apt;
+
 			if (id && state.projectLayouts[id]) {
 				return state.projectLayouts[id];
 			}
@@ -475,9 +506,12 @@ export default new Vuex.Store({
 			}
 			return f;
 		},
-		getFieldDefintion: (state) => (id) => {
-			if (state.projectFields[state.activeProjectType.id]) {
-				return state.projectFields[state.activeProjectType.id].fields.find(x => x.id == id);
+		getFieldDefintion: (state) => (fid) => {
+			const apt = state.projectTypes.find(x => x.codename == state.activeTypeCodename) || {};
+			const { id } = apt;
+
+			if (state.projectFields[id]) {
+				return state.projectFields[id].fields.find(x => x.id == fid);
 			}
 			return {};
 		},

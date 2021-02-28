@@ -124,5 +124,17 @@ module.exports = function () {
         });
     });
 
+    routes.post('/:id/fieldlayout', async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const layoutUpdate: any = req.body.layout;
+
+        const service = new TypeService();
+        const result = await service.updateTypeFieldLayoutById(id, layoutUpdate);
+        res.status(200).json({
+            success: true,
+            layout: layoutUpdate
+        });
+    });
+
     return routes;
 }

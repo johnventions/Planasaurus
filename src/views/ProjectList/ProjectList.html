@@ -1,10 +1,25 @@
 <div class="container-fluid">
-    <div v-if="activeList && activeList.list">
-        <div v-for="(project, i) in activeList.list"
-            :key="project.id">
-            <router-link :to="parseUrl(project)">
-                {{ activeProjectType.name }} #{{ project.id }}
-            </router-link>
-        </div>
+    <div v-if="activeList && activeList.list" class="list-container">
+        <button v-on:click="addField">
+            Add Field
+        </button>
+        <table-sort
+            :columns="columns"
+            :rows="rows">
+        </table-sort>
+        <modal name="fieldConfigure" height="auto">
+            <label>
+                Select item to add
+            </label><br/>
+            <select v-model="fieldToAdd">
+                <option value="">Select a field</option>
+                <option :value="field.id" v-for=" (field, i) in activeFieldsforDropdown" :key="i">
+                    {{ field.name }}
+                </option>
+            </select>
+            <button v-on:click="addFieldToLayout">
+                Add field
+            </button>
+        </modal>
     </div>
 </div>

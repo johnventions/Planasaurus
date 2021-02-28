@@ -18,16 +18,20 @@ export default {
             'activeLayout',
             'activeList',
             'prevItem',
-            'nextItem'
+            'nextItem',
+            'activeProjectType'
         ]),
         ... mapState({
             authenticated: state => state.authenticated,
             viewMode: state => state.viewMode,
             navItems: state => state.projectTypes.filter( x => x.parent_id == null),
-            activeProjectType: state => state.activeProjectType,
-            projectTypeDisplayName: state => state.activeProjectType ? state.activeProjectType.name : '',
-            layoutUrl: function(state) { return  `/dash/${state.activeProjectType.codename}/layout`; }
         }),
+        projectTypeDisplayName: function() {
+            return this.$store.getters.activeProjectType ? this.$store.getters.activeProjectType.name : ''
+        },
+        layoutUrl: function() {
+            return this.$store.getters.activeProjectType ? `/dash/${this.$store.getters.activeProjectType.codename}/layout` : ''
+        },
         layoutEditing: function() {
             if (this.$route.name == "Project Layout") {
                 return true;

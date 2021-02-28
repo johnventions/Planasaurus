@@ -12,6 +12,8 @@ export default class TypeService {
     async getTypes(workspace: Number) : Promise<ProjectType[]> {
         const pool = await getSQLPool;
         const types = await typeQueries.getProjectTypes(pool, workspace);
+        console.log(types);
+        
         return types.recordset.map(x => this.ToTypeModel(x) );
     }
 
@@ -101,6 +103,12 @@ export default class TypeService {
     async updateTypeLayoutById(typeID: Number, layout: any): Promise<any> {
         const pool = await getSQLPool;
         const result = await typeQueries.updateLayoutForProjectType(pool, typeID, JSON.stringify(layout));
+        return result;
+    }
+
+    async updateTypeFieldLayoutById(typeID: Number, layout: any): Promise<any> {
+        const pool = await getSQLPool;
+        const result = await typeQueries.updateFieldLayoutForProjectType(pool, typeID, JSON.stringify(layout));
         return result;
     }
 }

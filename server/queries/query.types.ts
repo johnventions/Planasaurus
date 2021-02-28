@@ -12,6 +12,7 @@ const getProjectTypes = function (pool: sql.ConnectionPool, workspace: Number) {
             t.codename,
             t.parent_id,
             t.menu_order,
+            t.fieldLayout,
             p.qty
         FROM project_types t
         INNER JOIN workspaces w ON t.workspace = w.id
@@ -216,6 +217,20 @@ const updateLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: N
     return request.query(update);
 }
 
+const updateFieldLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Number, layout: String) {
+    const update = `
+        UPDATE project_types
+        SET fieldLayout = @layout
+        WHERE id = @pt;
+`;
+
+    const request = pool.request();
+    request.input('pt', sql.Int, typeID);
+    request.input('layout', sql.VarChar, layout);
+    request.multiple = true;
+    return request.query(update);
+}
+
 const _ = {
     getProjectTypes,
     createType,
@@ -225,6 +240,7 @@ const _ = {
     getLayoutForProjectType,
     getOptionsForProjectType,
     updateLayoutForProjectType,
+    updateFieldLayoutForProjectType,
     updateFieldDefinition
 }
 

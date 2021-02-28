@@ -29,11 +29,11 @@ export default {
     computed: {
         ...mapGetters([
             'activeFields',
-            'activeLayout'
+            'activeLayout',
+            'activeProjectType'
         ]),
         ...mapState({
             activeProject: state => state.activeProject,
-            activeProjectType: state => state.activeProjectType,
             projectTypes: state => state.projectTypes,
             pendingUpdates: state => state.pendingUpdates,
             pendingFind: state => state.pendingFind,

@@ -82,7 +82,7 @@ export default {
             return `addModal_${this.field.id}`;
         },
         relatedOptions: function() {
-            const { id } = this.$store.state.activeProjectType;
+            const { id } = this.$store.getters.activeProjectType;
             const activeLayout = this.$store.state.projectLayouts[id];
             if (activeLayout && activeLayout.related[this.field.id]) {
                 return activeLayout.related[this.field.id];

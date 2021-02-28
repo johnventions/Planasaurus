@@ -7,6 +7,7 @@ export default class ProjectType {
     menu_order: Number = 0;
     parent_id: Number | null = null;
     qty: Number = 0;
+    fieldLayout: any[] = [];
 
     static fromData(data: any) : ProjectType {
         let t = new ProjectType();
@@ -16,6 +17,11 @@ export default class ProjectType {
         t.menu_order = data.menu_order;
         t.parent_id = data.parent_id;
         t.qty = data.qty || 0;
+        try {
+            t.fieldLayout = JSON.parse(data.fieldLayout) || [];
+        } catch {
+            t.fieldLayout = [];
+        }
 
         return t;
     }
