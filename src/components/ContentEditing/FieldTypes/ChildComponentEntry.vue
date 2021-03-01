@@ -13,16 +13,15 @@
         <div class="child-col settings">
             <dropdown-menu
                 v-model="show">
-            <button class="btn btn-primary dropdown-toggle">
-                <font-awesome-icon icon="cog" size="1x" />
-            </button>
-            <div slot="dropdown">
-                <button class="dropdown-item" @click="removeElement">
-                    Remove
+                <button class="btn btn-primary dropdown-toggle">
+                    <font-awesome-icon icon="cog" size="1x" />
                 </button>
-            </div>
-        </dropdown-menu>
-            
+                <div slot="dropdown">
+                    <button class="dropdown-item" @click="removeElement">
+                        Remove
+                    </button>
+                </div>
+            </dropdown-menu>
         </div>
     </div>
 </template>

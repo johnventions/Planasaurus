@@ -9,7 +9,9 @@ export default {
     name: 'ProjectList',
     data: function() {
         return {
+            show: false,
             fieldToAdd: '',
+            fieldToEdit: ''
         }
     },
     components: {
@@ -39,6 +41,12 @@ export default {
                 return f.fields.filter(x => x.parent == null);
             } 
             return [];
+        },
+        fieldLayoutDefinitions: function() {
+            const layout = this.activeProjectType.fieldLayout;
+            return layout.map(x => {
+                return this.$store.getters.getFieldDefintion(x.id);
+            });
         },
         layoutUrl: function() { return  `/dash/${this.activeProjectType}/layout`; },
         columns: function() {
@@ -104,11 +112,15 @@ export default {
         parseUrl(project) {
             return `${this.activeProjectType.codename}/${project.id}`;
         },
+        editFields: function() {
+            this.fieldToEdit = '';
+            this.$modal.show("fieldConfigureModal");
+        },
         addField: function() {
-            this.$modal.show("fieldConfigure");
+            this.$modal.show("fieldAddModal");
         },
         addFieldToLayout: function() {
-            this.$modal.hide("fieldConfigure");
+            this.$modal.hide("fieldAddModal");
             const modified = {
                 type: this.activeProjectType.id,
                 layout: [
@@ -118,7 +130,17 @@ export default {
                     }
                 ]
             };
-            this.modifyListLayout(modified)
+            this.modifyListLayout(modified);
+        },
+        removeFieldFromLayout: function() {
+            this.$modal.hide("fieldConfigureModal");
+            const layout = [... this.activeProjectType.fieldLayout]
+            layout.splice(this.fieldToEdit, 1);
+            const modified = {
+                type: this.activeProjectType.id,
+                layout
+            };
+            this.modifyListLayout(modified);
         }
     },
     mounted: function() {
