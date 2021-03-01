@@ -1,13 +1,24 @@
 <div class="container-fluid">
     <div v-if="activeList && activeList.list" class="list-container">
-        <button v-on:click="addField">
-            Add Field
-        </button>
+        <dropdown-menu
+                v-model="show">
+            <button class="btn btn-primary dropdown-toggle">
+                <font-awesome-icon icon="cog" size="1x" />
+            </button>
+            <div slot="dropdown">
+                <button class="dropdown-item" @click="addField">
+                    Add Field
+                </button>
+                <button class="dropdown-item" @click="editFields">
+                    Edit / Remove Fields
+                </button>
+            </div>
+        </dropdown-menu>
         <table-sort
             :columns="columns"
             :rows="rows">
         </table-sort>
-        <modal name="fieldConfigure" height="auto">
+        <modal name="fieldAddModal" height="auto">
             <label>
                 Select item to add
             </label><br/>
@@ -20,6 +31,20 @@
             <button v-on:click="addFieldToLayout">
                 Add field
             </button>
+        </modal>
+        <modal name="fieldConfigureModal" height="auto">
+            <label>
+                Select item to edit
+            </label><br/>
+            <select v-model="fieldToEdit">
+                <option value="">Select field to edit</option>
+                <option v-for="(f, i) in fieldLayoutDefinitions" :key="i" :value="i">{{ f.name }}</option>
+            </select>
+            <div v-if="fieldToEdit !== ''">
+                <button class="btn btn-primary" @click="removeFieldFromLayout">
+                    Remove Field
+                </button>
+            </div>
         </modal>
     </div>
 </div>
