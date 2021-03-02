@@ -1,47 +1,39 @@
 <div>
-    <nav class="bg-primary sidenav">
-        <div class='container'>
-            <router-link to="/" class="navbar-brand">
-                Planasaurus
-            </router-link>
-            <div
-                :class="{'show': navOpen}"
-                class="nav-menu"
-                id="">
-                <ul class="">
-                    <li class="nav-item" v-if="false && authenticated">
-                        <router-link to="/myq" class="nav-link">
-                            My Q
-                        </router-link>
-                    </li>
-                    <li class="nav-item" 
-                        v-for="(item, i) in navItems" :key="item.id">
-                        <router-link :to="parseUrl(item)" class="nav-link">
-                            <font-awesome-icon icon="caret-right" class="inline" />
-                            {{ item.name }}
-                        </router-link>
-                    </li>
-                    
-                    <li class="nav-item ml-auto" v-if="authenticated">
-                        <router-link to="/dash/configure" class="nav-link">
-                            <font-awesome-icon icon="plus-square" class="inline" />
-                            New Type
-                        </router-link>
-                    </li>
-                    <li class="nav-item ml-auto" v-if="authenticated">
-                        <router-link to="/dash/configure" class="nav-link">
-                            <font-awesome-icon icon="cog" class="inline" />
-                            Settings
-                        </router-link>
-                    </li>
-                    <li class="nav-item ml-auto" v-if="!authenticated">
-                        <router-link to="/login" class="nav-link">
-                            <font-awesome-icon icon="sign-in-alt" size="lg" class="inline" />
-                            Sign In
-                        </router-link>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <v-navigation-drawer 
+    permanent
+    on-drawer 
+    class="deep-purple darken-1"
+    v-if="authenticated"
+    v-model="drawer" app dark>
+    <v-sheet light color="grey lighten-4" class="pa-4">
+        <v-avatar class="mb-4" color="grey darken-1" size="64"></v-avatar>
+        <div>test@test.com</div>
+    </v-sheet>
+    <v-list dense nav> 
+        <v-list-item v-for="item in navItems" :key="item.id" :to="parseUrl(item)" link>
+            <v-list-item-icon>
+                <v-icon>{{ 'mdi-view-dashboard' }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+                <v-list-item-title>{{ item.name }}</v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/dash/configure" link>
+            <v-list-item-icon>
+                <v-icon>{{ 'mdi-plus' }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+                <v-list-item-title>New Type</v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/dash/configure" link>
+            <v-list-item-icon>
+                <v-icon>{{ 'mdi-dots-horizontal' }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+                <v-list-item-title>Settings</v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+    </v-list>
+</v-navigation-drawer>
 </div>

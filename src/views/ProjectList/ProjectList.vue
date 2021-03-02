@@ -45,17 +45,17 @@ export default {
         fieldLayoutDefinitions: function() {
             const layout = this.activeProjectType.fieldLayout;
             return layout.map(x => {
-                return this.$store.getters.getFieldDefintion(x.id);
+                return this.$store.getters.getFieldDefintion(x.id) || {id: x.id};
             });
         },
         layoutUrl: function() { return  `/dash/${this.activeProjectType}/layout`; },
         columns: function() {
             const fieldLayout = this.$store.getters.activeProjectType.fieldLayout || [];
             const fieldColumns = fieldLayout.map( x => {
-                const f = this.$store.getters.getFieldDefintion(x.id);
+                const f = this.$store.getters.getFieldDefintion(x.id) || {};
                 return  {
                     name: x.id,
-                    label: f.name
+                    label: f ? f.name : x.id
                 }
             });
             return [
@@ -95,7 +95,6 @@ export default {
     },
     methods: {
         ...mapMutations({
-            'startViewMode': 'START_VIEW_MODE'
         }),
         ...mapActions([
             'getProjectListById',

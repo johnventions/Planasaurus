@@ -1,7 +1,11 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <v-app>
+    <app-side-nav></app-side-nav>
+    <app-tool-nav></app-tool-nav>
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -9,7 +13,14 @@ import Vue from 'vue'
 import axios from 'axios';
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 
+import SideNav from "@/components/Structure/SideNav/SideNav";
+import ToolNav from "@/components/Structure/ToolNav/ToolNav";
+
 export default {
+  components: {
+    "app-side-nav": SideNav,
+    "app-tool-nav": ToolNav,
+  },
   methods: {
     ...mapMutations({
       startFindMode: "START_FIND_MODE",
@@ -26,8 +37,13 @@ export default {
       console.log(error);
     }
   },
+  data () {
+    return {
+    }
+  },
   computed: {
     ...mapState([
+      'authenticated'
     ]),
     ...mapGetters([
           'activeProjectType',
@@ -58,6 +74,9 @@ export default {
 </script>
 
 <style lang="scss">
+  a:hover {
+    text-decoration: none;
+  }
 #nav {
   margin-bottom: 10px;
   a {
