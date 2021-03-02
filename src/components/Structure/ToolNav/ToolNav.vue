@@ -41,7 +41,7 @@ export default {
         currentItemDisplay: function() {
             const list = this.$store.getters.activeList.list;
             const total = this.$store.getters.activeList.total;
-            if (this.$route.name == "Project Detail") {
+            if (list && this.$route.name == "Project Detail") {
                 if (this.$store.state.activeProject == null) return 0
                 const id = this.$store.state.activeProject.id;
                 const index = list.findIndex(x => x.id == id) + 1;
@@ -114,7 +114,4 @@ export default {
 }
 </script>
 <style lang="scss">
-    .utility-nav {
-        width: 100%;
-    }
 </style>

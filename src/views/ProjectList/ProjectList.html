@@ -38,7 +38,9 @@
             </label><br/>
             <select v-model="fieldToEdit">
                 <option value="">Select field to edit</option>
-                <option v-for="(f, i) in fieldLayoutDefinitions" :key="i" :value="i">{{ f.name }}</option>
+                <option v-for="(f, i) in fieldLayoutDefinitions" :key="i" :value="i">
+                    {{ f.name }}
+                </option>
             </select>
             <div v-if="fieldToEdit !== ''">
                 <button class="btn btn-primary" @click="removeFieldFromLayout">
