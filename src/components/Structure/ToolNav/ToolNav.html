@@ -5,7 +5,7 @@
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <v-btn-toggle rounded class="">
                 <v-btn
-                    v-if="viewMode != 'find'" 
+                    :disabled="viewMode == 'find'"
                     :to="`/dash/${activeProjectType.codename}/find`">
                 <v-icon>mdi-magnify</v-icon>
                 Search
@@ -14,13 +14,13 @@
                     v-if="viewMode == 'find'" 
                     @click="cancelClick">
                     <v-icon>mdi-magnify-minus</v-icon>
-                    Cancel Search
+                    Cancel
                 </v-btn>
                 <v-btn
                     @click="searchProjectRecords"
                     v-if="viewMode == 'find'">
                     <v-icon>mdi-magnify-plus</v-icon>
-                    Run Search
+                    Run
                 </v-btn>
                 <v-btn
                     :to="`/dash/${activeProjectType.codename}/new`" 
@@ -40,10 +40,21 @@
                     @click="goPrev">
                 <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
+                <v-btn>
+                    <span v-html="currentItemDisplay"></span>
+                </v-btn>
                 <v-btn
                     :disabled="nextItem == null"
                     @click="goNext">
                 <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>
+            </v-btn-toggle>
+            <v-btn-toggle rounded>
+                <v-btn :to="layoutUrl" > 
+                    Layout
+                </v-btn>
+                <v-btn @click="saveLayout" v-if="layoutEditing">
+                    Save Layout
                 </v-btn>
             </v-btn-toggle>
           </v-col>
