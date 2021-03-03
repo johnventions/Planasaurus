@@ -75,6 +75,11 @@ export default {
                 this.editField(newField.id);
             }
         },
+        removeField: function(index) {
+            let newItem = { ... this.item };
+            newItem.components.splice(index, 1);
+            this.$emit('updatechild', this.index, newItem);
+        },
         editField(id) {
             this.$modal.show(this.modalEditField);
             this.fieldInEdit = id;
