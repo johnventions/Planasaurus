@@ -1,8 +1,8 @@
 <template>
     <router-link :to="`/dash/${activeProjectType.codename}/${id}`">
-        <button class="btn btn-primary">
+        <v-btn>
             View
-        </button>
+        </v-btn>
     </router-link>
     
 </template>

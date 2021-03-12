@@ -1,9 +1,14 @@
 <template>
   <v-app>
-    <app-side-nav></app-side-nav>
-    <app-tool-nav></app-tool-nav>
-    <v-main>
-      <router-view />
+    <app-side-nav v-if="authenticated" 
+      ref="sidenav"></app-side-nav>
+    <app-tool-nav v-if="authenticated"
+      v-on:drawertoggle="$refs.sidenav.drawer = !$refs.sidenav.drawer"></app-tool-nav>
+    <app-brand-nav v-if="!authenticated"></app-brand-nav>
+    <v-main class="grey lighten-2">
+      <v-container>
+        <router-view />
+      </v-container>
     </v-main>
   </v-app>
 </template>
@@ -15,9 +20,11 @@ import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 
 import SideNav from "@/components/Structure/SideNav/SideNav";
 import ToolNav from "@/components/Structure/ToolNav/ToolNav";
+import BrandNav from "@/components/Structure/BrandNav/BrandNav";
 
 export default {
   components: {
+    "app-brand-nav": BrandNav,
     "app-side-nav": SideNav,
     "app-tool-nav": ToolNav,
   },
@@ -74,7 +81,7 @@ export default {
 </script>
 
 <style lang="scss">
-  a:hover {
+  a, a:hover {
     text-decoration: none;
   }
 #nav {

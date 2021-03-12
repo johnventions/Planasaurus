@@ -2,11 +2,12 @@
     <div class="form-group" 
         v-bind:class="{ find: viewMode == 'find' }">
         <label>{{ field.name }}</label>
-        <button 
+        <v-btn dark
+            color="deep-purple" 
             @click="startAddRecord"
             class="btn btn-primary btn-add float-right">
             + Add
-        </button><br/>
+        </v-btn>
         <div class="nested-input" v-if="value && value.length">
             <child-entry v-for="(child, i) in value"
                 v-on:remove-me="removeElement(child, i)"
@@ -154,41 +155,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .btn-add {
-        margin-left: 12px;
-        padding: 1px 8px;
-    }
-
     .nested-input {
-        border: 1px solid black;
         display: table;
         width: 100%;
-    }
-
-    .form-group {
-        &.find {
-            .input-container {
-                position: relative;
-                &:after {
-                    display: block;
-                    position: absolute;
-                    content: 'X';
-                    height: 20px;
-                    width: 20px;
-                    right: 5px;
-                    top: 5px;
-                }
-            }
-            select {
-                    background-color: #d9f6ff;
-                }
-        }
-
-        select {
-            &.touched {
-                border: 2px solid #328d32;
-                font-weight: bold;
-            }
-        }
     }
 </style>

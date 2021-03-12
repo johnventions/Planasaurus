@@ -9,14 +9,21 @@
                 :index="i"
                 :item="item">
             </layout-section>
-            <button class="btn btn-primary section-edit" 
+            <v-btn class="section-edit mx-2"
+                fab small dark
+                color="purple"
                 @click="editSection(item.id)">
-                <font-awesome-icon icon="cog" size="1x" class="inline" />
-            </button>
-            <button class="btn btn-primary section-new" 
+                <v-icon dark>
+                    mdi-cog
+                  </v-icon>
+            </v-btn>
+            <v-btn class="section-new"
+                icon outlined small
                 @click="newSection(i, null)">
-                +
-            </button>
+                <v-icon dark>
+                    mdi-plus
+                  </v-icon>
+            </v-btn>
         </div>
         <modal name="new-section-modal">
             <div class="row section-choices">

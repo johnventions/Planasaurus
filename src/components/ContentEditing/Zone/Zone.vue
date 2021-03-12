@@ -47,11 +47,15 @@ export default {
 </script>
 <style lang="scss">
     .zone {
+        .field-item {
+            margin-bottom: 10px;
+        }
         &.editing {
+            + .zone {
+                border-left: 1px dashed grey;
+            }
             .zone-container {
-                min-height: 200px;
                 padding: 15px;
-                border: 1px dotted black;
             }
             .zone-new {
                 display: inline-block;

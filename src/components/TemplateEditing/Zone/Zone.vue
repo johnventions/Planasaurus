@@ -137,9 +137,7 @@ export default {
         }
         &.editing {
             .zone-container {
-                min-height: 200px;
                 padding: 15px;
-                border: 1px dotted black;
             }
             .zone-new {
                 display: inline-block;

@@ -2,14 +2,15 @@
     <div class="form-group" 
         v-bind:class="{ find: viewMode == 'find' }"
     >
-        <label>{{ field.name }}</label><br/>
-        <select class="form-control"
-                v-bind:class="{touched: touched}"
-                v-model="value"
-                v-on:change="handleUpdate">
-            <option disabled selected>Select One</option>
-            <option :value="option.key" v-for="(option, i) in options" :key="i">{{ option.value }}</option>
-        </select>
+        <v-select
+            :items="options"
+            v-model="value"
+            v-on:change="handleUpdate"
+            v-bind:class="{touched: touched}"
+            item-text="value"
+            item-value="key"
+            :label="field.name"
+            ></v-select>
     </div>
 </template>
 <script>

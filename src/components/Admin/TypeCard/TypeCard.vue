@@ -6,22 +6,22 @@
         </div>
         <div class="list-type-buttons">
             <router-link :to="`/dash/${obj.codename}`">
-                <button class="btn btn-primary">
+                <v-btn>
                     <font-awesome-icon icon="location-arrow" size="1x" />
                     &nbsp; View
-                </button>
+                </v-btn>
             </router-link>
             <router-link :to="`/dash/${obj.codename}/layout`">
-                <button class="btn btn-primary">
+                <v-btn>
                     <font-awesome-icon icon="edit" size="1x" />
                     &nbsp; Edit Layout
-                </button>
+                </v-btn>
             </router-link>
-            <button class="btn btn-primary float-right"
+            <v-btn class="float-right"
                 @click="$emit('edit', obj.id)"
                 title="Edit Settings">
                     <font-awesome-icon icon="cog" size="1x" />
-            </button>
+            </v-btn>
         </div>
         <br/>
         <slot></slot>
