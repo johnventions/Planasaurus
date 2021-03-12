@@ -32,8 +32,4 @@ export default {
 }
 </script>
 <style lang="scss">
-    .section {
-        padding: 10px 0;
-        position: relative;
-    }
 </style>

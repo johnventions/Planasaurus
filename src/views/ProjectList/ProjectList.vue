@@ -98,12 +98,14 @@ export default {
         }),
         ...mapActions([
             'getProjectListById',
+            'getProjectFieldsByType',
             'modifyListLayout'
         ]),
         processPath: function() {
             if (this.activeProjectType != null && this.$route.query.search == null) {
                 this.queryList();
             }
+            this.getProjectFieldsByType(this.activeProjectType);
         },
         queryList() {
             this.getProjectListById(this.activeProjectType.id);
@@ -149,7 +151,9 @@ export default {
 }
 </script>
 <style lang="scss">
-    .list-container {
-        height: 100vh;
+    table {
+        tr td {
+            padding-bottom: 10px;
+        }
     }
 </style>

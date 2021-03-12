@@ -1,5 +1,5 @@
-<div class='zone editing'>
-    <div class="zone-container">
+<v-card elevation="4">
+    <v-card-text>
         <draggable 
             :list="item.components"
             handle=".handle"
@@ -19,19 +19,20 @@
                     </div>
                 </div>
         </draggable>
-        <button class="btn-field-new" @click="newField">
+        <v-btn @click="newField">
             + New Field
-        </button>
-    </div>
-    <modal :name="modalNewField" height="auto">
-        <new-field-modal
-            v-if="creatingField"
-            v-on:createField="submitCreateField" />
-    </modal>
-    <modal :name="modalEditField" height="auto">
-        <edit-field-modal
-            v-if="editingField"
-            v-on:edit-finish="finishEdit"
-            :field="fieldInEdit" />
-    </modal>
-</div>
+        </v-btn>
+        <modal :name="modalNewField" height="auto">
+            <new-field-modal
+                v-if="creatingField"
+                v-on:createField="submitCreateField" />
+        </modal>
+        <modal :name="modalEditField" height="auto">
+            <edit-field-modal
+                v-if="editingField"
+                v-on:edit-finish="finishEdit"
+                :field="fieldInEdit" />
+        </modal>
+    </v-card-text>
+</v-card>
+        

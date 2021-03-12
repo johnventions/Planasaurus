@@ -2,18 +2,20 @@
     <div class="form-group"
         v-bind:class="{ find: viewMode == 'find' }"
     >
-        <label>{{ field.name }}</label><br/>
         <div class="input-container" v-if="maxQty == 0 || maxQty > value.length">
-            <input type="file"
+            <v-file-input
+                v-model="files"
                 ref="fileInput"
-                class="form-control"
-                v-on:change="selectFileHandler"/>
-                <button 
-                    class="btn btn-primary"
-                    v-if="fileSelected"
-                    @click="uploadFile">
-                    Upload
-                </button>
+                counter
+                :label="field.name">
+            ></v-file-input>
+            <v-btn 
+                dark
+                v-if="files"
+                color="deep-purple"
+                @click="uploadFile">
+                Upload
+            </v-btn>
         </div>
         <div v-if="value && value.length" v-bind:class="`uploads-${displayType}`">
             <div v-for="(file, i) in value" :key="file.uuid" class="file-container">
@@ -44,6 +46,7 @@ export default {
     ],
     data: function() {
         return {
+            files: [],
             value: this.$store.getters.getFieldFiles(this.field.id),
             touched: false,
             changes: [],
@@ -82,15 +85,9 @@ export default {
             });
             this.touched = true;
         },
-        selectFileHandler() {
-            if (this.$refs.fileInput.files && this.$refs.fileInput.files.length) {
-                this.fileSelected = true;
-            }
-        },
         uploadFile: function() {
             const formData = new FormData();
-            const file = this.$refs.fileInput.files[0];
-            formData.append('attachment', file);
+            formData.append('attachment', this.files);
             this.$http.post('/upload', formData, {
                 headers: {
                      'Content-Type': 'multipart/form-data'
@@ -109,9 +106,7 @@ export default {
                         }
                     ];
                 this.handleUpdate();
-                if (this.$refs.fileInput) {
-                    this.$refs.fileInput.value = null;
-                }
+                this.files = null;
             })
         },
         removeElement: function(file, i) {

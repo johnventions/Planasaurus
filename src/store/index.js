@@ -434,7 +434,7 @@ export default new Vuex.Store({
 
 			if (state.activeProject && state.projectLists[id]) {
 				const list = state.projectLists[id].list;
-				const index = list.findIndex(x => x.id == state.activeProject.id);
+				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : 0;
 				if (index == 0) return null;
 				const prevItem = Math.max(index - 1, 0);
 				return list[prevItem];
@@ -447,7 +447,7 @@ export default new Vuex.Store({
 
 			if (state.activeProject && state.projectLists[id]) {
 				const list = state.projectLists[id].list;
-				const index = list.findIndex(x => x.id == state.activeProject.id);
+				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : 0;
 				if (index + 1 == list.length) return null;
 				const nextItem = Math.min(index + 1, list.length - 1);
 				return list[nextItem];
@@ -510,7 +510,7 @@ export default new Vuex.Store({
 			const apt = state.projectTypes.find(x => x.codename == state.activeTypeCodename) || {};
 			const { id } = apt;
 
-			if (state.projectFields[id]) {
+			if (state.projectFields[id] && state.projectFields[id].fields) {
 				return state.projectFields[id].fields.find(x => x.id == fid);
 			}
 			return {};

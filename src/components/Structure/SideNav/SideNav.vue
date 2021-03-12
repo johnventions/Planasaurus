@@ -6,7 +6,7 @@ export default {
     name: 'SideNav',
     data: function() {
         return {
-            drawer: null,
+            drawer: null
         }
     },
     components: {

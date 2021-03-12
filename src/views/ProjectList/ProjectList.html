@@ -1,19 +1,25 @@
 <div class="container-fluid">
     <div v-if="activeList && activeList.list" class="list-container">
-        <dropdown-menu
-                v-model="show">
-            <button class="btn btn-primary dropdown-toggle">
-                <font-awesome-icon icon="cog" size="1x" />
-            </button>
-            <div slot="dropdown">
-                <button class="dropdown-item" @click="addField">
-                    Add Field
-                </button>
-                <button class="dropdown-item" @click="editFields">
-                    Edit / Remove Fields
-                </button>
-            </div>
-        </dropdown-menu>
+        <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on"
+              >
+                Edit <font-awesome-icon icon="cog" size="1x" />
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="addField">
+                <v-list-item-title >Add Field</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="editFields"> 
+                  <v-list-item-title>Edit / Remove fields</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         <table-sort
             :columns="columns"
             :rows="rows">

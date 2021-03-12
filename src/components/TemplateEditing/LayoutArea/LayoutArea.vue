@@ -90,37 +90,15 @@ export default {
         }
     }
     .section-new, .section-edit {
-        border-radius: 20%;
-        border: 1px solid black;
-        width: 30px;
-        height: 30px;
         position: absolute;
         z-index: 20;
         text-align: center;
-        color: white;
-        font-size: 18px;
-        font-weight: 800;
         cursor: pointer;
-        padding: 0;
     }
     .section-new {
         left: -35px;
         bottom: -16px;
         position: absolute;
-
-        &:hover {
-            &:before {
-                position: absolute;
-                content: '';
-                display: block;
-                height: 0px;
-                width: 70vw;
-                border-top: 1px dashed black;
-                z-index: 2;
-                top: 12px;
-                left: 35px;
-            }
-        }
     }
     .section-edit {
         right: -15px;

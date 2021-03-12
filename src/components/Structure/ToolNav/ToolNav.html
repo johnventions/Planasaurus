@@ -2,7 +2,6 @@
     <v-app-bar app flat class="">
         <v-row>
           <v-col>
-            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <v-btn-toggle rounded class="">
                 <v-btn
                     :disabled="viewMode == 'find'"
@@ -34,7 +33,7 @@
             </v-btn-toggle>
           </v-col>
           <v-col>
-            <v-btn-toggle rounded class="justify-self-end">
+            <v-btn-toggle dense rounded v-if="!layoutEditing">
                 <v-btn 
                     :disabled="prevItem == null"
                     @click="goPrev">
@@ -57,6 +56,11 @@
                     Save Layout
                 </v-btn>
             </v-btn-toggle>
+          </v-col>
+          <v-col 
+            class="d-md-none col-1">
+            <v-app-bar-nav-icon 
+            @click="$emit('drawertoggle')"/>
           </v-col>
         </v-row>
       </v-app-bar>
