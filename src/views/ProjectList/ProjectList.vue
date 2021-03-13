@@ -50,8 +50,9 @@ export default {
                 },
                 ... fieldColumns,
                 {
-                    text: 'GoTo',
+                    text: '',
                     value: 'GoTo',
+                    sortable: false,
                 }
             ]
         },
