@@ -1,4 +1,4 @@
-<v-card elevation="4">
+<v-card elevation="4" class="zone">
     <v-card-text>
         <draggable 
             :list="item.components"
@@ -14,7 +14,7 @@
                             <font-awesome-icon icon="arrows-alt" size="sm" class="inline" />
                     </span>
                     <div 
-                    :field="getLayoutFieldDef(child.id)"
+                    v-bind="fieldProps(child.id)"
                     :is="getLayoutComponent(child.id)">
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-<template src="./Zone.html"></template>
+<template src="./TemplateZone.html"></template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import draggable from 'vuedraggable'
@@ -9,6 +9,7 @@ import NewFieldModal from '../Modals/NewField'
 import EditFieldModal from '../Modals/EditField'
 
 export default {
+    name: 'TemplateZone',
     props: ["item", "index"],
     data: function() {
         return {
@@ -42,6 +43,19 @@ export default {
                 return this.activeFields.fields.find(x => x.id == fieldID);
             }
             return null;
+        },
+        fieldProps(fieldID) {
+            let props = {};
+            if (this.activeFields && this.activeFields.fields) {
+                props.field = this.activeFields.fields.find(x => x.id == fieldID);
+            }
+            let fieldDef = this.getLayoutFieldDef(fieldID);
+            if (fieldDef) {
+                // find matching component base on the data type
+                let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
+                props.type = matchingComponent.type;
+            }
+            return props;
         },
         getLayoutComponent(fieldID) {
             // find field definition

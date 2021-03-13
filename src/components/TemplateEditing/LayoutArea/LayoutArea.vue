@@ -1,7 +1,7 @@
 <template src="./LayoutArea.html"></template>
 <script>
 import Vue from 'vue';
-import LayoutSection from '@/components/TemplateEditing/Section/Section';
+import LayoutSection from '@/components/TemplateEditing/Section/TemplateSection';
 import Section from '@/models/class.section';
 
 
