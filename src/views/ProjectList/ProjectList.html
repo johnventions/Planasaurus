@@ -1,33 +1,38 @@
 <div class="container-fluid">
     <div v-if="activeList && activeList.list" class="list-container">
-        <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="primary"
-                dark
-                v-bind="attrs"
-                v-on="on"
-              >
-                Edit <font-awesome-icon icon="cog" size="1x" />
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="addField">
-                <v-list-item-title >Add Field</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="editFields"> 
-                  <v-list-item-title>Edit / Remove fields</v-list-item-title>
-              </v-list-item>
-            </v-list>
-        </v-menu>
         <v-data-table
+            mobile-breakpoint="100"
             :headers="headers"
             :items="items"
             class="elevation-1">
+            <template v-slot:header.GoTo="{ header }">
+                <v-menu offset-y bottom left>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        color="primary"
+                        dark
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                      <v-icon>{{ 'mdi-cog' }}</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list>
+                      <v-list-item @click="addField">
+                        <v-list-item-title >Add Field</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="editFields"> 
+                          <v-list-item-title>Edit / Remove fields</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                </v-menu>
+            </template>
             <template v-slot:item.GoTo="{ item }">
                 <goto :id="item.ID"></goto>
             </template>
         </v-data-table>
+
+
         <modal name="fieldAddModal" height="auto">
             <label>
                 Select item to add

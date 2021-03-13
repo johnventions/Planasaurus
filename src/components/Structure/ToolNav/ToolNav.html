@@ -1,67 +1,64 @@
 <div>
     <v-app-bar app flat class="">
-        <v-row>
-          <v-col>
             <v-btn-toggle rounded class="">
                 <v-btn
                     :disabled="viewMode == 'find'"
                     :to="`/dash/${activeProjectType.codename}/find`">
-                <v-icon>mdi-magnify</v-icon>
-                Search
+                    <v-icon>mdi-magnify</v-icon>
+                    <span class="d-none d-sm-block">
+                        Search
+                    </span>
                 </v-btn>
                 <v-btn
                     v-if="viewMode == 'find'" 
                     @click="cancelClick">
                     <v-icon>mdi-magnify-minus</v-icon>
-                    Cancel
+                    <span class="d-none d-sm-block">
+                        Cancel
+                    </span>
                 </v-btn>
                 <v-btn
                     @click="searchProjectRecords"
                     v-if="viewMode == 'find'">
                     <v-icon>mdi-magnify-plus</v-icon>
-                    Run
+                    <span class="d-none d-sm-block">
+                        Run
+                    </span>
                 </v-btn>
                 <v-btn
                     :to="`/dash/${activeProjectType.codename}/new`" 
                     v-if="activeProjectType">
-                <v-icon>mdi-plus</v-icon>
-                New
-                </v-btn>
-                <v-btn>
-                <v-icon>mdi-dots-vertical</v-icon>
+                    <v-icon>mdi-plus</v-icon>
+                    <span class="d-none d-sm-block">
+                        New
+                    </span>
                 </v-btn>
             </v-btn-toggle>
-          </v-col>
-          <v-col>
+            <v-spacer></v-spacer>
             <v-btn-toggle dense rounded v-if="!layoutEditing">
                 <v-btn 
                     :disabled="prevItem == null"
                     @click="goPrev">
-                <v-icon>mdi-arrow-left</v-icon>
+                    <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
-                <v-btn>
+                <v-btn class="d-none d-sm-block">
                     <span v-html="currentItemDisplay"></span>
                 </v-btn>
                 <v-btn
                     :disabled="nextItem == null"
                     @click="goNext">
-                <v-icon>mdi-arrow-right</v-icon>
+                    <v-icon>mdi-arrow-right</v-icon>
                 </v-btn>
             </v-btn-toggle>
             <v-btn-toggle rounded>
                 <v-btn :to="layoutUrl" > 
-                    Layout
+                    <v-icon>{{ 'mdi-dots-vertical' }}</v-icon>
                 </v-btn>
                 <v-btn @click="saveLayout" v-if="layoutEditing">
                     Save Layout
                 </v-btn>
             </v-btn-toggle>
-          </v-col>
-          <v-col 
-            class="d-md-none col-1">
-            <v-app-bar-nav-icon 
-            @click="$emit('drawertoggle')"/>
-          </v-col>
-        </v-row>
+            <v-spacer class="d-block d-md-none" ></v-spacer>
+            <v-app-bar-nav-icon class="d-block d-md-none" @click="$emit('drawertoggle')"/>
       </v-app-bar>
 </div>

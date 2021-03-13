@@ -12,7 +12,7 @@
             <v-btn 
                 dark
                 v-if="files"
-                color="deep-purple"
+                color="primary"
                 @click="uploadFile">
                 Upload
             </v-btn>

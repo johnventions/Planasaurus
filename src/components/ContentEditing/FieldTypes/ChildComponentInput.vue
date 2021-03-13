@@ -3,7 +3,7 @@
         v-bind:class="{ find: viewMode == 'find' }">
         <label>{{ field.name }}</label>
         <v-btn dark
-            color="deep-purple" 
+            color="primary" 
             @click="startAddRecord"
             class="btn btn-primary btn-add float-right">
             + Add
