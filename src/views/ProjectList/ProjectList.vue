@@ -2,7 +2,6 @@
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 
-import TableSort from '@/components/TableSort/TableSort';
 import GoToProject from './cells/GoToProject'
 
 export default {
@@ -15,7 +14,7 @@ export default {
         }
     },
     components: {
-        TableSort
+        'goto': GoToProject
     },
     watch: {
         $route(to, from) {
@@ -35,43 +34,28 @@ export default {
             'activeList',
             'activeProjectType'
         ]),
-        activeFieldsforDropdown: function() {
-            const f = this.$store.getters.activeFields;
-            if (f && f.fields) {
-                return f.fields.filter(x => x.parent == null);
-            } 
-            return [];
-        },
-        fieldLayoutDefinitions: function() {
-            const layout = this.activeProjectType.fieldLayout;
-            return layout.map(x => {
-                return this.$store.getters.getFieldDefintion(x.id) || {id: x.id};
-            });
-        },
-        layoutUrl: function() { return  `/dash/${this.activeProjectType}/layout`; },
-        columns: function() {
+        headers: function() {
             const fieldLayout = this.$store.getters.activeProjectType.fieldLayout || [];
             const fieldColumns = fieldLayout.map( x => {
                 const f = this.$store.getters.getFieldDefintion(x.id) || {};
                 return  {
-                    name: x.id,
-                    label: f ? f.name : x.id
+                    text: f ? f.name : x.id,
+                    value: x.id.toString(),
                 }
             });
             return [
                 {
-                    name: 'ID',
-                    label: 'ID',
+                    text: 'ID',
+                    value: 'ID',
                 },
                 ... fieldColumns,
                 {
-                    name: 'GoTo',
-                    label: '',
-                    component: GoToProject
+                    text: 'GoTo',
+                    value: 'GoTo',
                 }
             ]
         },
-        rows: function() {
+        items: function() {
             const typeList = this.$store.getters.activeList;
             const fieldLayout = this.$store.getters.activeProjectType.fieldLayout || [];
             if (typeList.list) {
@@ -91,7 +75,21 @@ export default {
                 return formatted;
             }
             return [];
-        }
+        },
+        activeFieldsforDropdown: function() {
+            const f = this.$store.getters.activeFields;
+            if (f && f.fields) {
+                return f.fields.filter(x => x.parent == null);
+            } 
+            return [];
+        },
+        fieldLayoutDefinitions: function() {
+            const layout = this.activeProjectType.fieldLayout;
+            return layout.map(x => {
+                return this.$store.getters.getFieldDefintion(x.id) || {id: x.id};
+            });
+        },
+        layoutUrl: function() { return  `/dash/${this.activeProjectType}/layout`; },
     },
     methods: {
         ...mapMutations({

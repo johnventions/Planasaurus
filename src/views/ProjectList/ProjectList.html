@@ -19,11 +19,15 @@
                   <v-list-item-title>Edit / Remove fields</v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-menu>
-        <table-sort
-            :columns="columns"
-            :rows="rows">
-        </table-sort>
+        </v-menu>
+        <v-data-table
+            :headers="headers"
+            :items="items"
+            class="elevation-1">
+            <template v-slot:item.GoTo="{ item }">
+                <goto :id="item.ID"></goto>
+            </template>
+        </v-data-table>
         <modal name="fieldAddModal" height="auto">
             <label>
                 Select item to add

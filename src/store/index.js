@@ -434,8 +434,8 @@ export default new Vuex.Store({
 
 			if (state.activeProject && state.projectLists[id]) {
 				const list = state.projectLists[id].list;
-				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : 0;
-				if (index == 0) return null;
+				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : -1;
+				if (list || index == -1) return null;
 				const prevItem = Math.max(index - 1, 0);
 				return list[prevItem];
 			}
@@ -447,8 +447,8 @@ export default new Vuex.Store({
 
 			if (state.activeProject && state.projectLists[id]) {
 				const list = state.projectLists[id].list;
-				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : 0;
-				if (index + 1 == list.length) return null;
+				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : -1;
+				if (list || index == -1) return null;
 				const nextItem = Math.min(index + 1, list.length - 1);
 				return list[nextItem];
 			}
