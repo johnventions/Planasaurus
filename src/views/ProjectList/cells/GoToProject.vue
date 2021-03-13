@@ -1,6 +1,6 @@
 <template>
     <router-link :to="`/dash/${activeProjectType.codename}/${id}`">
-        <v-btn>
+        <v-btn color="deep-purple" dark>
             View
         </v-btn>
     </router-link>
