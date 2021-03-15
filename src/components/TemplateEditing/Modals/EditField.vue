@@ -1,24 +1,34 @@
 <template>
-    <div class="edit-field">
-        <div v-if="currentFieldType">
-            <div v-for="(meta, i) in currentFieldType.metaComponents" :key="i">
-                <div :is="meta"
-                    :field="currentFieldDef"
-                    v-on:updateFieldAttribute="handleUpdate"
-                    v-on:updateFieldMeta="handleMetaUpdate"></div>
+    <v-card class="edit-field">
+        <v-card-text>
+            Edit Field
+        </v-card-text>
+        <v-card-text>
+            <div v-if="currentFieldType">
+                <div v-for="(meta, i) in currentFieldType.metaComponents" :key="i">
+                    <div :is="meta"
+                        :field="currentFieldDef"
+                        v-on:updateFieldAttribute="handleUpdate"
+                        v-on:updateFieldMeta="handleMetaUpdate"></div>
+                </div>
             </div>
-        </div>
-        <button class="btn btn-primary save"
-            v-if="changes > 0"
-            @click="saveChanges">
-            Save changes
-        </button>
-        <button class="btn btn-primary save"
-            v-if="changes == 0"
-            @click="$emit('edit-finish')">
-            Finish
-        </button>
-    </div>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="red darken-1"
+                    text
+                    @click="$emit('edit-finish')">
+                    Finish
+                </v-btn>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="saveChanges">
+                    Save
+                </v-btn>
+                </v-card-actions>
+        </v-card-text>
+    </v-card>
 </template>
 <script>
 import axios from 'axios';

@@ -10,6 +10,7 @@ import api from '@/util/api';
 import viewModes from "../data/viewModes";
 import Layout from "@/models/class.layout";
 import Project from '@/models/class.project';
+import ProjectType from '@/models/class.projecttype';
 
 
 
@@ -71,12 +72,14 @@ export default new Vuex.Store({
 		},
 
 		/* TYPES */
-		SET_TYPES: function (state, types) {
+		SET_TYPES: function (state, typesData) {
 			// set TYPES to be key'ed off of type ID
 			// const mappedIDs = types.reduce((obj, x) => {
 			// 	obj[x.id] = x;
 			// 	return obj;
 			// }, {});
+
+			const types = typesData.map( x => new ProjectType(x));
 
 			// set TYPES to be key'ed off of type URL
 			const mappedNames = types.reduce((obj, x) => {
@@ -435,7 +438,7 @@ export default new Vuex.Store({
 			if (state.activeProject && state.projectLists[id]) {
 				const list = state.projectLists[id].list;
 				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : -1;
-				if (list || index == -1) return null;
+				if (!list || index == -1) return null;
 				const prevItem = Math.max(index - 1, 0);
 				return list[prevItem];
 			}
@@ -448,7 +451,7 @@ export default new Vuex.Store({
 			if (state.activeProject && state.projectLists[id]) {
 				const list = state.projectLists[id].list;
 				const index = list ? list.findIndex(x => x.id == state.activeProject.id) : -1;
-				if (list || index == -1) return null;
+				if (!list || index == -1) return null;
 				const nextItem = Math.min(index + 1, list.length - 1);
 				return list[nextItem];
 			}

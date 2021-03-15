@@ -3,13 +3,13 @@
         v-bind:class="{ find: viewMode == 'find' }"
     >
         <v-select
-            :items="options"
             v-model="value"
-            v-on:change="handleUpdate"
-            v-bind:class="{touched: touched}"
+            :items="options"
             item-text="value"
             item-value="key"
             :label="field.name"
+            v-bind:class="{touched: touched}"
+            v-on:change="handleUpdate"
             ></v-select>
     </div>
 </template>

@@ -22,17 +22,17 @@
         <v-btn @click="newField">
             + New Field
         </v-btn>
-        <modal :name="modalNewField" height="auto">
+        <v-dialog v-model="modalNewField" max-width="450">
             <new-field-modal
                 v-if="creatingField"
                 v-on:createField="submitCreateField" />
-        </modal>
-        <modal :name="modalEditField" height="auto">
+        </v-dialog>
+        <v-dialog v-model="modalEditField" max-width="450">
             <edit-field-modal
                 v-if="editingField"
                 v-on:edit-finish="finishEdit"
                 :field="fieldInEdit" />
-        </modal>
+        </v-dialog>
     </v-card-text>
 </v-card>
         
