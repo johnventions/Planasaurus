@@ -25,34 +25,38 @@
                   </v-icon>
             </v-btn>
         </div>
-        <modal name="new-section-modal">
-            <div class="row section-choices">
-                <div class="col-6">
-                    <button class="btn btn-primary" @click="createSection('full')">
-                        Full Width
-                    </button>
-                </div>
-                <div class="col-6">
-                    <button class="btn btn-primary" @click="createSection('50-50')">
-                        50-50 split
-                    </button>
-                </div>
-                <div class="col-6">
-                    <button class="btn btn-primary" @click="createSection('33-66')">
-                        33-66 split
-                    </button>
-                </div>
-                <div class="col-6">
-                    <button class="btn btn-primary" @click="createSection('66-33')">
-                        66-33 split
-                    </button>
-                </div>
-                <div class="col-6">
-                    <button class="btn btn-primary" @click="createSection('33-33-33')">
-                        33-33-33 split
-                    </button>
-                </div>
-            </div>
-        </modal>
+        <v-dialog v-model="dialogNewSection" max-width="450">
+            <v-card>
+                <v-card-text>
+                    <div class="row section-choices">
+                        <div class="col-6">
+                            <v-btn color="primary" class="btn btn-primary" @click="createSection('full')">
+                                Full Width
+                            </v-btn>
+                        </div>
+                        <div class="col-6">
+                            <v-btn color="primary" class="btn btn-primary" @click="createSection('50-50')">
+                                50-50 split
+                            </v-btn>
+                        </div>
+                        <div class="col-6">
+                            <v-btn color="primary" class="btn btn-primary" @click="createSection('33-66')">
+                                33-66 split
+                            </v-btn>
+                        </div>
+                        <div class="col-6">
+                            <v-btn color="primary" class="btn btn-primary" @click="createSection('66-33')">
+                                66-33 split
+                            </v-btn>
+                        </div>
+                        <div class="col-6">
+                            <v-btn color="primary" class="btn btn-primary" @click="createSection('33-33-33')">
+                                33-33-33 split
+                            </v-btn>
+                        </div>
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </div>

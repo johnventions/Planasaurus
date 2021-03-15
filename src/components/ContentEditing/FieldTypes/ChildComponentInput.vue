@@ -20,27 +20,31 @@
         <div v-else>
             No records
         </div>
-        <modal :name="addItemModalName" height="auto">
-            <label>
-                Select item to add
-            </label><br/>
-            <select v-model="pendingAdd">
-                <option v-for="opt in relatedOptions"
-                    :value="opt.project_id"
-                    :key="opt.project_id">
-                    <template v-if="opt.meta">
-                        {{ opt.meta[0].value }}
-                    </template>
-                </option>
-            </select>
-            <br/>
-            <button 
-                class="btn btn-primary"
-                @click="finishAddRecord"
-                v-if="pendingAdd">
-                Add Item
-            </button>
-        </modal>
+        <v-dialog v-model="addItemModal" max-width="450">
+            <v-card>
+                <v-card-text>
+                    <label>
+                        Select item to add
+                    </label><br/>
+                    <select v-model="pendingAdd">
+                        <option v-for="opt in relatedOptions"
+                            :value="opt.project_id"
+                            :key="opt.project_id">
+                            <template v-if="opt.meta">
+                                {{ opt.meta[0].value }}
+                            </template>
+                        </option>
+                    </select>
+                    <br/>
+                    <button 
+                        class="btn btn-primary"
+                        @click="finishAddRecord"
+                        v-if="pendingAdd">
+                        Add Item
+                    </button>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -63,6 +67,7 @@ export default {
         return {
             value: this.$store.getters.getFieldArrayVal(this.field.id),
             changes: [],
+            addItemModal: false,
             touched: false,
             pendingAdd: null,
         }
@@ -78,9 +83,6 @@ export default {
         }),
         childFields: function() {
             return this.value;
-        },
-        addItemModalName: function() {
-            return `addModal_${this.field.id}`;
         },
         relatedOptions: function() {
             const { id } = this.$store.getters.activeProjectType;
@@ -107,7 +109,7 @@ export default {
             this.touched = false;
         },
         startAddRecord: function() {
-            this.$modal.show(this.addItemModalName);
+            this.addItemModal = true;
         },
         finishAddRecord: async function() { 
             if (this.pendingAdd) {

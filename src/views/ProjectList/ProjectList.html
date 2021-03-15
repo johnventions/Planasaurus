@@ -32,36 +32,43 @@
             </template>
         </v-data-table>
 
-
-        <modal name="fieldAddModal" height="auto">
-            <label>
-                Select item to add
-            </label><br/>
-            <select v-model="fieldToAdd">
-                <option value="">Select a field</option>
-                <option :value="field.id" v-for=" (field, i) in activeFieldsforDropdown" :key="i">
-                    {{ field.name }}
-                </option>
-            </select>
-            <button v-on:click="addFieldToLayout">
-                Add field
-            </button>
-        </modal>
-        <modal name="fieldConfigureModal" height="auto">
-            <label>
-                Select item to edit
-            </label><br/>
-            <select v-model="fieldToEdit">
-                <option value="">Select field to edit</option>
-                <option v-for="(f, i) in fieldLayoutDefinitions" :key="i" :value="i">
-                    {{ f.name }}
-                </option>
-            </select>
-            <div v-if="fieldToEdit !== ''">
-                <button class="btn btn-primary" @click="removeFieldFromLayout">
-                    Remove Field
-                </button>
-            </div>
-        </modal>
+        <v-dialog v-model="fieldAddModal" max-width="450">
+            <v-card>
+                <v-card-title>
+                    Select item to add
+                </v-card-title>
+                <v-card-text>
+                    <v-select v-model="fieldToAdd" 
+                        :items="activeFieldsforDropdown"
+                        item-text="name"
+                        item-value="id"
+                        label="Select field to add">
+                    </v-select>
+                    <v-btn color="primary" v-on:click="addFieldToLayout">
+                        Add field
+                    </v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="fieldConfigureModal" max-width="450">
+            <v-card>
+                <v-card-title>
+                    Select a field to edit
+                </v-card-title>
+                <v-card-text>
+                    <v-select v-model="fieldToEdit" 
+                        :items="fieldLayoutDefinitions"
+                        item-text="name"
+                        item-value="uuid"
+                        label="Select field to edit">
+                    </v-select>
+                    <div v-if="fieldToEdit !== ''">
+                        <v-btn color="primary" @click="removeFieldFromLayout">
+                            Remove Field
+                        </v-btn>
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </div>

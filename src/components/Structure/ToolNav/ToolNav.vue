@@ -3,7 +3,7 @@
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 export default {
-    name: 'SideNav',
+    name: 'ToolNav',
     data: function() {
         return {
             isSticky: false,

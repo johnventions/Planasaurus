@@ -7,8 +7,10 @@ import Section from '@/models/class.section';
 
 export default {
     props: ['area', 'areaname'],
+    name: 'LayoutArea',
     data: function() {
         return {
+            dialogNewSection: false,
             newSectionIndex: null,
             targetSectionId: null,
         }
@@ -20,13 +22,13 @@ export default {
         newSection(i) {
             this.newSectionIndex = i + 1;
             this.targetSectionId = null;
-            this.$modal.show('new-section-modal');
+            this.dialogNewSection = true;
         },
         editSection(id) {
             console.log(id);
             this.newSectionIndex = null;
             this.targetSectionId = id;
-            this.$modal.show('new-section-modal');
+            this.dialogNewSection = true;
         },
         createSection(type) {
             // create new section at the index
@@ -65,7 +67,7 @@ export default {
             }
             // push that bad boy live
             this.updateMe(newArea);
-            this.$modal.hide('new-section-modal');
+            this.dialogNewSection = false;
         },
         handleUpdateChild(index, item) {
             let newArea = {...this.area };
@@ -83,15 +85,9 @@ export default {
     .section-container {
         position: relative;
     }
-    .section-choices {
-        button {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-    }
     .section-new, .section-edit {
         position: absolute;
-        z-index: 20;
+        z-index: 3;
         text-align: center;
         cursor: pointer;
     }

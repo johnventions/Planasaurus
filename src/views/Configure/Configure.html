@@ -28,28 +28,39 @@
             </v-list>
         </v-card>
     </div>
-    <modal name="editTypeModal" 
-            height="auto">
-        <div v-if="editingType">
-            <label>Collection Name</label><br/>
-            <input v-model="editingType.name"><br />
+    <v-dialog v-model="dialogEdit" max-width="450">
+        <v-card v-if="editingType">
+            <v-card-title>Edit Your Collection</v-card-title>
+            <v-card-text>
+                <v-text-field v-model="editingType.name" label="Collection Name"/>
+                <v-text-field v-model="editingType.codename" label="Collection layoutUrl"/>
+                <v-text-field v-model="editingType.menu_order" label="Order"/>
 
-            <label>Collection URL</label><br />
-            <input v-model="editingType.codename"><br />
-
-            <label>Order</label><br />
-            <input v-model="editingType.menu_order"><br />
-
-            <label>Parent</label><br />
-            <select v-model="editingType.parent_id">
-                <option v-for="(p, k) in possibleParents"
-                    :value="p.id"
-                    :key="p.id">{{ p.name }}</option>
-            </select>
-            <br/><br/>
-            <button class="btn btn-primary" @click="saveType">
-                Save
-            </button>
-        </div>
-    </modal>
+                <v-select v-model="editingType.parent_id"
+                        label="Parent (optional)"
+                        :items="possibleParents"
+                        item-text="name"
+                        item-value="id">
+                </v-select>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="red darken-1"
+                      text
+                      @click="dialogEdit = false"
+                    >
+                      Cancel
+                    </v-btn>
+          
+                    <v-btn
+                      color="green darken-1"
+                      text
+                      @click="saveType"
+                    >
+                      Save
+                    </v-btn>
+                  </v-card-actions>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
 </div>

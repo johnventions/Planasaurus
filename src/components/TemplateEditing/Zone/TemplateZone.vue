@@ -16,6 +16,8 @@ export default {
             creatingField: false,
             editingField: false,
             fieldInEdit: null,
+            modalNewField: false,
+            modalEditField: false
         };
     },
     components: {
@@ -27,12 +29,6 @@ export default {
         ...mapGetters([
             'activeFields'
         ]),
-        modalNewField: function(){ 
-            return `new_modal_${this.item.id}`;
-        },
-        modalEditField: function(){ 
-            return `edit_modal_${this.item.id}`;
-        }
     },
     methods: {
         ...mapActions([
@@ -68,7 +64,7 @@ export default {
             console.log("Could not find", fieldID)
         },
         newField() {
-            this.$modal.show(this.modalNewField);
+            this.modalNewField = true;
             this.creatingField = true;
             this.editingField = false;
         },
@@ -85,18 +81,18 @@ export default {
                 });
                 // pass new definition up to parent SECTION
                 this.$emit('updatechild', this.index, newItem);
-                this.$modal.hide(this.modalNewField);
                 this.editField(newField.id);
+                this.modalNewField = false;
             }
         },
         editField(id) {
-            this.$modal.show(this.modalEditField);
             this.fieldInEdit = id;
             this.editingField = true;
+            this.modalEditField = true;
         },
         finishEdit: function() {
             this.editingField = false;
-            this.$modal.hide(this.modalEditField);
+            this.modalEditField = false;
         },
         getComponentData: function(event) {
             console.log(event);
