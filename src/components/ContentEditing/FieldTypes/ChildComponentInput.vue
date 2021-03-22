@@ -1,14 +1,23 @@
 <template>
     <div class="form-group" 
         v-bind:class="{ find: viewMode == 'find' }">
-        <label>{{ field.name }}</label>
-        <v-btn dark
-            color="primary" 
-            @click="startAddRecord"
-            class="btn btn-primary btn-add float-right">
-            + Add
-        </v-btn>
-        <div class="nested-input" v-if="value && value.length">
+        <v-flex class="mb-3">
+            <label class="mr-5">{{ field.name }}</label>
+            <v-btn dark
+                dense
+                color="primary" 
+                @click="startAddRecord">
+                + Add
+            </v-btn>
+        </v-flex>
+
+        <v-data-table
+            dense
+            :headers="headers"
+            :items="items">
+        </v-data-table>
+
+        <div class="nested-input" v-if="false && value && value.length">
             <child-entry v-for="(child, i) in value"
                 v-on:remove-me="removeElement(child, i)"
                 :entry="child"
@@ -17,31 +26,25 @@
                 :key="child.id">
             </child-entry>
         </div>
-        <div v-else>
-            No records
-        </div>
+
         <v-dialog v-model="addItemModal" max-width="450">
             <v-card>
+                <v-card-title>
+                    Select item to add!
+                </v-card-title>
                 <v-card-text>
-                    <label>
-                        Select item to add
-                    </label><br/>
-                    <select v-model="pendingAdd">
-                        <option v-for="opt in relatedOptions"
-                            :value="opt.project_id"
-                            :key="opt.project_id">
-                            <template v-if="opt.meta">
-                                {{ opt.meta[0].value }}
-                            </template>
-                        </option>
-                    </select>
-                    <br/>
-                    <button 
-                        class="btn btn-primary"
+                    <v-select 
+                        v-model="pendingAdd"
+                        :items="relatedOptions"
+                        item-text="name"
+                        item-value="project_id">
+                    </v-select>
+                    <v-btn 
+                        color="primary"
                         @click="finishAddRecord"
                         v-if="pendingAdd">
                         Add Item
-                    </button>
+                    </v-btn>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -81,6 +84,29 @@ export default {
         ... mapState({
             viewMode: state => state.viewMode,
         }),
+        headers: function() {
+            const meta = this.field.metadata || {};
+            const fields = meta.fieldDisplay || [];
+            return fields.map(x => {
+                const f = this.$store.getters.getFieldDefintion(x.id) || {};
+                return {
+                    text: f.name,
+                    value: x.id.toString()
+                };
+            })
+        },
+        items: function() {
+            const list = this.value || [];
+            const cols = this.headers || [];
+            return list.map(x => {
+                let obj = {};
+                cols.forEach( y => {
+                    let fieldObj = x.fieldsMapped[y.value] || {};
+                    obj[y.value] = fieldObj.value;
+                });
+                return obj;
+            });
+        },
         childFields: function() {
             return this.value;
         },
@@ -88,7 +114,15 @@ export default {
             const { id } = this.$store.getters.activeProjectType;
             const activeLayout = this.$store.state.projectLayouts[id];
             if (activeLayout && activeLayout.related[this.field.id]) {
-                return activeLayout.related[this.field.id];
+                const related = activeLayout.related[this.field.id];
+                console.log(related, 1);
+                return related.map(x => {
+                    const display = x.meta && x.meta.length ? x.meta[0].value : x.project_id; 
+                    return {
+                        ...x,
+                        name: display
+                    }
+                });
             }
             return null;
         }
@@ -157,8 +191,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .nested-input {
-        display: table;
-        width: 100%;
-    }
 </style>

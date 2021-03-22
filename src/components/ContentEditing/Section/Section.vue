@@ -11,9 +11,9 @@ export default {
     methods: {
         getClass(i) {
             if (this.item.style == "50-50") {
-                return "col-sm-6";
+                return "col-12 col-sm-6";
             } else if (this.item.style == "33-33-33") {
-                return "col-sm-4";
+                return "col-12 col-md-4";
             } else if (this.item.style == "33-66") {
                 return  i == 0 ? "col-sm-4" : "col-sm-8";
             } else if (this.item.style == "66-33") {

@@ -41,7 +41,7 @@ export default {
                 if (relatedOptions && relatedOptions[this.field.id]) {
                     return relatedOptions[this.field.id].map( x => {
                         return {
-                        key: x.project_id,
+                        key: x.project_id.toString(),
                         value: x.meta ? x.meta.map(x => x.value).join(" ") : x.project_id
                         }
                     });
