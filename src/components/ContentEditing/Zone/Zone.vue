@@ -28,7 +28,7 @@ export default {
             if (fieldDef) {
                 // find matching component base on the data type
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
-                return matchingComponent.type;
+                if (matchingComponent) return matchingComponent.type;
             }
             return null;
         },
@@ -38,7 +38,7 @@ export default {
             if (fieldDef) {
                 // find matching component base on the data type
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
-                return matchingComponent.editingComponent;
+                if (matchingComponent) return matchingComponent.editingComponent;
             }
             console.log("Could not find", fieldID)
         }

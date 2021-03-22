@@ -1,13 +1,11 @@
 <template>
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <v-text-field
+    <div>
+        <v-text-field
                 type="text"
                 label="Name"
                 v-on:change="handleNameUpdate"
                 v-on:keyup="handleNameUpdate"
                 v-model="nameValue"/>
-        </div>
     </div>
 </template>
 <script>

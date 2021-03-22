@@ -1,18 +1,14 @@
 <template>
     <div class="row">
         <div class="col-12 col-md-6">
-            <label>
-                Data Type:
-            </label><br/>
-            <select 
+            <v-select 
+                label="Data Type"
                 v-on:change="handleRelationshipUpdate"
-                v-model="related_type">
-                <option v-for="type in projectTypes" 
-                    :value="type.id" 
-                    :key="type.id">
-                    {{ type.name }}
-                </option>
-            </select>
+                v-model="related_type"
+                :items="projectTypes"
+                item-text="name"
+                item-value="id">
+            </v-select>
         </div>
         <div class="col-12 col-md-6" v-if="fieldsForType.length">
             <label>

@@ -18,7 +18,8 @@
                   </v-icon>
             </v-btn>
             <v-btn class="section-new"
-                icon outlined small
+                icon small dark outlined
+                color="purple"
                 @click="newSection(i, null)">
                 <v-icon dark>
                     mdi-plus
@@ -27,6 +28,9 @@
         </div>
         <v-dialog v-model="dialogNewSection" max-width="450">
             <v-card>
+                <v-card-title>
+                    Select layout size
+                </v-card-title>
                 <v-card-text>
                     <div class="row section-choices">
                         <div class="col-6">

@@ -22,7 +22,7 @@
         <v-btn @click="newField">
             + New Field
         </v-btn>
-        <v-dialog v-model="modalNewField" max-width="450">
+        <v-dialog v-model="modalNewField" scrollable max-width="450">
             <new-field-modal
                 v-if="creatingField"
                 v-on:createField="submitCreateField" />

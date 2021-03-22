@@ -5,10 +5,18 @@
     <app-tool-nav v-if="authenticated"
       v-on:drawertoggle="$refs.sidenav.drawer = !$refs.sidenav.drawer"></app-tool-nav>
     <app-brand-nav v-if="!authenticated"></app-brand-nav>
-    <v-main class="grey lighten-2">
+    <v-main class="app-main grey lighten-2">
       <v-container>
         <router-view />
       </v-container>
+      <v-btn
+        class="app-menu d-block d-lg-none"
+        fab
+        dark
+        color="primary"
+        @click="$refs.sidenav.drawer = !$refs.sidenav.drawer">
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
     </v-main>
   </v-app>
 </template>
@@ -81,6 +89,14 @@ export default {
 </script>
 
 <style lang="scss">
+  .app-menu {
+    position: fixed;
+    bottom: 15px;
+    right: 20px;
+  }
+  .v-main__wrap {
+    padding-bottom: 100px;
+  }
   a, a:hover {
     text-decoration: none;
   }

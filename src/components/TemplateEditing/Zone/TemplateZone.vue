@@ -49,7 +49,7 @@ export default {
             if (fieldDef) {
                 // find matching component base on the data type
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
-                props.type = matchingComponent.type;
+                if (matchingComponent) props.type = matchingComponent.type;
             }
             return props;
         },
@@ -59,7 +59,7 @@ export default {
             if (fieldDef) {
                 // find matching component base on the data type
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
-                return matchingComponent.layoutComponent;
+                if (matchingComponent) return matchingComponent.layoutComponent; 
             }
             console.log("Could not find", fieldID)
         },

@@ -1,7 +1,8 @@
 <div>
     <v-app-bar app flat class="">
-            <v-btn-toggle rounded class="">
+        <v-btn-toggle rounded class="">
                 <v-btn
+                    :class="viewMode == 'find' ? 'd-none' : ''"
                     :disabled="viewMode == 'find'"
                     :to="`/dash/${activeProjectType.codename}/find`">
                     <v-icon>mdi-magnify</v-icon>
@@ -10,9 +11,9 @@
                     </span>
                 </v-btn>
                 <v-btn
-                    v-if="viewMode == 'find'" 
-                    @click="cancelClick">
-                    <v-icon>mdi-magnify-minus</v-icon>
+                    :class="viewMode != 'find' ? 'd-none' : ''"
+                    @click.stop="cancelClick">
+                    <v-icon>mdi-arrow-left</v-icon>
                     <span class="d-none d-sm-block">
                         Cancel
                     </span>
@@ -20,7 +21,7 @@
                 <v-btn
                     @click="searchProjectRecords"
                     v-if="viewMode == 'find'">
-                    <v-icon>mdi-magnify-plus</v-icon>
+                    <v-icon>mdi-chevron-double-right</v-icon>
                     <span class="d-none d-sm-block">
                         Run
                     </span>
@@ -50,15 +51,28 @@
                     <v-icon>mdi-arrow-right</v-icon>
                 </v-btn>
             </v-btn-toggle>
-            <v-btn-toggle rounded>
-                <v-btn :to="layoutUrl" > 
-                    <v-icon>{{ 'mdi-dots-vertical' }}</v-icon>
-                </v-btn>
-                <v-btn @click="saveLayout" v-if="layoutEditing">
-                    Save Layout
-                </v-btn>
-            </v-btn-toggle>
-            <v-spacer class="d-block d-lg-none" ></v-spacer>
-            <v-app-bar-nav-icon class="d-block d-lg-none" @click="$emit('drawertoggle')"/>
+            <v-spacer></v-spacer>
+            <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                    rounded
+                    icon
+                    v-bind="attrs"
+                    v-on="on">
+                      <v-icon>{{ 'mdi-dots-vertical' }}</v-icon>
+                  </v-btn> 
+                </template>
+                <v-list flat>
+                    <v-list-item :to="layoutUrl"
+                    v-if="!layoutEditing">
+                        Edit Layout
+                    </v-list-item>
+                    <v-list-item :to="layoutUrl"  
+                        @click="saveLayout" 
+                        v-if="layoutEditing">
+                        Save Layout
+                    </v-list-item>
+                </v-list>
+            </v-menu>
       </v-app-bar>
 </div>
