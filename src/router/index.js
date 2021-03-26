@@ -44,6 +44,7 @@ Vue.use(VueRouter)
     name: 'Auth Dashboard',
     component: AuthContainer,
     beforeEnter: checkAuth,
+    meta: { requiresAuth: true, dashTools: true },
     children: [
       {
         path: '/',

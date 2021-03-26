@@ -1,15 +1,16 @@
 <template>
   <v-app>
-    <app-side-nav v-if="authenticated" 
-      ref="sidenav"></app-side-nav>
-    <app-tool-nav v-if="authenticated"
+    <app-brand-nav v-if="!showDashTools"></app-brand-nav>
+    <app-side-nav 
+      v-if="authenticated && showDashTools" 
+      ref="sidenav">
+    </app-side-nav>
+    <app-tool-nav v-if="authenticated && showDashTools"
       v-on:drawertoggle="$refs.sidenav.drawer = !$refs.sidenav.drawer"></app-tool-nav>
-    <app-brand-nav v-if="!authenticated"></app-brand-nav>
     <v-main class="app-main grey lighten-2">
-      <v-container>
-        <router-view />
-      </v-container>
+      <router-view />
       <v-btn
+        v-if="showDashTools"
         class="app-menu d-block d-lg-none"
         fab
         dark
@@ -61,8 +62,11 @@ export default {
       'authenticated'
     ]),
     ...mapGetters([
-          'activeProjectType',
-    ])
+      'activeProjectType',
+    ]),
+    showDashTools: function() {
+      return this.$route.matched.find(x => x.meta.dashTools);
+    }
   },
   mounted: function () {
     this.$store.dispatch('getLoginStatus');
@@ -89,6 +93,13 @@ export default {
 </script>
 
 <style lang="scss">
+  #app {
+    @media (min-width: 1904px) {
+      .container {
+        max-width: 1440px;
+      }
+    }
+  }
   .app-menu {
     position: fixed;
     bottom: 15px;
