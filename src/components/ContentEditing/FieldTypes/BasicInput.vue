@@ -3,18 +3,20 @@
         v-bind:class="{ find: viewMode == 'find' }"
     >
         <div class="input-container">
-            <select v-model="searchOperator"
+            <v-select 
+                :items="searchOptions"
+                item-text="key"
+                item-value="value"
+                v-model="searchOperator"
                 v-if="viewMode == 'find' && useSearchOperators">
-                <option :value="null">=</option>
-                <option value=">">&gt;</option>
-                <option value="<">&lt;</option>
-            </select>
+            </v-select>
 
             <v-text-field
                 :label="field.name"
                 :dense="isNested"
                 v-if="type == 'text'"
                 :hide-details="isNested? true : false"
+                :single-line="isNested? true : false"
                 :placeholder="field.name"
                 v-bind:class="{touched: touched}"
                 v-on:change="handleUpdate"
@@ -65,6 +67,11 @@ export default {
             value: this.isNested ? this.field.value : this.$store.getters.getFieldVal(this.field.id),
             touched: false,
             searchOperator: null,
+            searchOptions: [
+                { key: '=', value: null},
+                { key: '>', value: '>'},
+                { key: '<', value: '<'},
+            ]
         }
     },
     watch: {

@@ -40,7 +40,7 @@ export default {
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
                 if (matchingComponent) return matchingComponent.editingComponent;
             }
-            console.log("Could not find", fieldID)
+            console.log("Could not find field", fieldID)
         }
     }
 }

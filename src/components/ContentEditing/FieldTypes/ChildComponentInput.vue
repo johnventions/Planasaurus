@@ -15,17 +15,19 @@
             dense
             :headers="headers"
             :items="items">
+            <template v-for="col in dynamicColumns"
+                v-slot:[`item.${col.value}`]="{ item }">
+                <div
+                    :isNested="true"
+                    :field="col.field"
+                    :parentField="field"
+                    :is="displayField()"
+                    type="text"
+                    :item="item"
+                     :key="col.value">
+                </div>
+            </template>
         </v-data-table>
-
-        <div class="nested-input" v-if="false && value && value.length">
-            <child-entry v-for="(child, i) in value"
-                v-on:remove-me="removeElement(child, i)"
-                :entry="child"
-                :field="field"
-                :fieldmeta="field.metadata"
-                :key="child.id">
-            </child-entry>
-        </div>
 
         <v-dialog v-model="addItemModal" max-width="450">
             <v-card>
@@ -54,9 +56,7 @@
 import { mapMutations, mapState } from 'vuex';
 import api from '@/util/api';
 import Project from '@/models/class.project';
-
-
-import ChildComponentEntry from './ChildComponentEntry';
+import BasicInput from '@/components/ContentEditing/FieldTypes/BasicInput.vue';
 
 export default {
     name: 'ChildElementComponent',
@@ -64,7 +64,6 @@ export default {
         'field', 'type'
     ],
     components: {
-        'child-entry': ChildComponentEntry
     },
     data: function() {
         return {
@@ -91,16 +90,35 @@ export default {
                 const f = this.$store.getters.getFieldDefintion(x.id) || {};
                 return {
                     text: f.name,
-                    value: x.id.toString()
+                    value: x.id.toString(),
+                    field: f
                 };
             })
         },
+        dynamicColumns: function() {
+            return this.headers.map(x => {
+                if (this.viewMode == 'find') {
+                    return x;
+                }
+                return null;
+            }).filter(y => y != null);
+        },
         items: function() {
-            const list = this.value || [];
             const cols = this.headers || [];
+
+            if (this.viewMode == 'find') {
+                let findRow = {};
+                cols.forEach( y => {
+                    findRow[y.value] = "ABC";
+                });
+                return [findRow];
+            }
+
+            const list = this.value || [];
             return list.map(x => {
                 let obj = {};
                 cols.forEach( y => {
+                    if (x.fieldsMapped == null) return;
                     let fieldObj = x.fieldsMapped[y.value] || {};
                     obj[y.value] = fieldObj.value;
                 });
@@ -177,6 +195,9 @@ export default {
                 }
             ];
             this.handleUpdate();
+        },
+        displayField: function() {
+            return BasicInput;
         }
     },
     mounted: function() {
