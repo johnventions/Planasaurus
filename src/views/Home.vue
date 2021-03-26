@@ -32,10 +32,10 @@
               Online collaboration for whatever you need.
             </h3>
             <p>
-              Planasaurus gives you and your team one place to share your projects, notes, contacts - you name it.. We don't care if you're tracking business leads or Christmas trees, anything is possible.
+              Planasaurus gives you and your team one place to share your projects, notes, contacts... anything goes. We don't care if you're tracking business leads or Christmas trees, anything is possible.
             </p>
             <p>
-              Build the interface of your dreams instead of wasting time in spreadsheets or sending documents back and forth.
+              Build the interface of your dreams instead of wasting time in spreadsheets or sending documents back and forth. Search, update, and get stuff done all in one place.
             </p>
           </v-col>
         </v-row>
@@ -65,12 +65,12 @@
               Customizable
             </h2>
             <p>
-              Drag and drop your interface to suit your needs. Upload files, link data to other records. 
+              Drag and drop your interface to suit your needs. Upload files for reference later or link data to other records to keep your data nice and clean. 
             </p>
           </v-col>
           <v-col cols="12">
             <v-btn to="/features">
-              See all features
+              - See all features -
             </v-btn>
           </v-col>
         </v-row>
@@ -90,8 +90,11 @@
               </p><p>
                 If you need more space or want to start collaborating, just upgrade to a basic or professional plan.
             </p>
-            <v-btn color="primary">
+            <v-btn color="primary" class="mr-4">
               See Plans
+            </v-btn>
+            <v-btn color="black" dark>
+              Sign Up
             </v-btn>
           </v-col>
         </v-row>

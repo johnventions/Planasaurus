@@ -26,6 +26,8 @@
             v-model="drawer"
             absolute
             temporary
+            color="primary"
+            dark
             >
             <v-list
                 nav
