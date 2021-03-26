@@ -1,4 +1,4 @@
-<template src="./Zone.html"></template>
+<template src="./TemplateZone.html"></template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import draggable from 'vuedraggable'
@@ -9,12 +9,15 @@ import NewFieldModal from '../Modals/NewField'
 import EditFieldModal from '../Modals/EditField'
 
 export default {
+    name: 'TemplateZone',
     props: ["item", "index"],
     data: function() {
         return {
             creatingField: false,
             editingField: false,
             fieldInEdit: null,
+            modalNewField: false,
+            modalEditField: false
         };
     },
     components: {
@@ -26,12 +29,6 @@ export default {
         ...mapGetters([
             'activeFields'
         ]),
-        modalNewField: function(){ 
-            return `new_modal_${this.item.id}`;
-        },
-        modalEditField: function(){ 
-            return `edit_modal_${this.item.id}`;
-        }
     },
     methods: {
         ...mapActions([
@@ -43,18 +40,31 @@ export default {
             }
             return null;
         },
+        fieldProps(fieldID) {
+            let props = {};
+            if (this.activeFields && this.activeFields.fields) {
+                props.field = this.activeFields.fields.find(x => x.id == fieldID);
+            }
+            let fieldDef = this.getLayoutFieldDef(fieldID);
+            if (fieldDef) {
+                // find matching component base on the data type
+                let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
+                if (matchingComponent) props.type = matchingComponent.type;
+            }
+            return props;
+        },
         getLayoutComponent(fieldID) {
             // find field definition
             let fieldDef = this.getLayoutFieldDef(fieldID);
             if (fieldDef) {
                 // find matching component base on the data type
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
-                return matchingComponent.layoutComponent;
+                if (matchingComponent) return matchingComponent.layoutComponent; 
             }
             console.log("Could not find", fieldID)
         },
         newField() {
-            this.$modal.show(this.modalNewField);
+            this.modalNewField = true;
             this.creatingField = true;
             this.editingField = false;
         },
@@ -71,8 +81,8 @@ export default {
                 });
                 // pass new definition up to parent SECTION
                 this.$emit('updatechild', this.index, newItem);
-                this.$modal.hide(this.modalNewField);
                 this.editField(newField.id);
+                this.modalNewField = false;
             }
         },
         removeField: function(index) {
@@ -81,13 +91,13 @@ export default {
             this.$emit('updatechild', this.index, newItem);
         },
         editField(id) {
-            this.$modal.show(this.modalEditField);
             this.fieldInEdit = id;
             this.editingField = true;
+            this.modalEditField = true;
         },
         finishEdit: function() {
             this.editingField = false;
-            this.$modal.hide(this.modalEditField);
+            this.modalEditField = false;
         },
         getComponentData: function(event) {
             console.log(event);
@@ -142,9 +152,7 @@ export default {
         }
         &.editing {
             .zone-container {
-                min-height: 200px;
                 padding: 15px;
-                border: 1px dotted black;
             }
             .zone-new {
                 display: inline-block;

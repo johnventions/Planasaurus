@@ -1,8 +1,8 @@
 <template src="./ProjectList.html"></template>
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+import { v4 as uuidv4 } from 'uuid';
 
-import TableSort from '@/components/TableSort/TableSort';
 import GoToProject from './cells/GoToProject'
 
 export default {
@@ -10,12 +10,14 @@ export default {
     data: function() {
         return {
             show: false,
+            fieldAddModal: false,
+            fieldConfigureModal: false,
             fieldToAdd: '',
             fieldToEdit: ''
         }
     },
     components: {
-        TableSort
+        'goto': GoToProject
     },
     watch: {
         $route(to, from) {
@@ -35,43 +37,29 @@ export default {
             'activeList',
             'activeProjectType'
         ]),
-        activeFieldsforDropdown: function() {
-            const f = this.$store.getters.activeFields;
-            if (f && f.fields) {
-                return f.fields.filter(x => x.parent == null);
-            } 
-            return [];
-        },
-        fieldLayoutDefinitions: function() {
-            const layout = this.activeProjectType.fieldLayout;
-            return layout.map(x => {
-                return this.$store.getters.getFieldDefintion(x.id);
-            });
-        },
-        layoutUrl: function() { return  `/dash/${this.activeProjectType}/layout`; },
-        columns: function() {
+        headers: function() {
             const fieldLayout = this.$store.getters.activeProjectType.fieldLayout || [];
             const fieldColumns = fieldLayout.map( x => {
-                const f = this.$store.getters.getFieldDefintion(x.id);
+                const f = this.$store.getters.getFieldDefintion(x.id) || {};
                 return  {
-                    name: x.id,
-                    label: f.name
+                    text: f ? f.name : x.id,
+                    value: x.id.toString(),
                 }
             });
             return [
                 {
-                    name: 'ID',
-                    label: 'ID',
+                    text: 'ID',
+                    value: 'ID',
                 },
                 ... fieldColumns,
                 {
-                    name: 'GoTo',
-                    label: '',
-                    component: GoToProject
+                    text: '',
+                    value: 'GoTo',
+                    sortable: false,
                 }
             ]
         },
-        rows: function() {
+        items: function() {
             const typeList = this.$store.getters.activeList;
             const fieldLayout = this.$store.getters.activeProjectType.fieldLayout || [];
             if (typeList.list) {
@@ -91,20 +79,37 @@ export default {
                 return formatted;
             }
             return [];
-        }
+        },
+        activeFieldsforDropdown: function() {
+            const f = this.$store.getters.activeFields;
+            if (f && f.fields) {
+                return f.fields.filter(x => x.parent == null);
+            } 
+            return [];
+        },
+        fieldLayoutDefinitions: function() {
+            const layout = this.activeProjectType.fieldLayout;
+            return layout.map(x => {
+                const def = this.$store.getters.getFieldDefintion(x.id) || {id: x.id, name: x.id };
+
+                return { ... def, uuid: x.uuid };
+            });
+        },
+        layoutUrl: function() { return  `/dash/${this.activeProjectType}/layout`; },
     },
     methods: {
         ...mapMutations({
-            'startViewMode': 'START_VIEW_MODE'
         }),
         ...mapActions([
             'getProjectListById',
+            'getProjectFieldsByType',
             'modifyListLayout'
         ]),
         processPath: function() {
             if (this.activeProjectType != null && this.$route.query.search == null) {
                 this.queryList();
             }
+            this.getProjectFieldsByType(this.activeProjectType);
         },
         queryList() {
             this.getProjectListById(this.activeProjectType.id);
@@ -114,28 +119,30 @@ export default {
         },
         editFields: function() {
             this.fieldToEdit = '';
-            this.$modal.show("fieldConfigureModal");
+            this.fieldConfigureModal = true;
         },
         addField: function() {
-            this.$modal.show("fieldAddModal");
+            this.fieldAddModal = true;
         },
         addFieldToLayout: function() {
-            this.$modal.hide("fieldAddModal");
+            this.fieldAddModal = false;
             const modified = {
                 type: this.activeProjectType.id,
                 layout: [
                     ... this.activeProjectType.fieldLayout,
                     {
-                        id: this.fieldToAdd
+                        id: this.fieldToAdd,
+                        uuid: uuidv4()
                     }
                 ]
             };
             this.modifyListLayout(modified);
         },
         removeFieldFromLayout: function() {
-            this.$modal.hide("fieldConfigureModal");
-            const layout = [... this.activeProjectType.fieldLayout]
-            layout.splice(this.fieldToEdit, 1);
+            this.fieldConfigureModal = false;
+            const layout = [... this.activeProjectType.fieldLayout];
+            const index = this.fieldLayoutDefinitions.findIndex(x => x.uuid == this.fieldToEdit);
+            layout.splice(index, 1);
             const modified = {
                 type: this.activeProjectType.id,
                 layout
@@ -150,7 +157,9 @@ export default {
 }
 </script>
 <style lang="scss">
-    .list-container {
-        height: 100vh;
+    table {
+        tr td {
+            padding-bottom: 10px;
+        }
     }
 </style>

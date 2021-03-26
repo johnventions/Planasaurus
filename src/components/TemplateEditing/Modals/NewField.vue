@@ -1,57 +1,38 @@
 <template>
-    <div>
-        <h3>New Field</h3>
-        <label>Field Name</label>
-        <input type="text" v-model="fieldName"/>
-        <button
-            class="btn"
-            :class="{
-                'btn-dark': field.id !== fieldType,
-                'btn-success': field.id == fieldType
-            }"
-            @click="selectType(field)"
-            v-for="(field) in fieldTypes" :key="field.id">
-            <div class="row">
-                    <div class="col-2 field-icon">
-                        <font-awesome-icon :icon="field.icon" size="2x"/>
-                    </div>
-                    <div class="col-10">
-                        <h4>
-                            {{ field.name }}
-                        </h4>
-                        <p>
-                            {{ field.description}}
-                        </p>
-                    </div>
-            </div>
-        </button>
-
-        <button class="btn btn-primary" @click="submit">
-            Create
-        </button>
-    </div>
+    <v-card>
+        <v-card-title>
+            New Field
+        </v-card-title>
+        <v-card-text>
+            <v-text-field label="Field name" v-model="fieldName"/>
+            <v-list>
+                <v-list-item-group
+                    mandatory
+                    v-model="fieldTypeIndex">
+                    <v-list-item
+                        dense
+                        color="secondary"
+                        v-for="(field) in fieldTypes" :key="field.id">
+                        <v-list-item-icon>
+                            <v-icon v-text="field.icon"/>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <h4>
+                                {{ field.name }}
+                            </h4>
+                            <p>
+                                {{ field.description}}
+                            </p>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-item-group>
+            </v-list>
+            <v-btn class="btn btn-primary" @click="submit">
+                Create
+            </v-btn>
+        </v-card-text>
+    </v-card>
 </template>
-
-<style lang="scss" scoped>
-    button {
-        width: 100%;
-        margin-bottom: 10px;
-        text-align: left;
-        padding: 5px 15px;
-        
-        h4 {
-            margin-bottom: 0;
-        }
-
-        .field-icon {
-            text-align: center;
-        }
-
-        p {
-            margin-bottom: 0;
-        }
-    }
-</style>
 
 <script>
 import fieldTypes from "@/data/fieldTypes";
@@ -60,23 +41,32 @@ export default {
     data: function() {
         return {
             fieldName: '',
-            fieldType: null,
+            fieldTypeIndex: 0,
         }
     },
     computed: {
         fieldTypes: () => fieldTypes
     },
     methods: {
-        selectType(field) {
-            console.log(field);
-            this.fieldType = field.id;
-        },
         submit() {
+            const t = fieldTypes[this.fieldTypeIndex];
+            
             this.$emit('createField', {
                 name: this.fieldName,
-                data_type: this.fieldType,
+                data_type: t.id,
             });
         }
     }
 }
 </script>
+
+<style lang="scss" scoped>
+    button {
+        h4 {
+            margin-bottom: 0;
+        }
+        .field-icon {
+            text-align: center;
+        }
+    }
+</style>

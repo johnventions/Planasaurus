@@ -1,54 +1,62 @@
 <template>
     <div class="form-group" 
         v-bind:class="{ find: viewMode == 'find' }">
-        <label>{{ field.name }}</label>
-        <button 
-            @click="startAddRecord"
-            class="btn btn-primary btn-add float-right">
-            + Add
-        </button><br/>
-        <div class="nested-input" v-if="value && value.length">
-            <child-entry v-for="(child, i) in value"
-                v-on:remove-me="removeElement(child, i)"
-                :entry="child"
-                :field="field"
-                :fieldmeta="field.metadata"
-                :key="child.id">
-            </child-entry>
-        </div>
-        <div v-else>
-            No records
-        </div>
-        <modal :name="addItemModalName" height="auto">
-            <label>
-                Select item to add
-            </label><br/>
-            <select v-model="pendingAdd">
-                <option v-for="opt in relatedOptions"
-                    :value="opt.project_id"
-                    :key="opt.project_id">
-                    <template v-if="opt.meta">
-                        {{ opt.meta[0].value }}
-                    </template>
-                </option>
-            </select>
-            <br/>
-            <button 
-                class="btn btn-primary"
-                @click="finishAddRecord"
-                v-if="pendingAdd">
-                Add Item
-            </button>
-        </modal>
+        <v-flex class="mb-3">
+            <label class="mr-5">{{ field.name }}</label>
+            <v-btn dark
+                dense
+                color="primary" 
+                @click="startAddRecord">
+                + Add
+            </v-btn>
+        </v-flex>
+
+        <v-data-table
+            dense
+            :headers="headers"
+            :items="items">
+            <template v-for="col in dynamicColumns"
+                v-slot:[`item.${col.value}`]="{ item }">
+                <div
+                    :isNested="true"
+                    :field="col.field"
+                    :parentField="field"
+                    :is="displayField()"
+                    type="text"
+                    :item="item"
+                     :key="col.value">
+                </div>
+            </template>
+        </v-data-table>
+
+        <v-dialog v-model="addItemModal" max-width="450">
+            <v-card>
+                <v-card-title>
+                    Select item to add!
+                </v-card-title>
+                <v-card-text>
+                    <v-select 
+                        v-model="pendingAdd"
+                        :items="relatedOptions"
+                        item-text="name"
+                        item-value="project_id">
+                    </v-select>
+                    <v-btn 
+                        color="primary"
+                        @click="finishAddRecord"
+                        v-if="pendingAdd">
+                        Add Item
+                    </v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex';
 import api from '@/util/api';
 import Project from '@/models/class.project';
-
-
-import ChildComponentEntry from './ChildComponentEntry';
+import BasicInput from '@/components/ContentEditing/FieldTypes/BasicInput.vue';
 
 export default {
     name: 'ChildElementComponent',
@@ -56,12 +64,12 @@ export default {
         'field', 'type'
     ],
     components: {
-        'child-entry': ChildComponentEntry
     },
     data: function() {
         return {
             value: this.$store.getters.getFieldArrayVal(this.field.id),
             changes: [],
+            addItemModal: false,
             touched: false,
             pendingAdd: null,
         }
@@ -75,17 +83,64 @@ export default {
         ... mapState({
             viewMode: state => state.viewMode,
         }),
+        headers: function() {
+            const meta = this.field.metadata || {};
+            const fields = meta.fieldDisplay || [];
+            return fields.map(x => {
+                const f = this.$store.getters.getFieldDefintion(x.id) || {};
+                return {
+                    text: f.name,
+                    value: x.id.toString(),
+                    field: f
+                };
+            })
+        },
+        dynamicColumns: function() {
+            return this.headers.map(x => {
+                if (this.viewMode == 'find') {
+                    return x;
+                }
+                return null;
+            }).filter(y => y != null);
+        },
+        items: function() {
+            const cols = this.headers || [];
+
+            if (this.viewMode == 'find') {
+                let findRow = {};
+                cols.forEach( y => {
+                    findRow[y.value] = "ABC";
+                });
+                return [findRow];
+            }
+
+            const list = this.value || [];
+            return list.map(x => {
+                let obj = {};
+                cols.forEach( y => {
+                    if (x.fieldsMapped == null) return;
+                    let fieldObj = x.fieldsMapped[y.value] || {};
+                    obj[y.value] = fieldObj.value;
+                });
+                return obj;
+            });
+        },
         childFields: function() {
             return this.value;
-        },
-        addItemModalName: function() {
-            return `addModal_${this.field.id}`;
         },
         relatedOptions: function() {
             const { id } = this.$store.getters.activeProjectType;
             const activeLayout = this.$store.state.projectLayouts[id];
             if (activeLayout && activeLayout.related[this.field.id]) {
-                return activeLayout.related[this.field.id];
+                const related = activeLayout.related[this.field.id];
+                console.log(related, 1);
+                return related.map(x => {
+                    const display = x.meta && x.meta.length ? x.meta[0].value : x.project_id; 
+                    return {
+                        ...x,
+                        name: display
+                    }
+                });
             }
             return null;
         }
@@ -106,7 +161,7 @@ export default {
             this.touched = false;
         },
         startAddRecord: function() {
-            this.$modal.show(this.addItemModalName);
+            this.addItemModal = true;
         },
         finishAddRecord: async function() { 
             if (this.pendingAdd) {
@@ -140,6 +195,9 @@ export default {
                 }
             ];
             this.handleUpdate();
+        },
+        displayField: function() {
+            return BasicInput;
         }
     },
     mounted: function() {
@@ -154,41 +212,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .btn-add {
-        margin-left: 12px;
-        padding: 1px 8px;
-    }
-
-    .nested-input {
-        border: 1px solid black;
-        display: table;
-        width: 100%;
-    }
-
-    .form-group {
-        &.find {
-            .input-container {
-                position: relative;
-                &:after {
-                    display: block;
-                    position: absolute;
-                    content: 'X';
-                    height: 20px;
-                    width: 20px;
-                    right: 5px;
-                    top: 5px;
-                }
-            }
-            select {
-                    background-color: #d9f6ff;
-                }
-        }
-
-        select {
-            &.touched {
-                border: 2px solid #328d32;
-                font-weight: bold;
-            }
-        }
-    }
 </style>

@@ -1,15 +1,12 @@
-// Layout Editing
-import TextInput from "@/components/TemplateEditing/FieldTypes/TextInput.vue";
-import DateInput from "@/components/TemplateEditing/FieldTypes/DateInput.vue";
-import DropdownInput from "@/components/TemplateEditing/FieldTypes/DropdownInput.vue";
+import BasicInputEditable from "@/components/ContentEditing/FieldTypes/BasicInput.vue";
+import BasicInputMock from "@/components/TemplateEditing/FieldTypes/BasicInputMock.vue";
+
+import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/DropdownInput.vue";
+import DropdownInputMock from "@/components/TemplateEditing/FieldTypes/DropdownInput.vue";
+
+import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
 import RadioInput from "@/components/TemplateEditing/FieldTypes/RadioInput.vue";
 
-// Content Editing
-import BasicInputEditable from "@/components/ContentEditing/FieldTypes/BasicInput.vue";
-// import TextInputEditable from "@/components/ContentEditing/FieldTypes/TextInput.vue";
-// import DateInputEditable from "@/components/ContentEditing/FieldTypes/DateInput.vue";
-import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/DropdownInput.vue";
-import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
 import ChildComponentInput from "@/components/ContentEditing/FieldTypes/ChildComponentInput.vue";
 import UploadInputEditable from "@/components/ContentEditing/FieldTypes/UploadInput.vue";
 
@@ -27,9 +24,9 @@ const fieldTypes = [
         id: 1,
         name: "Text Input",
         type: "text",
-        layoutComponent: TextInput,
+        layoutComponent: BasicInputMock,
         editingComponent: BasicInputEditable,
-        icon: "font",
+        icon: "mdi-format-text",
         description: "Simple text field",
         metaComponents: [
             NameCodename
@@ -38,9 +35,9 @@ const fieldTypes = [
     {
         id: 2,
         name: "Number",
-        layoutComponent: TextInput,
+        layoutComponent: BasicInputMock,
         editingComponent: BasicInputEditable,
-        icon: "hashtag",
+        icon: "mdi-pound",
         description: "Basic numbers",
         metaComponents: [
             NameCodename
@@ -50,9 +47,9 @@ const fieldTypes = [
         id: 3,
         name: "Date",
         type: "date",
-        layoutComponent: DateInput,
+        layoutComponent: BasicInputMock,
         editingComponent: BasicInputEditable,
-        icon: "calendar-alt",
+        icon: "mdi-calendar",
         description: "Date picker, or date time",
         metaComponents: [
             NameCodename
@@ -63,7 +60,7 @@ const fieldTypes = [
         name: "Radio Input (Yes / No)",
         layoutComponent: RadioInput,
         editingComponent: RadioInputEditable,
-        icon: "toggle-on",
+        icon: "mdi-toggle-switch",
         description: "Basic yes/no field",
         metaComponents: [
             NameCodename
@@ -72,9 +69,9 @@ const fieldTypes = [
     {
         id: 5,
         name: "Dropdown (Static)",
-        layoutComponent: DropdownInput,
+        layoutComponent: DropdownInputMock,
         editingComponent: DropdownInputEditable,
-        icon: "caret-square-down",
+        icon: "mdi-form-dropdown",
         description: "Choose an item from a list of static options",
         metaComponents: [
             NameCodename,
@@ -84,9 +81,9 @@ const fieldTypes = [
     {
         id: 6,
         name: "Dropdown (Related Item)",
-        layoutComponent: DropdownInput,
+        layoutComponent: DropdownInputMock,
         editingComponent: DropdownInputEditable,
-        icon: "caret-square-down",
+        icon: "mdi-form-dropdown",
         description: "Choose an items from another data source in your project",
         metaComponents: [
             NameCodename,
@@ -96,9 +93,9 @@ const fieldTypes = [
     {
         id: 7,
         name: "Connected Data",
-        layoutComponent: TextInput,
+        layoutComponent: BasicInputMock,
         editingComponent: ChildComponentInput,
-        icon: "layer-group",
+        icon: "mdi-layers-triple",
         description: "Connect your record to multiple other records (for example: participants, ingredients, bill of materials)",
         metaComponents: [
             NameCodename,
@@ -109,9 +106,9 @@ const fieldTypes = [
     {
         id: 8,
         name: "File / Image Upload",
-        layoutComponent: TextInput,
+        layoutComponent: BasicInputMock,
         editingComponent: UploadInputEditable,
-        icon: "file-upload",
+        icon: "mdi-file-image",
         description: "Upload images, documents, or other files related to your data",
         metaComponents: [
             NameCodename,

@@ -1,14 +1,16 @@
 <template src="./LayoutArea.html"></template>
 <script>
 import Vue from 'vue';
-import LayoutSection from '@/components/TemplateEditing/Section/Section';
+import LayoutSection from '@/components/TemplateEditing/Section/TemplateSection';
 import Section from '@/models/class.section';
 
 
 export default {
     props: ['area', 'areaname'],
+    name: 'LayoutArea',
     data: function() {
         return {
+            dialogNewSection: false,
             newSectionIndex: null,
             targetSectionId: null,
         }
@@ -20,13 +22,13 @@ export default {
         newSection(i) {
             this.newSectionIndex = i + 1;
             this.targetSectionId = null;
-            this.$modal.show('new-section-modal');
+            this.dialogNewSection = true;
         },
         editSection(id) {
             console.log(id);
             this.newSectionIndex = null;
             this.targetSectionId = id;
-            this.$modal.show('new-section-modal');
+            this.dialogNewSection = true;
         },
         createSection(type) {
             // create new section at the index
@@ -65,7 +67,7 @@ export default {
             }
             // push that bad boy live
             this.updateMe(newArea);
-            this.$modal.hide('new-section-modal');
+            this.dialogNewSection = false;
         },
         handleUpdateChild(index, item) {
             let newArea = {...this.area };
@@ -83,44 +85,16 @@ export default {
     .section-container {
         position: relative;
     }
-    .section-choices {
-        button {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-    }
     .section-new, .section-edit {
-        border-radius: 20%;
-        border: 1px solid black;
-        width: 30px;
-        height: 30px;
         position: absolute;
-        z-index: 20;
+        z-index: 3;
         text-align: center;
-        color: white;
-        font-size: 18px;
-        font-weight: 800;
         cursor: pointer;
-        padding: 0;
     }
     .section-new {
         left: -35px;
         bottom: -16px;
         position: absolute;
-
-        &:hover {
-            &:before {
-                position: absolute;
-                content: '';
-                display: block;
-                height: 0px;
-                width: 70vw;
-                border-top: 1px dashed black;
-                z-index: 2;
-                top: 12px;
-                left: 35px;
-            }
-        }
     }
     .section-edit {
         right: -15px;

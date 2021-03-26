@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open --port 3355 ",
+    "build": "vue-cli-service build && tsc",
+    "lint": "vue-cli-service lint",
+    "build-server": "tsc",
+    "build-vue": "vue-cli-service build",
     "dev": "concurrently \"nodemon\" \"vue-cli-service serve --open --port 3355\"",
     "start": "node ./server.js",
     "start-ts": "ts-node server.ts",
     "start:watch": "nodemon",
-    "build": "vue-cli-service build && tsc",
-    "build-server": "tsc",
-    "build-vue": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "tsc": "tsc"
   },
   "dependencies": {
@@ -48,6 +48,7 @@
     "vue-router": "^3.2.0",
     "vue-smooth-dnd": "^0.8.1",
     "vuedraggable": "^2.24.3",
+    "vuetify": "^2.4.0",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
@@ -64,12 +65,15 @@
     "gulp": "^4.0.2",
     "node-sass": "^4.12.0",
     "nodemon": "^2.0.4",
-    "sass-loader": "^8.0.2",
+    "sass": "^1.32.0",
+    "sass-loader": "^10.0.0",
     "stylus": "^0.54.8",
     "stylus-loader": "^4.3.1",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7",
-    "vue-template-compiler": "^2.6.11"
+    "vue-cli-plugin-vuetify": "~2.2.0",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.7.0"
   },
   "nodemonConfig": {
     "ignore": [

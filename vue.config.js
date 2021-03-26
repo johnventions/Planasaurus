@@ -1,5 +1,3 @@
-const path = require('path')
-
 module.exports = {
     pluginOptions: {
         'style-resources-loader': {
@@ -7,6 +5,7 @@ module.exports = {
             patterns: ['\\src\\styles\\imports.styl']
         }
     },
+
     devServer: {
         proxy: {
             '^/api': {
@@ -25,5 +24,9 @@ module.exports = {
                 changeOrigin: true
             },
         }
-    }
+    },
+
+    transpileDependencies: [
+      'vuetify'
+    ]
 }

@@ -2,14 +2,15 @@
     <div class="form-group" 
         v-bind:class="{ find: viewMode == 'find' }"
     >
-        <label>{{ field.name }}</label><br/>
-        <select class="form-control"
-                v-bind:class="{touched: touched}"
-                v-model="value"
-                v-on:change="handleUpdate">
-            <option disabled selected>Select One</option>
-            <option :value="option.key" v-for="(option, i) in options" :key="i">{{ option.value }}</option>
-        </select>
+        <v-select
+            v-model="value"
+            :items="options"
+            item-text="value"
+            item-value="key"
+            :label="field.name"
+            v-bind:class="{touched: touched}"
+            v-on:change="handleUpdate"
+            ></v-select>
     </div>
 </template>
 <script>
@@ -40,7 +41,7 @@ export default {
                 if (relatedOptions && relatedOptions[this.field.id]) {
                     return relatedOptions[this.field.id].map( x => {
                         return {
-                        key: x.project_id,
+                        key: x.project_id.toString(),
                         value: x.meta ? x.meta.map(x => x.value).join(" ") : x.project_id
                         }
                     });
