@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Axios from 'axios';
+import vuetify from './plugins/vuetify';
+
 
 import VModal from 'vue-js-modal';
 import DropdownMenu from '@innologica/vue-dropdown-menu';
@@ -80,5 +82,6 @@ Vue.use(VModal, {
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

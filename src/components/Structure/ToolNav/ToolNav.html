@@ -1,67 +1,78 @@
 <div>
-    <nav class="navbar utility-nav navbar-expand-lg navbar-light bg-grey"
-            v-if="activeProjectType && activeProjectType.id">
-        <div class="container-fluid">
-            <ul class="navbar-nav">
-                <li class="nav-item" v-if="activeList && activeList.list">
-                    <div>
-                        <button
-                            :disabled="prevItem == null"
-                            @click="goPrev">
-                            <font-awesome-icon icon="angle-left" size="2x"  />
-                        </button>
-                        <button
-                            :disabled="nextItem == null"
-                            @click="goNext" >
-                            <font-awesome-icon icon="angle-right" size="2x"/>
-                        </button>
-                    </div>
+    <v-app-bar app flat class="">
+        <v-btn-toggle rounded class="">
+                <v-btn
+                    :class="viewMode == 'find' ? 'd-none' : ''"
+                    :disabled="viewMode == 'find'"
+                    :to="`/dash/${activeProjectType.codename}/find`">
+                    <v-icon>mdi-magnify</v-icon>
+                    <span class="d-none d-sm-block">
+                        Search
+                    </span>
+                </v-btn>
+                <v-btn
+                    :class="viewMode != 'find' ? 'd-none' : ''"
+                    @click.stop="cancelClick">
+                    <v-icon>mdi-arrow-left</v-icon>
+                    <span class="d-none d-sm-block">
+                        Cancel
+                    </span>
+                </v-btn>
+                <v-btn
+                    @click="searchProjectRecords"
+                    v-if="viewMode == 'find'">
+                    <v-icon>mdi-chevron-double-right</v-icon>
+                    <span class="d-none d-sm-block">
+                        Run
+                    </span>
+                </v-btn>
+                <v-btn
+                    :to="`/dash/${activeProjectType.codename}/new`" 
+                    v-if="activeProjectType">
+                    <v-icon>mdi-plus</v-icon>
+                    <span class="d-none d-sm-block">
+                        New
+                    </span>
+                </v-btn>
+            </v-btn-toggle>
+            <v-spacer></v-spacer>
+            <v-btn-toggle dense rounded v-if="!layoutEditing">
+                <v-btn 
+                    :disabled="prevItem == null"
+                    @click="goPrev">
+                    <v-icon>mdi-arrow-left</v-icon>
+                </v-btn>
+                <v-btn class="d-none d-sm-block">
                     <span v-html="currentItemDisplay"></span>
-                </li>
-                <li class="nav-item" v-if="activeProjectType">
-                    <router-link :to="`/dash/${activeProjectType.codename}/new`" class="nav-link">
-                        <font-awesome-icon icon="plus-square" size="2x"/>
-                        New {{ activeProjectType ? activeProjectType.name : '' }}
-                    </router-link>
-                </li>
-                <template v-if="viewMode != 'find'">
-                    <li class="nav-item">
-                        <router-link :to="`/dash/${activeProjectType.codename}/find`" class="nav-link">
-                            <font-awesome-icon icon="search" size="2x"/>
-                            Search {{ activeProjectType ? activeProjectType.name : '' }}
-                        </router-link>
-                    </li>
+                </v-btn>
+                <v-btn
+                    :disabled="nextItem == null"
+                    @click="goNext">
+                    <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>
+            </v-btn-toggle>
+            <v-spacer></v-spacer>
+            <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                    rounded
+                    icon
+                    v-bind="attrs"
+                    v-on="on">
+                      <v-icon>{{ 'mdi-dots-vertical' }}</v-icon>
+                  </v-btn> 
                 </template>
-                <template v-if="viewMode == 'find'">
-                    <li class="nav-item">
-                        <button @click="cancelClick" class="nav-link">
-                            <font-awesome-icon icon="angle-double-left" size="2x" />
-                            Cancel Search
-                        </button>
-                    </li>
-                    <li class="nav-item" >
-                        <button @click="searchProjectRecords" class="nav-link">
-                            <font-awesome-icon icon="search" size="2x" />
-                            Run Search
-                        </button>
-                    </li>
-                </template >
-                <li class="nav-item util" 
+                <v-list flat>
+                    <v-list-item :to="layoutUrl"
                     v-if="!layoutEditing">
-                    <router-link class="nav-link"
-                        :to="layoutUrl">
-                        <font-awesome-icon icon="edit" size="2x" />
                         Edit Layout
-                    </router-link>
-                </li>
-                <li class="nav-item util" 
-                    v-if="layoutEditing">
-                    <button class="nav-link" @click="saveLayout">
-                        <font-awesome-icon icon="file-upload" size="2x" />
+                    </v-list-item>
+                    <v-list-item :to="layoutUrl"  
+                        @click="saveLayout" 
+                        v-if="layoutEditing">
                         Save Layout
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </nav>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+      </v-app-bar>
 </div>

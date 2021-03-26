@@ -11,6 +11,7 @@ export default {
     },
     data: function() {
         return {
+            dialogEdit: false,
             editingType: null,
         }
     },
@@ -41,7 +42,7 @@ export default {
             const t = this.projectTypes.find(x => x.id == id);
             if (t) {
                 this.editingType = { ... t};
-                this.$modal.show('editTypeModal');
+                this.dialogEdit = true;
             }
         },
         newType: function() {
@@ -52,14 +53,14 @@ export default {
                 menu_order: 0,
                 parent_id: null,
             };
-            this.$modal.show('editTypeModal');
+            this.dialogEdit = true;
         },
         saveType: function() {
             const url = `/api/types${ this.editingType.id != 0 ? '/' + this.editingType.id  : '' }`;
             let update = this.editingType.id == 0 ? axios.post(url, this.editingType) : axios.put(url, this.editingType);
             update.then( () => {
                 this.getTypes();
-                this.$modal.hide('editTypeModal');
+                this.dialogEdit = false;
             })
         }
     }

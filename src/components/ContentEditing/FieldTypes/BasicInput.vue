@@ -2,23 +2,51 @@
     <div class="form-group"
         v-bind:class="{ find: viewMode == 'find' }"
     >
-        <label v-if="!isNested && field.name">
-            {{ field.name }}<br/>
-        </label>
         <div class="input-container">
-            <select v-model="searchOperator"
+            <v-select 
+                :items="searchOptions"
+                item-text="key"
+                item-value="value"
+                v-model="searchOperator"
                 v-if="viewMode == 'find' && useSearchOperators">
-                <option :value="null">=</option>
-                <option value=">">&gt;</option>
-                <option value="<">&lt;</option>
-            </select>
-            <input :type="type" 
-                class="form-control"
+            </v-select>
+
+            <v-text-field
+                :label="field.name"
+                :dense="isNested"
+                v-if="type == 'text'"
+                :hide-details="isNested? true : false"
+                :single-line="isNested? true : false"
+                :placeholder="field.name"
                 v-bind:class="{touched: touched}"
                 v-on:change="handleUpdate"
                 v-on:keyup="handleUpdate"
                 v-on:keyup.enter="handleSubmit"
-                v-model="value"/>
+                v-model="value"
+            ></v-text-field>
+
+            <v-menu
+                v-if="type == 'date'"
+                v-model="dateMenu"
+                :close-on-content-click="false"
+                max-width="290">
+                <template 
+                    v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        :value="value"
+                        :label="field.name"
+                        :placeholder="field.name"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        @click:clear="value = null"
+                    ></v-text-field>
+                </template>
+                <v-date-picker
+                    v-model="value"
+                    v-on:change="handleUpdate"
+                ></v-date-picker>
+            </v-menu>
         </div>
     </div>
 </template>
@@ -35,9 +63,15 @@ export default {
     ],
     data: function() {
         return {
+            dateMenu: false,
             value: this.isNested ? this.field.value : this.$store.getters.getFieldVal(this.field.id),
             touched: false,
             searchOperator: null,
+            searchOptions: [
+                { key: '=', value: null},
+                { key: '>', value: '>'},
+                { key: '<', value: '<'},
+            ]
         }
     },
     watch: {
@@ -75,6 +109,7 @@ export default {
         ]),
         handleUpdate: function(){
             const newVal = (this.viewMode == 'find' && this.searchOperator) ? `${this.searchOperator}${this.value}` : this.value;
+            this.dateMenu = false;
 
             this.updateField({
                 id: this.fieldIdForUpdate,
@@ -104,24 +139,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .form-group {
-        .input-container {
-            display: flex;
-        }
-        &.find {
-            .input-container {
-                position: relative;
-            }
-            input, select {
-                    background-color: #d9f6ff;
-                }
-        }
-
-        input {
-            &.touched {
-                border: 2px solid #328d32;
-                font-weight: bold;
-            }
-        }
-    }
 </style>

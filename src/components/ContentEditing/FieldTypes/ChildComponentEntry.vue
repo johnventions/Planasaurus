@@ -7,6 +7,7 @@
                 :field="f"
                 :isNested="true"
                 :parentField="field"
+                type="text"
                 :is="displayField">
             </div>
         </div>
@@ -70,20 +71,13 @@ export default {
 </script>
 <style lang="scss" scoped>
     .child-entry {
-        display: table-row;
         .child-col {
             padding: 0px 0px;
             display: table-cell;
             flex-grow: 1;
-            border: 1px solid grey;
-
             &.settings {
                 width: 30px;
                 padding: 0 8px;
-            }
-
-            .form-group {
-                margin-bottom: 0;
             }
         }
     }

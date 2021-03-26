@@ -1,4 +1,3 @@
-
 export default class Project {
     id = 0;
     name = '';

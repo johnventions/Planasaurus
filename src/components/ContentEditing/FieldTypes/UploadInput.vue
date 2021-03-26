@@ -2,36 +2,47 @@
     <div class="form-group"
         v-bind:class="{ find: viewMode == 'find' }"
     >
-        <label>{{ field.name }}</label><br/>
         <div class="input-container" v-if="maxQty == 0 || maxQty > value.length">
-            <input type="file"
-                ref="fileInput"
-                class="form-control"
-                v-on:change="selectFileHandler"/>
-                <button 
-                    class="btn btn-primary"
-                    v-if="fileSelected"
+            <v-row class="mb-3">
+                <v-file-input
+                    v-model="files"
+                    ref="fileInput"
+                    counter
+                    :label="field.name">
+                ></v-file-input>
+                <v-btn 
+                    dark
+                    v-if="files"
+                    color="primary"
+                    class="ml-2 mt-3"
                     @click="uploadFile">
                     Upload
-                </button>
+                </v-btn>
+            </v-row>
         </div>
         <div v-if="value && value.length" v-bind:class="`uploads-${displayType}`">
-            <div v-for="(file, i) in value" :key="file.uuid" class="file-container">
-                <a target="_blank" :href="file.publicPath">
-                    <img v-if="file.previewPath" v-bind:src="file.previewPath">
-                    <span v-else class="document-icon">
-                        <font-awesome-icon icon="file" size="2x" />
-                    </span>
-                </a>
-                <div class="file-details">
-                    {{ file.original_filename }} - <a target="_blank" :href="file.publicPath">View</a>
-                    <br/>
-                    <button
-                        v-on:click="removeElement(file, i)">
-                        Remove
-                    </button>
-                </div>
-            </div>
+            <v-list>
+                <v-list-item v-for="(file, i) in value" :key="file.uuid">
+                    <a target="_blank" :href="file.publicPath">
+                        <v-list-item-avatar v-if="file.previewPath">
+                            <img v-bind:src="file.previewPath">
+                        </v-list-item-avatar>
+                        <v-list-item-icon v-else>
+                            <v-icon color="indigo">
+                                mdi-file
+                            </v-icon>
+                        </v-list-item-icon>
+                    </a>
+                    <div class="file-details">
+                        {{ file.original_filename }} - <a target="_blank" :href="file.publicPath">View</a>
+                        <br/>
+                        <button
+                            v-on:click="removeElement(file, i)">
+                            Remove
+                        </button>
+                    </div>
+                </v-list-item>
+            </v-list>
         </div>
     </div>
 </template>
@@ -44,6 +55,7 @@ export default {
     ],
     data: function() {
         return {
+            files: [],
             value: this.$store.getters.getFieldFiles(this.field.id),
             touched: false,
             changes: [],
@@ -82,15 +94,9 @@ export default {
             });
             this.touched = true;
         },
-        selectFileHandler() {
-            if (this.$refs.fileInput.files && this.$refs.fileInput.files.length) {
-                this.fileSelected = true;
-            }
-        },
         uploadFile: function() {
             const formData = new FormData();
-            const file = this.$refs.fileInput.files[0];
-            formData.append('attachment', file);
+            formData.append('attachment', this.files);
             this.$http.post('/upload', formData, {
                 headers: {
                      'Content-Type': 'multipart/form-data'
@@ -109,9 +115,7 @@ export default {
                         }
                     ];
                 this.handleUpdate();
-                if (this.$refs.fileInput) {
-                    this.$refs.fileInput.value = null;
-                }
+                this.files = null;
             })
         },
         removeElement: function(file, i) {
@@ -139,81 +143,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .form-group {
-        &.find {
-            .input-container {
-                position: relative;
-                &:after {
-                    display: block;
-                    position: absolute;
-                    content: 'X';
-                    height: 20px;
-                    width: 20px;
-                    right: 5px;
-                    top: 5px;
-                }
-            }
-            input {
-                    background-color: #d9f6ff;
-                }
-        }
-        input {
-            margin-bottom: 15px;
-        }
-        .uploads-list {
-            overflow: hidden;
-            img {
-                max-width: 100px;
-            }
-            .file-container {
-                display: flex;
-                margin-bottom: 8px;
-                .file-details {
-                    padding: 0 5px;
-                }
-
-                .document-icon {
-                    display: block;
-                    border: 1px solid blue;
-                    width: 100px;
-                    svg {
-                        margin: 10px auto;
-                        display: block;
-                    }
-                }
-            }
-        }
-        .uploads-thumbnail {
-            position: relative;
-            .file-container {
-                display: inline-block;
-                margin: 5px;
-            }
-            img {
-                width: 150px;
-                height: 150px;
-                object-fit: contain;
-                background: black;
-                border: 1px solid black;
-                opacity: 0.8;
-                transition: opacity ease 0.2s;
-                &:hover {
-                    opacity: 1;
-                }
-            }
-            .file-details {
-                display: none;
-            }
-        
-            .document-icon {
-                display: block;
-                width: 150px;
-                height: 150px;
-                border: 1px solid blue;
-                svg {
-                    margin: 10px 12px;
-                }
-            }
-        }
-    }
 </style>

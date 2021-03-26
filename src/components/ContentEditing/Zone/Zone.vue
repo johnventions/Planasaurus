@@ -28,7 +28,7 @@ export default {
             if (fieldDef) {
                 // find matching component base on the data type
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
-                return matchingComponent.type;
+                if (matchingComponent) return matchingComponent.type;
             }
             return null;
         },
@@ -38,20 +38,24 @@ export default {
             if (fieldDef) {
                 // find matching component base on the data type
                 let matchingComponent = fieldTypes.find( x => x.id == fieldDef.data_type);
-                return matchingComponent.editingComponent;
+                if (matchingComponent) return matchingComponent.editingComponent;
             }
-            console.log("Could not find", fieldID)
+            console.log("Could not find field", fieldID)
         }
     }
 }
 </script>
 <style lang="scss">
     .zone {
+        .field-item {
+            margin-bottom: 10px;
+        }
         &.editing {
+            + .zone {
+                border-left: 1px dashed grey;
+            }
             .zone-container {
-                min-height: 200px;
                 padding: 15px;
-                border: 1px dotted black;
             }
             .zone-new {
                 display: inline-block;

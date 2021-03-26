@@ -1,33 +1,36 @@
 <template>
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <label>
-                Data to Display:
-            </label><br/>
-            <ul class="dropdown-options">
-                <li v-for="(item, i) in fieldMapping" :key="i">
+    <div>
+        <v-card-title class="px-0">
+            Fields to Display
+        </v-card-title>
+        <v-row class="mx-0">
+            <v-select v-model="pendingAdd"
+                :items="fieldOptions"
+                item-text="name"
+                item-value="id">
+            </v-select>
+            <v-btn color="primary"
+                @click="addOption"
+                class="mt-3">
+                Add
+            </v-btn>
+        </v-row>
+        <v-list>
+            <v-list-item dense v-for="(item, i) in fieldMapping" :key="i">
+                <v-list-item-content>
                     {{ item.name }}
-                    <button v-on:click="removeField(item)">
-                        x
-                    </button>
-                </li> 
-            </ul>
-        </div>
-        <div class="col-12 col-md-6">
-            <label>
-                Add new fields
-            </label><br/>
-            <select v-model="pendingAdd">
-                <option v-for="(opt, i) in fieldOptions"
-                    :value="opt.id"
-                    :key="i">
-                    {{ opt.name }}
-                </option>
-            </select><br/>
-            <button class="btn btn-primary" @click="addOption">
-                Add Option
-            </button>
-        </div>
+                </v-list-item-content>
+                <v-list-item-action dense>
+                    <v-btn icon>
+                        <v-icon dense 
+                            @click="removeField(item)"
+                            color="red lighten-1">
+                            mdi-trash-can
+                        </v-icon>
+                    </v-btn>
+                </v-list-item-action>
+            </v-list-item>
+        </v-list>
     </div>
 </template>
 <script>

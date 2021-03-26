@@ -1,9 +1,9 @@
-<template src="./Section.html"></template>
+<template src="./TemplateSection.html"></template>
 <script>
-import Zone from "../Zone/Zone";
+import Zone from "../Zone/TemplateZone";
 
 export default {
-    name: 'Section',
+    name: 'TemplateSection',
     props: ['item', 'index'],
     components: {
         'layout-zone': Zone
@@ -32,8 +32,4 @@ export default {
 }
 </script>
 <style lang="scss">
-    .section {
-        padding: 10px 0;
-        position: relative;
-    }
 </style>

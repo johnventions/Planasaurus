@@ -1,5 +1,5 @@
-<div class='zone editing'>
-    <div class="zone-container">
+<v-card elevation="4" class="zone">
+    <v-card-text>
         <draggable 
             :list="item.components"
             handle=".handle"
@@ -13,8 +13,7 @@
                             <font-awesome-icon icon="arrows-alt" size="sm" class="inline" />
                     </span>
                     <div 
-                    :field="getLayoutFieldDef(child.id)"
-                    v-on:click="editField(child.id)"
+                    v-bind="fieldProps(child.id)"
                     :is="getLayoutComponent(child.id)">
                     </div>
                     <button 
@@ -25,19 +24,20 @@
                     </button>
                 </div>
         </draggable>
-        <button class="btn-field-new" @click="newField">
+        <v-btn @click="newField">
             + New Field
-        </button>
-    </div>
-    <modal :name="modalNewField" height="auto">
-        <new-field-modal
-            v-if="creatingField"
-            v-on:createField="submitCreateField" />
-    </modal>
-    <modal :name="modalEditField" height="auto">
-        <edit-field-modal
-            v-if="editingField"
-            v-on:edit-finish="finishEdit"
-            :field="fieldInEdit" />
-    </modal>
-</div>
+        </v-btn>
+        <v-dialog v-model="modalNewField" scrollable max-width="450">
+            <new-field-modal
+                v-if="creatingField"
+                v-on:createField="submitCreateField" />
+        </v-dialog>
+        <v-dialog v-model="modalEditField" max-width="450">
+            <edit-field-modal
+                v-if="editingField"
+                v-on:edit-finish="finishEdit"
+                :field="fieldInEdit" />
+        </v-dialog>
+    </v-card-text>
+</v-card>
+        
