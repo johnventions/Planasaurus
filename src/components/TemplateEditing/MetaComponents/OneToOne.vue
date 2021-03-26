@@ -1,29 +1,21 @@
 <template>
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <v-select 
-                label="Data Type"
-                v-on:change="handleRelationshipUpdate"
-                v-model="related_type"
-                :items="projectTypes"
-                item-text="name"
-                item-value="id">
-            </v-select>
-        </div>
-        <div class="col-12 col-md-6" v-if="fieldsForType.length">
-            <label>
-                Primary Field:
-            </label><br/>
-            <select 
-                v-on:change="handleKeysUpdate"
-                v-model="related_keys">
-                <option v-for="typeField in fieldsForType" 
-                    :value="typeField.id" 
-                    :key="typeField.id">
-                    {{ typeField.name }}
-                </option>
-            </select>
-        </div>
+    <div>
+        <v-select 
+            label="Data Type"
+            v-on:change="handleRelationshipUpdate"
+            v-model="related_type"
+            :items="projectTypes"
+            item-text="name"
+            item-value="id">
+        </v-select>
+        <v-select 
+            label="Primary Field"
+            v-on:change="handleKeysUpdate"
+            v-model="related_keys"
+            :items="fieldsForType"
+            item-text="name"
+            item-value="id">
+        </v-select>
     </div>
 </template>
 <script>
