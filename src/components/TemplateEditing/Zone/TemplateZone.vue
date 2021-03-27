@@ -121,6 +121,8 @@ export default {
         border: 1px dashed blue;
     }
     .zone {
+        border: 1px dashed grey;
+        
         .zone-input {
             display: flex;
             transition: opacity 0.5s ease, transform 0.25s ease;

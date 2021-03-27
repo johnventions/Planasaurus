@@ -1,13 +1,18 @@
-<section class="section">
-    <v-row>
-        <v-col v-for="(zone, i) in item.zones"
-            :class="getClass(i)" 
-            :key="zone.id">
-            <layout-zone 
-                :item="zone"
-                :index="i"
-                v-on:updatechild="handleUpdateChild">
-            </layout-zone>
-        </v-col>
-    </v-row>
+<section class="section mb-6">
+    <v-card elevation="4">
+        <v-container>
+            <v-row>
+                <v-col v-for="(zone, i) in item.zones" 
+                    class="zone-col"
+                    :class="getClass(i)" 
+                    :key="zone.id">
+                    <layout-zone 
+                        :item="zone"
+                        :index="i"
+                        v-on:updatechild="handleUpdateChild">
+                    </layout-zone>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-card>
 </section>

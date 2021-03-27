@@ -527,6 +527,11 @@ export default new Vuex.Store({
 				}
 			}
 			return [];
+		},
+		getWorkspace: (state) => {
+			const ws = state.activeWorkspace;
+			console.log(ws);
+			return ws != null ? state.user.workspaces.find(x => x.id == ws) : {};
 		}
 	},
 	modules: {
