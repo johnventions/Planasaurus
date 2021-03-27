@@ -46,17 +46,25 @@ export default {
                     value: x.id.toString(),
                 }
             });
-            return [
-                {
+            const base_headers = [{
+                    text: '',
+                    value: 'APP_VIEW',
+                    sortable: false,
+            }];
+            if (fieldColumns.length == 0) {
+                base_headers.push({
                     text: 'ID',
                     value: 'ID',
-                },
+                });
+            }
+            return [
+                ...base_headers,
                 ... fieldColumns,
-                {
-                    text: '',
-                    value: 'GoTo',
-                    sortable: false,
-                }
+                // {
+                //     text: '',
+                //     value: 'APP_GOTO',
+                //     sortable: false,
+                // }
             ]
         },
         items: function() {
@@ -69,9 +77,12 @@ export default {
                         fieldRows[y.id] = row.getFieldValue(y.id)
                     });
                     return {
+                        APP_VIEW: {
+                            id: row.id
+                        },
                         ID: row.id,
                         ... fieldRows,
-                        GoTo: {
+                        APP_GOTO: {
                             id: row.id
                         }
                     }

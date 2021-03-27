@@ -8,6 +8,8 @@ import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInpu
 import RadioInput from "@/components/TemplateEditing/FieldTypes/RadioInput.vue";
 
 import ChildComponentInput from "@/components/ContentEditing/FieldTypes/ChildComponentInput.vue";
+import ChildComponentMock from "@/components/TemplateEditing/FieldTypes/ChildComponentMock.vue";
+
 import UploadInputEditable from "@/components/ContentEditing/FieldTypes/UploadInput.vue";
 
 
@@ -93,7 +95,7 @@ const fieldTypes = [
     {
         id: 7,
         name: "Connected Data",
-        layoutComponent: BasicInputMock,
+        layoutComponent: ChildComponentMock,
         editingComponent: ChildComponentInput,
         icon: "mdi-layers-triple",
         description: "Connect your record to multiple other records (for example: participants, ingredients, bill of materials)",
