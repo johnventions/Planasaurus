@@ -8,20 +8,23 @@
             :move="onDrop">
                 <div v-for="(child, i) in item.components"
                     class="zone-input"
+                    :class="`child_field_${child.id}`"
                     :key="child.id">
                     <span class="handle">
                             <font-awesome-icon icon="arrows-alt" size="sm" class="inline" />
                     </span>
                     <div 
-                    v-bind="fieldProps(child.id)"
-                    :is="getLayoutComponent(child.id)">
+                        v-bind="fieldProps(child.id)"
+                        :is="getLayoutComponent(child.id)">
                     </div>
-                    <button 
-                        v-if="getLayoutFieldDef(child.id) == null"
+                    <v-btn
+                        color="black"
+                        dark
+                        v-if="!getLayoutFieldDef(child.id) || !getLayoutComponent(child.id)"
                         @click="removeField(i)"
-                        class="btn btn-remove btn-secondary">
+                        class="btn-remove">
                         Remove Field
-                    </button>
+                    </v-btn>
                 </div>
         </draggable>
         <v-btn @click="newField">

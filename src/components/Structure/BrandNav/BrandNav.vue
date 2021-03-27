@@ -55,6 +55,8 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
+
 export default {
     name: 'BrandNav',
     data: function() {
@@ -86,6 +88,11 @@ export default {
                 },
             ]
         }
+    },
+    computed: {
+        ... mapState({
+            authenticated: state => state.authenticated,
+        }),
     }
 }
 </script>
