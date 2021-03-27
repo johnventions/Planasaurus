@@ -3,12 +3,14 @@
         <v-app-bar app color="black" dark class="">
             <v-container class="py-0 fill-height">
                 <v-row>
-                    <v-toolbar-title class="py-2">
+                    <router-link to="/">
+                    <v-toolbar-title class="pt-3">
                         <v-icon>
                             mdi-egg-easter
                         </v-icon>
                         Planasaurus
                     </v-toolbar-title>
+                    </router-link>
                     <v-spacer></v-spacer>
                     <div class="py-2 d-none d-md-block">
                         <template v-for="item in links" >

@@ -7,6 +7,7 @@ import Home from '../views/Home.vue'
 import Plans from '../views/Plans/Plans.vue'
 import Features from '../views/Features/Features.vue'
 import Login from '../views/Login/Login.vue'
+import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 
 
 import AuthContainer from '../views/AuthContainer.vue'
@@ -45,6 +46,11 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: PrivacyPolicy
   },
   {
     path: '/about',

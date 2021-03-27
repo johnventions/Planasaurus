@@ -9,6 +9,13 @@ export default {
     data: function() {
         return {
             activeID: null,
+            
+        items: [
+          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+          { title: 'Photos', icon: 'mdi-image' },
+          { title: 'About', icon: 'mdi-help-box' },
+        ],
+        right: null,
         }
     },
     watch: {

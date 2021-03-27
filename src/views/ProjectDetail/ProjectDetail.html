@@ -1,21 +1,62 @@
-<div class="container">
-    <div class="project-detail" 
-        v-if="activeProject || viewMode == 'find'">
-        <div class="row">
-            <div class="col-9">
-            </div>
-            <div class="col-3">
-                <v-btn
-                    v-if="Object.keys(pendingUpdates).length"
-                    color="success"
-                    @click="saveChanges">
-                    Save Changes
-                </v-btn>
-            </div>
+<div class="">
+    <v-row>
+        <div class="col-12 col-md-9">
+            <v-container>
+                <div class="project-detail" 
+                    v-if="activeProject || viewMode == 'find'">
+                    <div class="row">
+                        <div class="col-9">
+                        </div>
+                        <div class="col-3">
+                            <v-btn
+                                v-if="Object.keys(pendingUpdates).length"
+                                color="success"
+                                @click="saveChanges">
+                                Save Changes
+                            </v-btn>
+                        </div>
+                    </div>
+                    <editing-area 
+                        v-if="activeLayout && activeLayout.layout"
+                        :item="activeLayout.layout.primaryArea">
+                    </editing-area>
+                </div>
+            </v-container>
         </div>
-        <editing-area 
-            v-if="activeLayout && activeLayout.layout"
-            :item="activeLayout.layout.primaryArea">
-        </editing-area>
-    </div>
+        <div class="d-none col-12 col-md-3">
+            <v-navigation-drawer absolute right>
+                <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title class="title">
+                    Application
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                    subtext
+                    </v-list-item-subtitle>
+                </v-list-item-content>
+                </v-list-item>
+        
+                <v-divider></v-divider>
+        
+                <v-list
+                dense
+                nav
+                >
+                <v-list-item
+                    v-for="item in items"
+                    :key="item.title"
+                    link
+                >
+                    <v-list-item-icon>
+                    <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+        
+                    <v-list-item-content>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                </v-list>
+            </v-navigation-drawer>
+        </div>
+    </v-row>
 </div>
