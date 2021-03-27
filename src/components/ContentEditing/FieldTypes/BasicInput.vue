@@ -4,6 +4,7 @@
     >
         <div class="input-container">
             <v-select 
+                class="search-operator"
                 :items="searchOptions"
                 item-text="key"
                 item-value="value"
@@ -139,4 +140,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    .input-container {
+        display: flex;
+
+        .search-operator {
+            max-width: 45px;
+            margin-right: 10px;
+        }
+    }
 </style>

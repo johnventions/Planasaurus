@@ -466,6 +466,10 @@ export default new Vuex.Store({
 			}
 			return {};
 		},
+		activeProjectListPage: state => {
+			return state.activeTypeCodename ? `/dash/${state.activeTypeCodename}` : '/dash';
+
+		},
 		activeProjectType: state  => {
 			const t = state.projectTypes.find(x => x.codename == state.activeTypeCodename);
 			return t || {};
@@ -530,7 +534,6 @@ export default new Vuex.Store({
 		},
 		getWorkspace: (state) => {
 			const ws = state.activeWorkspace;
-			console.log(ws);
 			return ws != null ? state.user.workspaces.find(x => x.id == ws) : {};
 		}
 	},

@@ -4,8 +4,13 @@ import VueRouter from 'vue-router'
 import store from '../store/index';
 
 import Home from '../views/Home.vue'
+import Plans from '../views/Plans/Plans.vue'
+import Features from '../views/Features/Features.vue'
 import Login from '../views/Login/Login.vue'
+
+
 import AuthContainer from '../views/AuthContainer.vue'
+import Dashboard from '../views/Dashboard/Dashboard.vue'
 import ProjectList from '../views/ProjectList/ProjectList.vue'
 import ProjectDetail from '../views/ProjectDetail/ProjectDetail.vue'
 import ProjectLayout from '../views/ProjectLayout/ProjectLayout.vue'
@@ -25,6 +30,16 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/plans',
+    name: 'Plans',
+    component: Plans
+  },
+  {
+    path: '/features',
+    name: 'Features',
+    component: Features
   },
   {
     path: '/login',
@@ -48,8 +63,8 @@ Vue.use(VueRouter)
     children: [
       {
         path: '/',
-        name: 'Dash Home',
-        component: Home,
+        name: 'Dash',
+        component: Dashboard,
       },
       {
         path: 'configure',

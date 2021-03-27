@@ -133,7 +133,6 @@ export default {
             const activeLayout = this.$store.state.projectLayouts[id];
             if (activeLayout && activeLayout.related[this.field.id]) {
                 const related = activeLayout.related[this.field.id];
-                console.log(related, 1);
                 return related.map(x => {
                     const display = x.meta && x.meta.length ? x.meta[0].value : x.project_id; 
                     return {

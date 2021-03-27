@@ -1,5 +1,10 @@
 <template>
     <div class="container">
+        <v-btn :to="activeProjectListPage">
+            <v-icon>
+                mdi-arrow-left
+            </v-icon>
+        </v-btn>
         <div class="row">
             <div class="col-12">
                 <layout-area 
@@ -33,7 +38,8 @@ export default {
         ...mapGetters([
             'activeFields',
             'activeLayout',
-            'activeProjectType'
+            'activeProjectType',
+            'activeProjectListPage'
         ]),
         ...mapState({
             projectTypes: state => state.projectTypes
