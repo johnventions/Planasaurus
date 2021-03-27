@@ -8,6 +8,7 @@
             :move="onDrop">
                 <div v-for="(child, i) in item.components"
                     class="zone-input"
+                    @click="editField(child.id)"
                     :class="`child_field_${child.id}`"
                     :key="child.id">
                     <span class="handle">
