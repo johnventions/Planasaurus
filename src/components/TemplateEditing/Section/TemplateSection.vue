@@ -32,4 +32,9 @@ export default {
 }
 </script>
 <style lang="scss">
+    .zone-col {
+        + .zone-col {
+            border-left: 1px solid rgba(200, 200, 200, 0.66);
+        }
+    }
 </style>

@@ -11,8 +11,13 @@
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <div class="py-2 d-none d-md-block">
-                        <v-btn text to="/plans">Plans</v-btn>
-                        <v-btn text to="/features">Features</v-btn>
+                        <template v-for="item in links" >
+                            <v-btn text 
+                                v-if="!item.mobileOnly"
+                                :to="item.to" :key="item.name">
+                                {{ item.name }}
+                            </v-btn>
+                        </template>
                         <v-btn class="ml-6" color="primary" to="/login">Login</v-btn>
                     </div>
                     <v-app-bar-nav-icon 
@@ -35,29 +40,14 @@
                 <v-list-item-group
                     v-model="group"
                     active-class="deep-purple--text text--accent-4">
-                    <v-list-item>
+                    <v-list-item v-for="item in links" 
+                            :key="item.name"
+                            :to="item.to"
+                            >
                         <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
                         </v-list-item-icon>
-                        <v-list-item-title>Home</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                        <v-list-item-icon>
-                        <v-icon>mdi-clipboard-list</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Plans</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                        <v-list-item-icon>
-                        <v-icon>mdi-sparkles</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Features</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                        <v-list-item-icon>
-                        <v-icon>mdi-account</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Sign Up / Login</v-list-item-title>
+                        <v-list-item-title>{{ item.name}}</v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
@@ -70,7 +60,31 @@ export default {
     data: function() {
         return {
             drawer: false,
-            group: null
+            group: null,
+            links: [
+                {
+                name: 'Home',
+                to: '/',
+                icon: 'mdi-home',
+                mobileOnly: true
+                },
+                {
+                name: 'Plans',
+                to: '/plans',
+                icon: 'mdi-clipboard-list'
+                },
+                {
+                name: 'Features',
+                to: '/features',
+                icon: 'mdi-sparkles',
+                },
+                {
+                name: 'Sign Up / Login',
+                to: '/login',
+                icon: 'mdi-account',
+                mobileOnly: true
+                },
+            ]
         }
     }
 }

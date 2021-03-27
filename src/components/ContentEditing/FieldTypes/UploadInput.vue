@@ -16,7 +16,12 @@
                     color="primary"
                     class="ml-2 mt-3"
                     @click="uploadFile">
-                    Upload
+                    <span class="d-none d-md-block">
+                        Upload
+                    </span>
+                    <v-icon class="d-block d-md-none">
+                        mdi-cloud-upload-outline
+                    </v-icon>
                 </v-btn>
             </v-row>
         </div>

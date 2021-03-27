@@ -14,7 +14,8 @@ export default {
     computed: {
         ... mapGetters([
             'activeList',
-            'activeProjectType'
+            'activeProjectType',
+            'getWorkspace'
         ]),
         ... mapState({
             authenticated: state => state.authenticated,
