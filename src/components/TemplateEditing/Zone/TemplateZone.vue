@@ -1,6 +1,6 @@
 <template src="./TemplateZone.html"></template>
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import draggable from 'vuedraggable'
 
 import fieldTypes from "@/data/fieldTypes";
@@ -27,13 +27,17 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'activeFields'
+            'activeFields',
+            'activeProjectType'
         ]),
     },
     methods: {
         ...mapActions([
-            'createField'
+            'createField',
         ]),
+        ...mapMutations({
+            'updateField': 'UPDATE_FIELD_DEFINITION'
+        }),
         getLayoutFieldDef(fieldID) {
             if (this.activeFields && this.activeFields.fields) {
                 return this.activeFields.fields.find(x => x.id == fieldID);
@@ -95,9 +99,13 @@ export default {
             this.editingField = true;
             this.modalEditField = true;
         },
-        finishEdit: function() {
+        finishEdit: function(field) {
             this.editingField = false;
             this.modalEditField = false;
+            this.updateField({
+                id: this.activeProjectType.id,
+                field
+            });
         },
         getComponentData: function(event) {
             console.log(event);

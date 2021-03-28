@@ -1,7 +1,7 @@
 <template>
     <v-card class="edit-field">
         <v-card-title>
-            Edit Field
+            Field Settings
         </v-card-title>
         <div class="px-6" v-if="currentFieldType">
             <div v-for="(meta, i) in currentFieldType.metaComponents" :key="i">
@@ -26,6 +26,11 @@
                 Save
             </v-btn>
         </v-card-actions>
+         <v-progress-linear
+            v-if="loading"
+            indeterminate
+            color="cyan"
+            ></v-progress-linear>
     </v-card>
 </template>
 <script>
@@ -39,6 +44,7 @@ export default {
         return {
             editedFieldDef: null,
             changes: 0,
+            loading: false
         }
     },
     computed: {
@@ -72,10 +78,12 @@ export default {
         },
         saveChanges: function() {
             console.log(this.editedFieldDef);
+            this.loading = true;
             axios.put(`/api/types/fields/${this.editedFieldDef.id}`, this.editedFieldDef)
                 .then((response) => {
-                    console.log(response);
-                    this.$emit("edit-finish");
+                    // update field
+                    this.loading = false;
+                    this.$emit("edit-finish", response.data.field);
                 });
         }
     },
