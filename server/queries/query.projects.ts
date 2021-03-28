@@ -55,6 +55,18 @@ const baseLookup = function() {
                 field_defs d ON f3.field_id = d.id
             WHERE
                 f3.project_id = l.id
+            UNION ALL
+            SELECT 
+                f4.id as 'id',
+                d.id as 'field_id',
+                d.name as 'key',
+                CAST(f4.value as varchar) as 'value'
+            FROM
+                field_bools f4
+            INNER JOIN
+                field_defs d ON f4.field_id = d.id
+            WHERE
+                f4.project_id = l.id
             ) as nested
             FOR JSON PATH
         ) as fields,
@@ -153,25 +165,34 @@ const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
 const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: Array<FieldUpdate>, definitions: Map<string, FieldDef>) {
     const request = pool.request();
 
-    // create the update string
-    let update = fields.map((x) => {
-        const def = definitions.get(x.field_id.toString()) ? definitions.get(x.field_id.toString()) : undefined;
-        return x.toUpdateString(x.field_id, def);
-    }).join("\r\n");
+    let update : string[] = [];
 
 
-    // bind the input parameters (sql injection prevention)
     fields.forEach( x => {
-        request.input(`${x.paramID}_v`, sql.VarChar, x.value);
+        const def = definitions.get(x.field_id.toString()) ? definitions.get(x.field_id.toString()) : undefined;
+
+        // create the update string
+        update.push( x.toUpdateString(x.field_id, def) );
+
+        // bind the input parameters (sql injection prevention)
         request.input(`${x.paramID}_f`, sql.Int, x.field_id);
+        if (def?.data_type == 3) {
+            // dates
+            request.input(`${x.paramID}_v`, sql.Date,  x.value);
+        } else if (def?.data_type == 4) {
+            // bools
+            request.input(`${x.paramID}_v`, sql.Bit, x.value ? 1 : 0);
+        } else {
+            request.input(`${x.paramID}_v`, sql.VarChar, x.value);
+        }
     });
 
-    console.log("UPDATE", update);
-    
+    const updateString = update.join("\r\n");
+
     request.multiple = true;
     request.input('id', sql.Int, id);
 
-    return request.query(update);
+    return request.query(updateString);
 };
 
 const getProjectType = function (pool: sql.ConnectionPool, id: Number) {

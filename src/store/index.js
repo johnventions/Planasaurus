@@ -172,6 +172,14 @@ export default new Vuex.Store({
 			}
 		},
 
+		UPDATE_FIELD_DEFINITION: function(state, pkg) {
+			const { id, field } = pkg;
+			let currentFields = state.projectFields[id];
+			let fieldIndex = currentFields.fields.findIndex(x => x.id == field.id);
+			currentFields.fields[fieldIndex] = field;
+			Vue.set(state.projectFields, id, currentFields);
+		},
+
 		/* LAYOUTS */
 		LOADING_LAYOUT: function (state, pkg) {
 			const { id, fetch } = pkg;

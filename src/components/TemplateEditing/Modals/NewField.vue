@@ -20,9 +20,7 @@
                             <h4>
                                 {{ field.name }}
                             </h4>
-                            <p>
-                                {{ field.description}}
-                            </p>
+                            {{ field.description}}
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-item-group>
@@ -49,6 +47,7 @@ export default {
     },
     methods: {
         submit() {
+            if (this.fieldName == '') return;
             const t = fieldTypes[this.fieldTypeIndex];
             
             this.$emit('createField', {

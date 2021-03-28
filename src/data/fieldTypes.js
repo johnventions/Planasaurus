@@ -5,7 +5,7 @@ import DropdownInputEditable from "@/components/ContentEditing/FieldTypes/Dropdo
 import DropdownInputMock from "@/components/TemplateEditing/FieldTypes/DropdownInput.vue";
 
 import RadioInputEditable from "@/components/ContentEditing/FieldTypes/RadioInput.vue";
-import RadioInput from "@/components/TemplateEditing/FieldTypes/RadioInput.vue";
+import RadioInputMock from "@/components/TemplateEditing/FieldTypes/RadioInputMock.vue";
 
 import ChildComponentInput from "@/components/ContentEditing/FieldTypes/ChildComponentInput.vue";
 import ChildComponentMock from "@/components/TemplateEditing/FieldTypes/ChildComponentMock.vue";
@@ -60,7 +60,7 @@ const fieldTypes = [
     {
         id: 4,
         name: "Radio Input (Yes / No)",
-        layoutComponent: RadioInput,
+        layoutComponent: RadioInputMock,
         editingComponent: RadioInputEditable,
         icon: "mdi-toggle-switch",
         description: "Basic yes/no field",

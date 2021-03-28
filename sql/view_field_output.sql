@@ -33,3 +33,16 @@ FROM
     field_related f3
 INNER JOIN
     field_defs d ON f3.field_id = d.id
+
+UNION ALL
+SELECT
+	f4.project_id as 'project_id',
+    d.id as 'field_id',
+    f4.id as 'value_id',
+    d.name as 'key',
+    CASE WHEN f4.value = 1 THEN '1' 
+        ELSE '0' END 'value'
+FROM
+    field_bools f4
+INNER JOIN
+    field_defs d ON f4.field_id = d.id
