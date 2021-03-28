@@ -57,6 +57,8 @@ export default class ProjectFilter {
         if (this.def.data_type == 3) {
             /* data_type 3 == Date */
             this.makeDateComparisonWhere(request, dataTable, this.fieldID, this.param, this.value);
+        } else if (this.def.data_type == 4) {
+            this.makeBoolComparison(request, dataTable, this.fieldID, this.param, this.value);
         } else if (this.def.data_type == 6 || this.def.data_type == 5) {
             /* 
                 data_type 5 = Dropdwon Static
@@ -99,6 +101,8 @@ export default class ProjectFilter {
             if (!childDef) return;
             if (childDef.data_type == 1) { // Text
                 this.makeLikeComparision(request, tableAlias, key, childParam, this.value[key]);
+            } else if (childDef.data_type == 4) {
+                this.makeBoolComparison(request, tableAlias, key, childParam, this.value[key]);
             } else if (childDef.data_type == 6 || childDef.data_type == 5) {
                 /* 
                     data_type 5 = Dropdwon Static
@@ -120,6 +124,14 @@ export default class ProjectFilter {
         `;
         request.input(param, `${ val }`);
     }
+
+    makeBoolComparison(request: sql.Request, tableAlias: string, fieldID: Number, param: string, value: string) {
+        this.whereStatement = `
+            AND ${tableAlias}.field_id = ${fieldID} AND ${tableAlias}.value = @${param}
+        `;
+        request.input(param, `${ value == 'true'  ? 1 : 0 }`);
+    }
+    
 
     makeExactIntCompare(request: sql.Request, tableAlias: string, fieldID: Number, param: string, value: string) {
         this.whereStatement = `
