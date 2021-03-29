@@ -13,6 +13,7 @@ export default {
     props: ["item", "index"],
     data: function() {
         return {
+            loading: false,
             creatingField: false,
             editingField: false,
             fieldInEdit: null,
@@ -73,7 +74,9 @@ export default {
             this.editingField = false;
         },
         submitCreateField: async function(pkg) {
+            this.loading = true;
             let newField = await this.createField(pkg);
+            this.loading = false;
             this.creatingField = false;
 
             if (newField) {

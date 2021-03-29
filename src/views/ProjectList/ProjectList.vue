@@ -114,7 +114,7 @@ export default {
         ...mapActions([
             'getProjectListById',
             'getProjectFieldsByType',
-            'modifyListLayout'
+            'modifyListLayout',
         ]),
         processPath: function() {
             if (this.activeProjectType != null && this.$route.query.search == null) {
@@ -171,6 +171,10 @@ export default {
     table {
         tr td {
             padding-bottom: 10px;
+        }
+
+        colgroup col:first-of-type {
+            width: 50px;
         }
     }
 </style>

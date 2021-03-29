@@ -1,16 +1,16 @@
-<div class="container-fluid">
+<div class="container container-fluid">
     <div v-if="activeList && activeList.list" class="list-container">
         <v-data-table
             mobile-breakpoint="100"
             :headers="headers"
             :items="items"
             class="elevation-1">
-            <template v-slot:header.GoTo="{ header }">
+            <template v-slot:header.APP_VIEW="{ header }">
                 <v-menu offset-y bottom left>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
-                        color="primary"
-                        dark
+                        text
+                        icon
                         v-bind="attrs"
                         v-on="on"
                       >
@@ -34,7 +34,7 @@
 
         <v-dialog v-model="fieldAddModal" max-width="450">
             <v-card>
-                <v-card-title>
+                <v-card-title class="headline font-weight-regular light-blue white--text">
                     Select item to add
                 </v-card-title>
                 <v-card-text>

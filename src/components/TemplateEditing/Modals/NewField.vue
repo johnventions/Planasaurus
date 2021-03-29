@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-card-title>
+        <v-card-title class="headline font-weight-regular light-blue white--text">
             New Field
         </v-card-title>
         <v-card-text>
@@ -29,6 +29,11 @@
                 Create
             </v-btn>
         </v-card-text>
+         <v-progress-linear
+            v-if="loading"
+            indeterminate
+            color="cyan"
+            ></v-progress-linear>
     </v-card>
 </template>
 
@@ -36,6 +41,7 @@
 import fieldTypes from "@/data/fieldTypes";
 
 export default {
+    props: ['loading'],
     data: function() {
         return {
             fieldName: '',

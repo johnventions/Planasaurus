@@ -27,6 +27,7 @@ export default {
             newItem.zones[index] = item;
             // pass new definition up to parent LAYOUT
             this.$emit('updatechild', this.index, newItem);
+            console.log("updating field in section")
         }
     }
 }

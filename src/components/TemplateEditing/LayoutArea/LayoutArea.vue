@@ -73,6 +73,7 @@ export default {
             let newArea = {...this.area };
             Vue.set(newArea.sections, index, item);
             this.updateMe(newArea);
+            console.log("updating area");
         },
         updateMe(obj) {
             this.$emit('updateArea', this.areaname, obj);
