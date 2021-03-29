@@ -2,7 +2,7 @@
     <div class="form-group" 
         v-bind:class="{ find: viewMode == 'find' }"
     >
-        <v-select
+        <v-autocomplete
             v-model="value"
             :items="options"
             item-text="value"
@@ -10,7 +10,7 @@
             :label="field.name"
             v-bind:class="{touched: touched}"
             v-on:change="handleUpdate"
-            ></v-select>
+            ></v-autocomplete>
     </div>
 </template>
 <script>

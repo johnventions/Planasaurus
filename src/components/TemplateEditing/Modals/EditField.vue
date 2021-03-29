@@ -1,12 +1,14 @@
 <template>
     <v-card class="edit-field">
-        <v-card-title>
+        <v-card-title class="headline font-weight-regular light-blue white--text">
             Field Settings
         </v-card-title>
-        <div class="px-6" v-if="currentFieldType">
+        <v-card-title>
+        </v-card-title>
+        <div class="px-6" v-if="editedFieldDef && currentFieldType">
             <div v-for="(meta, i) in currentFieldType.metaComponents" :key="i">
                 <div :is="meta"
-                    :field="currentFieldDef"
+                    :field="editedFieldDef"
                     v-on:updateFieldAttribute="handleUpdate"
                     v-on:updateFieldMeta="handleMetaUpdate"></div>
             </div>
@@ -17,7 +19,7 @@
                 color="blue darken-1"
                 text
                 @click="$emit('edit-finish')">
-                Finish
+                Close
             </v-btn>
             <v-btn
                 color="green darken-1"

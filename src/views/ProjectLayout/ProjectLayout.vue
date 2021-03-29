@@ -1,20 +1,22 @@
 <template>
-    <div class="container">
-        <v-btn :to="activeProjectListPage">
-            <v-icon>
-                mdi-arrow-left
-            </v-icon>
-        </v-btn>
-        <div class="row">
-            <div class="col-12">
-                <layout-area 
-                    v-if="activeLayout && activeLayout.layout"
-                    v-on:updateArea="handleUpdateArea"
-                    areaname="primaryArea"
-                    :area="activeLayout.layout.primaryArea">
-                </layout-area>
-            </div>
-            <div class="col-4">
+    <div>
+        <div class="container container-fluid">
+            <v-btn :to="activeProjectListPage">
+                <v-icon>
+                    mdi-arrow-left
+                </v-icon>
+            </v-btn>
+            <div class="row">
+                <div class="col-12">
+                    <layout-area 
+                        v-if="activeLayout && activeLayout.layout"
+                        v-on:updateArea="handleUpdateArea"
+                        areaname="primaryArea"
+                        :area="activeLayout.layout.primaryArea">
+                    </layout-area>
+                </div>
+                <div class="col-4">
+                </div>
             </div>
         </div>
     </div>
@@ -32,6 +34,7 @@ export default {
     data: function() {
         return {
             activeType: null,
+            loading: true
         }
     },
     computed: {
@@ -80,6 +83,8 @@ export default {
                 area: obj
             };
             this.modifyArea(update);
+            this.saveLayout();
+            console.log("Saving area");
         },
         saveLayout() {
             let pkg = {

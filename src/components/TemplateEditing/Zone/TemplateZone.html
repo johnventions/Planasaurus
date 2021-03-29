@@ -34,9 +34,10 @@
         <v-dialog v-model="modalNewField" scrollable max-width="450">
             <new-field-modal
                 v-if="creatingField"
+                :loading="loading"
                 v-on:createField="submitCreateField" />
         </v-dialog>
-        <v-dialog v-model="modalEditField" max-width="450">
+        <v-dialog v-model="modalEditField" max-width="450" persistent>
             <edit-field-modal
                 v-if="editingField"
                 v-on:edit-finish="finishEdit"

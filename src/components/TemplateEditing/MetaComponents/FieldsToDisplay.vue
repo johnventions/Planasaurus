@@ -34,11 +34,14 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
     name: 'FieldsToDisplay',
     props: ['field'],
     data: function() {
         return {
+            related_type: '',
             pendingAdd: null,
             value: [],
         };
@@ -55,6 +58,16 @@ export default {
         },
     },
     methods: {
+        ...mapActions([
+            'getProjectFieldsByType'
+        ]),
+        ensureFields() {
+            if (this.field.relationship_type) {
+                this.getProjectFieldsByType({
+                    id: this.field.relationship_type
+                });
+            }
+        },
         handleUpdate: function(){
             this.$emit('updateFieldMeta', 'fieldDisplay', this.value);
         },
@@ -75,6 +88,7 @@ export default {
         } else {
             this.value = [];
         }
+        this.ensureFields();
     }
 
 }

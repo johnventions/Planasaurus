@@ -69,7 +69,7 @@ export default class ProjectFilter {
             /*
                 data_type 1 = Text
                 data_type 2 = Number
-                data_type 4 = Radio
+                data_type 4 = Toggle
             */
            this.makeLikeComparision(request, dataTable, this.fieldID, this.param, this.value);
         }

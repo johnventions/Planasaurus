@@ -1,7 +1,7 @@
 <template>
-    <v-container fluid class="dash">
-        <router-view></router-view>
-    </v-container>
+  <div>
+      <router-view></router-view>
+  </div>
 </template>
 <script>
 
