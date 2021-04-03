@@ -29,7 +29,7 @@
         <v-row>
           <v-col class="col-md-6">
             <h3 class="mb-2">
-              Online collaboration for whatever you need.
+              Online collaboration for whatever your team needs.
             </h3>
             <p>
               Planasaurus gives you and your team one place to share your projects, notes, contacts... anything goes. We don't care if you're tracking business leads or Christmas trees, anything is possible.
@@ -43,32 +43,42 @@
     </v-sheet>
     <v-sheet color="primary" dark class="py-6">
       <v-container>
-        <v-row class="text-center">
-          <v-col class="col-12 col-md-4">
+        <v-row class="">
+          <v-col class="text-left col-12 col-md-8">
             <h2 class="text-decoration-underline mb-2">
-              Easy to Use
+              Easy to Use. Easy to Edit.
             </h2>
             <p>
-              Define the data you want, add some entries, walk away. Need to add more fields later? Not a problem.
+              <ol>
+                <li>Define the properties you want</li>
+                <li>Add some entries</li>
+                <li>Walk away</li>
+              </ol>
+              <br/>
+              Need to add more fields later? Not a problem.
             </p>
           </v-col>
-          <v-col class="col-12 col-md-4">
+          <v-col class="col-12 col-md-8 offset-md-4 text-right">
             <h2 class="text-decoration-underline mb-2">
-              Highly Searchable
+              Searchable and Sortable
             </h2>
             <p>
-              Hit "Find" and type what you're looking for. Sort data or search by text, date range, checkbox or any combination.
+              Hit "Find" and type what you're looking for. 
+              <br/>
+              Search by text, date range, checkbox or any combination of properties.
             </p>
           </v-col>
-          <v-col class="col-12 col-md-4">
+          <v-col class="col-12 col-md-8 text-left">
             <h2 class="text-decoration-underline mb-2">
               Customizable
             </h2>
             <p>
-              Drag and drop your interface to suit your needs. Upload files for reference later or link data to other records to keep your data nice and clean. 
+              Build your interface with drag and drop tools.
+              <br/>
+              Upload files for reference later or link data to other records to keep your data nice and clean. 
             </p>
           </v-col>
-          <v-col cols="12">
+          <v-col cols="12 text-center">
             <v-btn to="/features">
               - See all features -
             </v-btn>
@@ -77,18 +87,16 @@
       </v-container>
     </v-sheet>
     <div class="py-6">
-      <v-container class="text-right">
+      <v-container class="text-center">
         <v-row>
-          <v-col class="col-12 col-md-6">
-
-          </v-col>
-          <v-col class="col-12 col-md-6">
+          <v-col class="col-12 col-md-8 offset-md-2">
             <h2 class="mb-2">Get Started Today
             </h2>
             <p>
               Personal plans are free to try and get started - just sign up with your email.
-              </p><p>
-                If you need more space or want to start collaborating, just upgrade to a basic or professional plan.
+            </p>
+            <p>
+                Upgrade at any point in the future if you need more space or want to start collaborating.
             </p>
             <v-btn color="primary" class="mr-4">
               See Plans

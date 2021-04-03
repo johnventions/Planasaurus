@@ -37,7 +37,7 @@ export default {
         }),
         options: function() {
             if (this.field.data_type == 6) {
-                const relatedOptions = this.$store.getters.activeLayout.related;
+                const relatedOptions = this.$store.getters.activeFields.related;
                 if (relatedOptions && relatedOptions[this.field.id]) {
                     return relatedOptions[this.field.id].map( x => {
                         return {

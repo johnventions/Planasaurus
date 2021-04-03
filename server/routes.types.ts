@@ -67,9 +67,11 @@ module.exports = function () {
         const id = parseInt(req.params.id);
         const service = new TypeService();
         const result = await service.getTypeFieldsById(id);
+        const related = await service.getTypeOptionsById(id);
         res.status(200).json({
             success: true,
-            fields: result
+            fields: result,
+            related
         });
     });
 
@@ -104,11 +106,11 @@ module.exports = function () {
         const id = parseInt(req.params.id);
         const service = new TypeService();
         const result = await service.getTypeLayoutById(id);
-        const related = await service.getTypeOptionsById(id);
+        // const related = await service.getTypeOptionsById(id);
         res.status(200).json({
             success: true,
             layout: result,
-            related: related
+            // related: related
         });
     });
 

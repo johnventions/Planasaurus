@@ -85,6 +85,7 @@ const fieldTypes = [
         name: "Dropdown (Related Item)",
         layoutComponent: DropdownInputMock,
         editingComponent: DropdownInputEditable,
+        isForeignKey: true,
         icon: "mdi-form-dropdown",
         description: "Choose an items from another data source in your project",
         metaComponents: [
@@ -97,6 +98,7 @@ const fieldTypes = [
         name: "Connected Data",
         layoutComponent: ChildComponentMock,
         editingComponent: ChildComponentInput,
+        isForeignKey: true,
         icon: "mdi-layers-triple",
         description: "Connect your record to multiple other records (for example: participants, ingredients, bill of materials)",
         metaComponents: [

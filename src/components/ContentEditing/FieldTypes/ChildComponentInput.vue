@@ -130,9 +130,9 @@ export default {
         },
         relatedOptions: function() {
             const { id } = this.$store.getters.activeProjectType;
-            const activeLayout = this.$store.state.projectLayouts[id];
-            if (activeLayout && activeLayout.related[this.field.id]) {
-                const related = activeLayout.related[this.field.id];
+            const activeFields = this.$store.state.projectFields[id];
+            if (activeFields && activeFields.related[this.field.id]) {
+                const related = activeFields.related[this.field.id];
                 return related.map(x => {
                     const display = x.meta && x.meta.length ? x.meta[0].value : x.project_id; 
                     return {

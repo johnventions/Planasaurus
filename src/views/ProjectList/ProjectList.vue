@@ -3,7 +3,9 @@
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import { v4 as uuidv4 } from 'uuid';
 
-import GoToProject from './cells/GoToProject'
+import convertListToTable from '@/util/convertListToTable'
+import GoToProject from '@/components/ListDisplay/GoToProject'
+import determineDisplayComponent from '@/data/determineDisplayComponent'
 
 export default {
     name: 'ProjectList',
@@ -35,21 +37,29 @@ export default {
         }),
         ...mapGetters([
             'activeList',
-            'activeProjectType'
+            'activeProjectType',
+            'getRelatedFieldVal'
         ]),
         headers: function() {
             const fieldLayout = this.$store.getters.activeProjectType.fieldLayout || [];
             const fieldColumns = fieldLayout.map( x => {
                 const f = this.$store.getters.getFieldDefintion(x.id) || {};
+                const displayComponent = determineDisplayComponent(f);
+                const foreignKeyType = f.relationship_type;
                 return  {
+                    customField: true,
                     text: f ? f.name : x.id,
                     value: x.id.toString(),
+                    displayComponent,
+                    foreignKeyType,
+                    relatedKey: f.related_keys
                 }
             });
             const base_headers = [{
                     text: '',
                     value: 'APP_VIEW',
                     sortable: false,
+                    displayComponent: GoToProject
             }];
             if (fieldColumns.length == 0) {
                 base_headers.push({
@@ -60,36 +70,18 @@ export default {
             return [
                 ...base_headers,
                 ... fieldColumns,
-                // {
-                //     text: '',
-                //     value: 'APP_GOTO',
-                //     sortable: false,
-                // }
             ]
         },
+        dynamicColumns: function() {
+            return this.headers.filter(y => y.displayComponent != null);
+        },
         items: function() {
-            const typeList = this.$store.getters.activeList;
-            const fieldLayout = this.$store.getters.activeProjectType.fieldLayout || [];
-            if (typeList.list) {
-                const formatted = typeList.list.map( row => {
-                    let fieldRows = {};
-                    fieldLayout.forEach( y => {
-                        fieldRows[y.id] = row.getFieldValue(y.id)
-                    });
-                    return {
-                        APP_VIEW: {
-                            id: row.id
-                        },
-                        ID: row.id,
-                        ... fieldRows,
-                        APP_GOTO: {
-                            id: row.id
-                        }
-                    }
-                });
-                return formatted;
-            }
-            return [];
+            const { list }  = this.$store.getters.activeList;
+            const fieldHeaders = this.headers || [];
+            console.log("List", list);
+            console.log("Headers", fieldHeaders);
+            console.log("Convert:", convertListToTable);
+            return convertListToTable(list, fieldHeaders, this.activeProjectType);
         },
         activeFieldsforDropdown: function() {
             const f = this.$store.getters.activeFields;

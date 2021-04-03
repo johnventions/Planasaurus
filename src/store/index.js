@@ -135,11 +135,12 @@ export default new Vuex.Store({
 		},
 
 		SET_FIELDS: function (state, pkg) {
-			const { id, fields } = pkg;
+			const { id, fields, related } = pkg;
 			Vue.set(state.projectFields, id, {
 				loading: false,
 				lastUpdate: Date.now(),
 				fields: fields,
+				related,
 				fetch: null
 			});
 		},
@@ -304,7 +305,8 @@ export default new Vuex.Store({
 				.then(result => {
 					commit('SET_FIELDS', {
 						id: id,
-						fields: result.data.fields
+						fields: result.data.fields,
+						related: result.data.related
 					});
 				});
 			commit('LOADING_FIELDS', {
@@ -500,6 +502,21 @@ export default new Vuex.Store({
 				f = field ? field.value : f;
 			}
 			return f;
+		},
+		getRelatedFieldVal: (state) => (projectIdFrom, fieldIdFrom, projectIdTo, fieldIdTo) => {
+			const apt = state.projectFields[projectIdFrom] || {};
+			// get related fields from project type
+			const { related } = apt;
+			if (related && related[fieldIdFrom]) {
+				const relatedOption = related[fieldIdFrom].find(y => y.project_id == projectIdTo);
+				if (relatedOption && relatedOption.meta) {
+					// find matching fields in the meta object
+					const match = relatedOption.meta.find(x => x.field_id == fieldIdTo);
+					return match ? match.value : relatedOption.meta[0].value;
+				}
+				return projectIdTo;
+			}
+			return {};
 		},
 		getFieldArrayVal: (state) => (id) => {
 			let f = [];

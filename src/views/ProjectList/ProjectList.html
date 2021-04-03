@@ -2,6 +2,7 @@
     <div v-if="activeList && activeList.list" class="list-container">
         <v-data-table
             mobile-breakpoint="100"
+            :items-per-page="30"
             :headers="headers"
             :items="items"
             class="elevation-1">
@@ -27,8 +28,13 @@
                     </v-list>
                 </v-menu>
             </template>
-            <template v-slot:item.APP_VIEW="{ item }">
-                <goto :id="item.ID"></goto>
+            <template v-for="col in dynamicColumns"
+                v-slot:[`item.${col.value}`]="{ item }">
+                <div
+                    :is="col.displayComponent"
+                    type="text"
+                    :item="item">
+                </div>
             </template>
         </v-data-table>
 
