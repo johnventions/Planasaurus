@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="`/dash/${activeProjectType.codename}/${id}`">
+    <router-link :to="destination">
         <v-btn text>
             <v-icon>
                 mdi-arrow-right-bold-circle-outline
@@ -9,16 +9,16 @@
     
 </template>
 <script>
-import { mapGetters } from 'vuex';
 export default {
     name: 'GoToProjectButton',
     props: [
-        'id'
+        'id', 'item'
     ],
     computed: {
-        ...mapGetters([
-            'activeProjectType'
-        ])
+        destination: function() {
+            const goto = this.item.APP_VIEW;
+            return  `/dash/${goto.codename}/${goto.id}`;
+        }
     },
     methods: {
     }
