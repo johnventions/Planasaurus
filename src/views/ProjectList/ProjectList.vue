@@ -50,6 +50,7 @@ export default {
                     customField: true,
                     text: f ? f.name : x.id,
                     value: x.id.toString(),
+                    data_type: f.data_type,
                     displayComponent,
                     foreignKeyType,
                     relatedKey: f.related_keys
@@ -78,9 +79,6 @@ export default {
         items: function() {
             const { list }  = this.$store.getters.activeList;
             const fieldHeaders = this.headers || [];
-            console.log("List", list);
-            console.log("Headers", fieldHeaders);
-            console.log("Convert:", convertListToTable);
             return convertListToTable(list, fieldHeaders, this.activeProjectType);
         },
         activeFieldsforDropdown: function() {
