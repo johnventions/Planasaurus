@@ -33,6 +33,8 @@
                 <div
                     :is="col.displayComponent"
                     type="text"
+                    :id="col.value"
+                    :column="col"
                     :item="item">
                 </div>
             </template>
