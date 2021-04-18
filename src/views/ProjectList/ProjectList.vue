@@ -158,13 +158,16 @@ export default {
 }
 </script>
 <style lang="scss">
-    table {
-        tr td {
-            padding-bottom: 10px;
-        }
+    .project-list-table {
+        table {
+            tr td {
+                padding-bottom: 10px;
+            }
 
-        colgroup col:first-of-type {
-            width: 50px;
+            colgroup col:first-of-type {
+                width: 50px;
+            }
         }
     }
+    
 </style>

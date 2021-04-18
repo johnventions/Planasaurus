@@ -1,32 +1,32 @@
 <div class="container">
-    <v-btn color="primary" @click="newType">
-        <font-awesome-icon icon="plus-square" size="lg" />
+    <v-btn class="float-right" color="primary" @click="newType">
+        <v-icon>mdi-pencil</v-icon>
         New Data Collection
     </v-btn>
     <br/><br />
     <div class="list-group">
-        <v-card 
-            class="mb-10"
-            v-for="(type, i) in topLevelProjects" 
-            :key="type.id">
-            <type-card
-                :obj="type"
-                v-on:edit="editType">
-                <div v-if="getTypeChildren(type.id).length">
-                    <v-divider></v-divider>
-                    <v-list three-line class="ml-10">
-                        <template v-for="(childType, j) in getTypeChildren(type.id)">
-                            <type-card 
-                                :key="childType.id"
-                                :obj="childType"
-                                v-on:edit="editType">
-                            </type-card>
-                        </template>
-                    </v-list>
-                </div>
-            </type-card>
-            </v-list>
-        </v-card>
+        <template 
+            v-for="(type, i) in topLevelProjects">
+            <v-card 
+                class="mb-2 mt-6"
+                :key="type.id">
+                <type-card
+                    :obj="type"
+                    v-on:edit="editType">
+                </type-card>
+            </v-card>
+            <div v-if="getTypeChildren(type.id).length">
+                <v-card three-line class="ml-10 mb-2">
+                    <template v-for="(childType, j) in getTypeChildren(type.id)">
+                        <type-card 
+                            :key="childType.id"
+                            :obj="childType"
+                            v-on:edit="editType">
+                        </type-card>
+                    </template>
+                </v-card>
+            </div>
+        </template>
     </div>
     <v-dialog v-model="dialogEdit" max-width="450">
         <v-card v-if="editingType">

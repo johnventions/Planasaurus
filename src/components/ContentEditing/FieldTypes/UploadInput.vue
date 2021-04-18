@@ -25,34 +25,48 @@
                 </v-btn>
             </v-row>
         </div>
-        <div v-if="value && value.length" v-bind:class="`uploads-${displayType}`">
-            <v-list>
-                <v-list-item v-for="(file, i) in value" :key="file.uuid">
-                    <a target="_blank" :href="file.publicPath">
-                        <v-list-item-avatar v-if="file.previewPath">
-                            <img v-bind:src="file.previewPath">
-                        </v-list-item-avatar>
-                        <v-list-item-icon v-else>
-                            <v-icon color="indigo">
-                                mdi-file
-                            </v-icon>
-                        </v-list-item-icon>
-                    </a>
-                    <div class="file-details">
-                        {{ file.original_filename }} - <a target="_blank" :href="file.publicPath">View</a>
-                        <br/>
-                        <button
+        <div v-if="value && value.length"
+            class="d-flex flex-wrap"  
+            v-bind:class="`uploads-${displayType}`">
+            <v-card 
+                v-for="(file) in value" :key="file.uuid"
+                class="file-card mx-2 mb-3">
+                    <router-link 
+                        target="_blank"
+                        :to="file.publicPath">
+                        <v-card-text v-if="!file.previewPath">
+                            <h3 class="primary--text">
+                                {{ file.original_filename }}
+                            </h3>
+                        </v-card-text>
+                    </router-link>
+                    <v-card-actions class="py-0">
+                        <v-img
+                            class="thumb"
+                             :src="file.previewPath"
+                            v-if="file.previewPath" />
+                        <template v-if="!file.previewPath">
+                        <v-icon color="secondary">
+                            {{ getPathIcon(file.original_filename) }}
+                        </v-icon>
+                        </template>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                            text
+                            color="red lighten-1"
                             v-on:click="removeElement(file, i)">
                             Remove
-                        </button>
-                    </div>
-                </v-list-item>
-            </v-list>
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
         </div>
     </div>
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex';
+import convertExtToIcon from '@/util/convertExtToIcon';
+
 export default {
     name: 'UploadInput',
     props: [
@@ -134,6 +148,9 @@ export default {
             ];
             this.handleUpdate();
         },
+        getPathIcon: function(file) {
+            return convertExtToIcon(file);
+        },
         resetValue() {
             this.value = this.$store.getters.getFieldFiles(this.field.id);
         }
@@ -148,4 +165,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    .file-card {
+        width: 350px;
+
+        @media screen and (min-width: 768px) {
+            width: 50%;
+            width: 300px;
+        }
+
+        @media screen and (min-width: 1200px) {
+            width: 320px;
+            max-width: 100%;
+        }
+
+        .thumb {
+            max-width: 50%;
+            max-height: 125px;
+        }
+    }
 </style>

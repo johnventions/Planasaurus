@@ -43,12 +43,69 @@ const getWorkspacesByOwner = function (pool: sql.ConnectionPool, owner: Number) 
     return request.query(select);
 }
 
+const getWorkspaceSharedTos = function(pool: sql.ConnectionPool, id: Number) {
+    const select = `
+    SELECT
+        u.email,
+        u.id,
+        1 as 'accepted'
+    FROM workspace_users wu
+        INNER JOIN users u ON wu.user_id = u.id
+    WHERE wu.workspace_id = @id
+    UNION
+    SELECT
+        wi.email,
+        null as 'id',
+        0 as 'accepted'
+    FROM workspace_invites wi
+    WHERE wi.accepted = 0
+        AND wi.workspace_id = @id
+`;
+
+    const request = pool.request();
+    request.input('id', sql.Int, id);
+    request.multiple = true;
+    return request.query(select);
+}
+
+const addUserToWorkspace = function(pool: sql.ConnectionPool, id: Number, user: Number, addedBy: Number) {
+    const insert = `
+        INSERT INTO workspace_users
+        (workspace_id, user_id, added_by)
+        VALUES
+        (@ws, @user, @by)
+    `;
+    const request = pool.request();
+    request.input('ws', sql.Int, id);
+    request.input('user', sql.Int, user);
+    request.input('by', sql.Int, addedBy);
+    request.multiple = true;
+    return request.query(insert);
+}
+
+const createWorkspaceInvitation = function(pool: sql.ConnectionPool, id: Number, email: string, addedBy: Number) {
+    const insert = `
+        INSERT INTO workspace_invites
+        (workspace_id, email, added_by)
+        VALUES
+        (@ws, @email, @by)
+    `;
+    const request = pool.request();
+    request.input('ws', sql.Int, id);
+    request.input('email', sql.VarChar, email);
+    request.input('by', sql.Int, addedBy);
+    request.multiple = true;
+    return request.query(insert);
+}
 
 
 const _ = {
     createWorkspace,
     getWorkspacesById,
-    getWorkspacesByOwner
+    getWorkspacesByOwner,
+    getWorkspaceSharedTos,
+    addUserToWorkspace,
+    createWorkspaceInvitation
 }
 
 export default _;

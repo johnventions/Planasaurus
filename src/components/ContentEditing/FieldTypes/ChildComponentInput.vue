@@ -3,11 +3,12 @@
         v-bind:class="{ find: viewMode == 'find' }">
         <v-flex class="mb-3">
             <label class="mr-5">{{ field.name }}</label>
-            <v-btn dark
-                dense
-                color="primary" 
+            <v-btn
+                icon
+                dark
+                color="primary"
                 @click="startAddRecord">
-                + Add
+                +
             </v-btn>
         </v-flex>
 
