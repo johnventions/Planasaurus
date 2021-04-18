@@ -22,6 +22,8 @@ export default class UserService {
             // create their first workspace
             const wsService = new WorkspaceService();
             await wsService.createWorkSpace(u.id, 'My First Workspace');
+            // add any shared workspaces
+            await userQueries.acceptInvitations(pool, u.id, u.email);
         }
         return this.getUserComplete(dbUser.recordset[0] as User);
     }
@@ -33,9 +35,15 @@ export default class UserService {
         return user;
     }
 
-    async getUserById(id: Number) {
+    async getUserById(id: Number) : Promise<User> {
         const pool = await getSQLPool;
         const dbUser = await userQueries.getUserById(pool, id);
-        return this.getUserComplete(dbUser.recordset[0] as User);
+        return User.fromData(dbUser.recordset[0]);
+    }
+
+    async getUserByEmail(email: string) : Promise<User | null> {
+        const pool = await getSQLPool;
+        const dbUser = await userQueries.getUserByEmail(pool, email);
+        return dbUser.recordset.length ? User.fromData(dbUser.recordset[0]) : null;
     }
 }

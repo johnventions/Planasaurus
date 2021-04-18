@@ -19,6 +19,9 @@
             </h4>
             <v-btn color="primary">
               Sign Up for free
+              <v-icon>
+                mid-arrow-right
+              </v-icon>
             </v-btn>
           </v-col>
         </v-row>
@@ -27,16 +30,26 @@
     <v-sheet class="py-6">
       <v-container>
         <v-row>
-          <v-col class="col-md-6">
+          <v-col class="col-12 col-md-6">
             <h3 class="mb-2">
-              Online collaboration for whatever your team needs.
+              Online collaboration for all of your team's needs.
             </h3>
             <p>
               Planasaurus gives you and your team one place to share your projects, notes, contacts... anything goes. We don't care if you're tracking business leads or Christmas trees, anything is possible.
             </p>
             <p>
-              Build the interface of your dreams instead of wasting time in spreadsheets or sending documents back and forth. Search, update, and get stuff done all in one place.
+              Instead of wasting time in spreadsheets or sending documents back and forth, build the interface of your dreams and get stuff done.
             </p>
+            <p>
+              Watch the demo video to see how it works
+            </p>
+          </v-col>
+          <v-col class="col-12 col-md-6">
+            <v-skeleton-loader
+                  class="mx-auto"
+                  max-width="300"
+                  type="card"
+                ></v-skeleton-loader>
           </v-col>
         </v-row>
       </v-container>
@@ -46,7 +59,7 @@
         <v-row class="">
           <v-col class="text-left col-12 col-md-8">
             <h2 class="text-decoration-underline mb-2">
-              Easy to Use. Easy to Edit.
+              Easy to Use Widgets. Easy to Edit.
             </h2>
             <p>
               <ol>

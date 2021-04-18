@@ -37,7 +37,6 @@ passport.deserializeUser(async function (user: any, done: any) {
     then you use the id to select the user from the db and pass the user obj to the done callback
     PS: You can later access this data in any routes in: req.user
     */
-    console.log("user", user);
     done(null, user);
     /*
     const service = new UsersService();

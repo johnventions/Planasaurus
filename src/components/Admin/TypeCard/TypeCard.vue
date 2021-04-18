@@ -1,27 +1,30 @@
 <template>
-    <v-card-text>
-        <v-card-title>
+    <div>
+        <v-card-title class="d-block headline font-weight-regular">
             {{ obj.name }}
-        </v-card-title>
-        <v-card-subtitle>{{ obj.qty }} records</v-card-subtitle>
-        <v-card-actions>
-            <v-btn :to="`/dash/${obj.codename}`">
-                <font-awesome-icon icon="location-arrow" size="1x" />
-                &nbsp; View
-            </v-btn>
-            <v-btn :to="`/dash/${obj.codename}/layout`">
-                <font-awesome-icon icon="edit" size="1x" />
-                &nbsp; Edit Layout
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn @click="$emit('edit', obj.id)"
+            <v-btn class="float-right"
+                @click="$emit('edit', obj.id)"
                 title="Edit Settings">
-                    <font-awesome-icon icon="cog" size="1x" />
-            </v-btn>
-        </v-card-actions>
-        <br/>
-        <slot></slot>
-    </v-card-text>
+                    <v-icon>
+                        mdi-cog
+                    </v-icon>
+                </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+            <v-card-subtitle>{{ obj.qty }} records</v-card-subtitle>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text :to="`/dash/${obj.codename}`">
+                    View <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>
+                <v-btn text :to="`/dash/${obj.codename}/layout`">
+                    Layout <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+            </v-card-actions>
+            <slot></slot>
+        </v-card-text>
+    </div>
 </template>
 <script>
 export default {

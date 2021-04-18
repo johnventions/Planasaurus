@@ -1,11 +1,12 @@
-import { nextTick } from "process";
-
 const routes = require('express').Router();
 
 module.exports = function () {
     routes.get('/', async (req: any, res: any) => {
         res.status(200).json({ message: 'Connected!' });
     });
+
+    const workspaces = require('./routes.workspace')();
+    routes.use('/workspaces', workspaces);
 
     const projects = require('./routes.projects')();
     routes.use('/projects', projects);

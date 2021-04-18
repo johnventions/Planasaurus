@@ -5,7 +5,6 @@ const convertListToTable = (list, headers, projectType) => {
     if (!list) return;
     const formatted = list.map( row => {
         let fieldRows = {};
-        console.log(row);
         headers.forEach( header => {
             const { customField, value, foreignKeyType, relatedKey } = header
             if (!customField) return;

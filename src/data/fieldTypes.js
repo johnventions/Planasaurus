@@ -11,6 +11,7 @@ import ChildComponentInput from "@/components/ContentEditing/FieldTypes/ChildCom
 import ChildComponentMock from "@/components/TemplateEditing/FieldTypes/ChildComponentMock.vue";
 
 import UploadInputEditable from "@/components/ContentEditing/FieldTypes/UploadInput.vue";
+import UploadInputMock from "@/components/TemplateEditing/FieldTypes/UploadInputMock.vue";
 
 
 // Metacomponents
@@ -110,7 +111,7 @@ const fieldTypes = [
     {
         id: 8,
         name: "File / Image Upload",
-        layoutComponent: BasicInputMock,
+        layoutComponent: UploadInputMock,
         editingComponent: UploadInputEditable,
         icon: "mdi-file-image",
         description: "Upload images, documents, or other files related to your data",

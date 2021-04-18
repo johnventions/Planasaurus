@@ -9,6 +9,8 @@ export default class Workspace {
     static fromData(data: any): Workspace {
         let u = new this();
         u.id = data.id;
+        u.name = data.name;
+        u.owner_id = data.owner_id;
         u.uuid = v4();
 
         return u;

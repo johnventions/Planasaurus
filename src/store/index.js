@@ -269,10 +269,16 @@ export default new Vuex.Store({
 		},
 
 		getTypes({ commit }) {
-			axios.get("/api/types")
+			return axios.get("/api/types")
 				.then(result => {
 					commit('SET_TYPES', result.data.types);
+					return 1;
 				});
+		},
+
+		setWorkspace({ commit, dispatch }, type) {
+			commit('SET_WORKSPACE', type);
+			return dispatch('getTypes');
 		},
 
 		getProjectListById({ commit }, id) {
