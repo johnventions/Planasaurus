@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+import SiteSession from '../models/session';
 import User from '../models/user';
 import UsersService from "./users.service";
 
@@ -23,11 +24,13 @@ passport.serializeUser(async function (user: any, done: any) {
     const userLogin : User = await service.createOrGetUser('googleid', userObj);
     const activeWorkspace: Number = userLogin.workspaces[0].id;
 
-    done(null, {
+    const session = {
         id: userLogin.id,
         workspace: activeWorkspace,
         lastCheck: Date.now()
-    });
+    } as SiteSession
+
+    done(null, session);
 });
 
 

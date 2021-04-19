@@ -1,16 +1,17 @@
 import { Router, Request, Response } from 'express';
+import checkPermissions from "./checkPermissions";
+
+import Project from "./models/project";
 import ProjectService from "./services/project.service"
 import ProjectSpecification from './specifications/specification.project';
 
-import Project from "./models/project";
-import FieldUpdate from "./models/fieldUpdate";
 import TypeService from './services/types.service';
 import FieldDef from './models/fielddef';
 
 module.exports = function () {
     let routes : Router = require('express').Router();
 
-    routes.get('/', async (req: Request, res: Response) => {
+    routes.get('/',  checkPermissions('read', ['projects']), async (req: Request, res: Response) => {
         const typeID : Number = Number(req.query.type);
 
         // Look up field definitions, so we can search the correct table
@@ -37,7 +38,7 @@ module.exports = function () {
      *
      * @param {number} id The id of the project
      */
-    routes.get('/:id', async (req: Request, res: Response) => {
+    routes.get('/:id', checkPermissions('read', ['projects']), async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const service = new ProjectService();
         const result = await service.getProjectById(id);
@@ -56,7 +57,7 @@ module.exports = function () {
      *
      * @param {number} id The id of the project
      */
-    routes.get('/:id/meta', async (req: Request, res: Response) => {
+    routes.get('/:id/meta', checkPermissions('read', ['projects']), async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const service = new ProjectService();
         const result = await service.getFieldMetaForProject(1, id);
@@ -67,7 +68,7 @@ module.exports = function () {
         });
     });
 
-    routes.post('/:id', async (req: Request, res: Response) => {
+    routes.post('/:id', checkPermissions('write', ['projects']), async (req: Request, res: Response) => {
         let id : Number = parseInt(req.params.id);
         const service = new ProjectService();
 

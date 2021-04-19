@@ -117,12 +117,34 @@ const acceptInvitations = function(pool: sql.ConnectionPool, id: Number, email: 
     return request.query(insert);
 }
 
+const getUserPermissions = function(pool: sql.ConnectionPool, id: Number) {
+    const select = `
+    SELECT
+        id as 'workspace_id',
+        'admin' as 'granted'
+    FROM workspaces
+    WHERE
+        owner_id = @id
+    UNION
+    SELECT
+        workspace_id,
+        'shared' as 'granted'
+    FROM workspace_users
+    WHERE user_id = @id
+`
+    const request: sql.Request = pool.request();
+    request.input('id', sql.Int, id);
+    request.multiple = true;
+    return request.query(select);
+}
+
 const _ = {
     getUser,
     getUserById,
     getUserByEmail,
     createUser,
-    acceptInvitations
+    acceptInvitations,
+    getUserPermissions
 };
 
 export default _;

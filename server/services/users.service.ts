@@ -1,8 +1,12 @@
 const { getSQLPool } = require('../sql');
-import userQueries from '../queries/query.users';
+
+import Permission from '../models/permissions';
 import User from '../models/user';
-import WorkspaceService from './workspace.service'
+import userQueries from '../queries/query.users';
+
 import Workspace from '../models/workspace';
+import WorkspaceService from './workspace.service'
+
 
 
 export default class UserService {
@@ -45,5 +49,11 @@ export default class UserService {
         const pool = await getSQLPool;
         const dbUser = await userQueries.getUserByEmail(pool, email);
         return dbUser.recordset.length ? User.fromData(dbUser.recordset[0]) : null;
+    }
+
+    static async getUserPermissions(id: Number) : Promise<Array<Permission>> {
+        const pool = await getSQLPool;
+        const permissions = await userQueries.getUserPermissions(pool, id);
+        return permissions.recordset as Permission[];
     }
 }

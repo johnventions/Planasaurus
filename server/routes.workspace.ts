@@ -1,11 +1,12 @@
 import { Router, Request, Response, response } from 'express';
+import checkPermissions from "./checkPermissions";
 
 import WorkspaceService from "./services/workspace.service";
 
 module.exports = function () {
     let routes: Router = require('express').Router();
 
-    routes.get('/:id/invite', async (req: any, res: any) => {
+    routes.get('/:id/invite', checkPermissions('read', ['workspace']), async (req: any, res: any) => {
         const sessionUser = req.user ? req.user : null;
         if (sessionUser == null) {
             return res.status(401).json({});
@@ -19,7 +20,7 @@ module.exports = function () {
         return res.status(200).json(invites);
     });
 
-    routes.post('/:id/invite', async (req: any, res: any) => {
+    routes.post('/:id/invite', checkPermissions('write', ['workspace']), async (req: any, res: any) => {
         const sessionUser = req.user ? req.user : null;
 
         const { email } = req.body;

@@ -12,6 +12,7 @@ export default {
     data: function() {
         return {
             show: false,
+            loadingList: true,
             fieldAddModal: false,
             fieldConfigureModal: false,
             fieldToAdd: '',
@@ -113,7 +114,10 @@ export default {
             this.getProjectFieldsByType(this.activeProjectType);
         },
         queryList() {
-            this.getProjectListById(this.activeProjectType.id);
+            this.loadingList = true;
+            this.getProjectListById(this.activeProjectType.id).then(() => {
+                this.loadingList = false;
+            });
         },
         parseUrl(project) {
             return `${this.activeProjectType.codename}/${project.id}`;
