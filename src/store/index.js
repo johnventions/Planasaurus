@@ -295,10 +295,13 @@ export default new Vuex.Store({
 						total: result.data.total,
 					});
 				});
+
 			commit('LOADING_LIST', {
 				id,
 				fetch
 			});
+			
+			return fetch;
 		},
 
 		getProjectFieldsByType({ commit }, type) {

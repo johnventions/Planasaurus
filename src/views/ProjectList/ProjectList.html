@@ -1,4 +1,9 @@
 <div class="container container-fluid">
+    <v-progress-linear
+    v-if="loadingList"
+    indeterminate
+    color="cyan"
+    ></v-progress-linear>
     <div v-if="activeList && activeList.list" class="list-container">
         <v-data-table
             mobile-breakpoint="100"

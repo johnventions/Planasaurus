@@ -1,23 +1,11 @@
-import * as sql from 'mssql';
-const aws = require('aws-sdk');
-var multer = require('multer');
-var multerS3 = require('multer-s3-transform');
-const sharp = require('sharp');
-
-const S3Proxy = require('s3proxy');
-
-import { Router, Request, Response } from 'express';
-import UploadService from './services/upload.service';
-import WorkspaceService from './services/workspace.service';
-import Workspace from './models/workspace';
-import Upload from './models/upload';
 import { v4 } from 'uuid';
-import MediaFile from './models/mediafile';
-
-const { getSQLPool } = require('../server/sql');
-
-var S3 = require('aws-sdk/clients/s3');
+const aws = require('aws-sdk');
+const S3 = require('aws-sdk/clients/s3');
+const sharp = require('sharp');
+const multer = require('multer');
+const multerS3 = require('multer-s3-transform');
 const spacesEndpoint = new aws.Endpoint('nyc3.digitaloceanspaces.com');
+const S3Proxy = require('s3proxy');
 
 const s3config = {
     endpoint: spacesEndpoint,
@@ -25,10 +13,20 @@ const s3config = {
     secretAccessKey: process.env.STORAGE_SECRET
 };
 
+import { Router, Request, Response } from 'express';
+import checkPermissions from "./checkPermissions";
+
+import Upload from './models/upload';
+import UploadService from './services/upload.service';
+
+import WorkspaceService from './services/workspace.service';
+import Workspace from './models/workspace';
+
+import MediaFile from './models/mediafile';
+
+
 const bucketname = process.env.STORAGE_BUCKET;
-
 const s3 = new S3(s3config);
-
 const proxy = new S3Proxy({ bucket: bucketname, ...s3config });
 proxy.init();
 
@@ -95,7 +93,7 @@ module.exports = function () {
         });
     });
 
-    routes.post('/', upload, async (req: any, res: Response) => {
+    routes.post('/', checkPermissions('write', ['uploads']), upload, async (req: any, res: Response) => {
         const workspace = Number(req.headers['pterobyte-workspace']);
         const { user, file } = req;
 
@@ -147,7 +145,7 @@ module.exports = function () {
             });
     });
 
-    routes.route('/:guid/:filename').get(async (req: Request, res: Response) => {
+    routes.route('/:guid/:filename').get(checkPermissions('read', ['projects']), async (req: Request, res: Response) => {
         const preview = req.query.preview || 0;
         const service = new UploadService();
         const guid = req.params.guid;
