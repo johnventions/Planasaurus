@@ -60,6 +60,11 @@ class App {
         const loginRoutes = require('./server/routes.login')();
         this.app.use('/signin', loginRoutes);
 
+        this.app.get('/logout', function(req: any, res: any){
+            req.logout();
+            res.redirect('/');
+        });
+
         const uploadRoutes = require('./server/routes.upload')();
         this.app.use('/upload', uploadRoutes);
     }

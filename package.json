@@ -83,7 +83,8 @@
       "node_modules"
     ],
     "watch": [
-      "server"
+      "server",
+      "server.ts"
     ],
     "exec": "npm run start-ts",
     "ext": "ts"
