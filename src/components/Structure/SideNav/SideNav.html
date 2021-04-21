@@ -69,9 +69,11 @@
         </v-list>
         <template v-slot:append>
             <div class="pa-2 text-center">
-              <v-btn block color="black">
-                Logout
-              </v-btn>
+                <a href="/logout">
+                    <v-btn block color="black">
+                        Logout
+                    </v-btn>
+                </a>
             </div>
           </template>
           <v-dialog v-model="sharingDialog" max-width="750">

@@ -6,6 +6,7 @@ const checkPermissions = function(action: string, resource: [string] ) {
         const workspace = Number(req.headers['pterobyte-workspace']);
         try {
             const sessionUser = SiteSession.load(req);
+            if (!sessionUser.id) throw new Error('Not allowed');
             const permissions = await UserServie.getUserPermissions(sessionUser.id);
 
             const match = permissions.find(x => x.workspace_id == workspace);

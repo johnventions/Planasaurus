@@ -13,6 +13,11 @@ module.exports = {
                 ws: true,
                 changeOrigin: true
             },
+            '^/logout': {
+                target: 'http://localhost:3366/',
+                ws: true,
+                changeOrigin: true
+            },
             '^/signin': {
                 target: 'http://localhost:3366/',
                 ws: true,
