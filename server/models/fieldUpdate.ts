@@ -4,10 +4,10 @@ import FieldDef from "./fielddef";
 
 class FieldUpdate {
     paramID: string;
-    field_id: Number = 0;
+    field_id: number = 0;
     value: any = '';
 
-    constructor(field_id: Number, value: string) {
+    constructor(field_id: number, value: string) {
         this.paramID = v4().replace(/-/g, '');
         this.field_id = field_id;
         this.value = value;

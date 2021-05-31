@@ -9,13 +9,13 @@ export default class TypeService {
     constructor() {
     }
 
-    async getTypes(workspace: Number) : Promise<ProjectType[]> {
+    async getTypes(workspace: number) : Promise<ProjectType[]> {
         const pool = await getSQLPool;
         const types = await typeQueries.getProjectTypes(pool, workspace);
         return types.recordset.map(x => this.ToTypeModel(x) );
     }
 
-    async createOrUpdateType(workspace: Number, type: ProjectType) : Promise<ProjectType> {
+    async createOrUpdateType(workspace: number, type: ProjectType) : Promise<ProjectType> {
         const pool = await getSQLPool;
         if (type.id == 0) {
             const ins = await typeQueries.createType(pool, workspace, type);
@@ -30,14 +30,14 @@ export default class TypeService {
 
     }
 
-    async getTypeFieldsById(id: Number): Promise<FieldDef[]>{
+    async getTypeFieldsById(id: number): Promise<FieldDef[]>{
         const pool = await getSQLPool;
         const fields = await typeQueries.getFieldsByType(pool, id);
         return fields.recordset.map(x => this.ToFieldModel(x));
 
     }
 
-    async getTypeFieldsMapById(id: Number): Promise<Map<string, FieldDef>> {
+    async getTypeFieldsMapById(id: number): Promise<Map<string, FieldDef>> {
         const fields = await this.getTypeFieldsById(id);
         let fieldMap = new Map<string, FieldDef>();
         fields.filter(f => f.parent == null).forEach(x => {
@@ -58,7 +58,7 @@ export default class TypeService {
 
     }
 
-    async createTypeField(typeID: Number, field: FieldDef): Promise<FieldDef> {
+    async createTypeField(typeID: number, field: FieldDef): Promise<FieldDef> {
         const pool = await getSQLPool;
         const result = await typeQueries.createFieldForType(pool, typeID, field);
         let created = result.recordset[0];
@@ -66,7 +66,7 @@ export default class TypeService {
         return f;
     }
 
-    async updateTypeField(fieldID: Number, field: FieldDef): Promise<FieldDef> {
+    async updateTypeField(fieldID: number, field: FieldDef): Promise<FieldDef> {
         const pool = await getSQLPool;
         const result = await typeQueries.updateFieldDefinition(pool, fieldID, field);
         let f: FieldDef = { ...field };
@@ -81,14 +81,14 @@ export default class TypeService {
         return FieldDef.fromData(data);
     }
 
-    async getTypeLayoutById(typeID: Number): Promise<Layout> {
+    async getTypeLayoutById(typeID: number): Promise<Layout> {
         const pool = await getSQLPool;
         const result = await typeQueries.getLayoutForProjectType(pool, typeID);
         let layout: Layout = Layout.fromData(JSON.parse(result.recordset[0].layout));
         return layout;
     }
 
-    async getTypeOptionsById(typeID: Number): Promise<any> {
+    async getTypeOptionsById(typeID: number): Promise<any> {
         const pool = await getSQLPool;
         const result = await typeQueries.getOptionsForProjectType(pool, typeID);
         let options : any = {};
@@ -98,13 +98,13 @@ export default class TypeService {
         return options;
     }
 
-    async updateTypeLayoutById(typeID: Number, layout: any): Promise<any> {
+    async updateTypeLayoutById(typeID: number, layout: any): Promise<any> {
         const pool = await getSQLPool;
         const result = await typeQueries.updateLayoutForProjectType(pool, typeID, JSON.stringify(layout));
         return result;
     }
 
-    async updateTypeFieldLayoutById(typeID: Number, layout: any): Promise<any> {
+    async updateTypeFieldLayoutById(typeID: number, layout: any): Promise<any> {
         const pool = await getSQLPool;
         const result = await typeQueries.updateFieldLayoutForProjectType(pool, typeID, JSON.stringify(layout));
         return result;

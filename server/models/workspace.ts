@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
 
 export default class Workspace {
-    id: Number = 0;
+    id: number = 0;
     name: string = '';
     owner_id: string = '';
     uuid: string = '';

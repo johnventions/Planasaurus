@@ -40,7 +40,7 @@ const getUser = function (pool: sql.ConnectionPool, col: String, user: any) {
     return request.query(select);
 }
 
-const getUserById = function (pool: sql.ConnectionPool, id: Number) {
+const getUserById = function (pool: sql.ConnectionPool, id: number) {
     const select = `
     ${ userSelectBase }
     WHERE
@@ -90,7 +90,7 @@ const createUser = function(pool: sql.ConnectionPool, col: String, user: any) {
     return request.query(insert);
 }
 
-const acceptInvitations = function(pool: sql.ConnectionPool, id: Number, email: string) {
+const acceptInvitations = function(pool: sql.ConnectionPool, id: number, email: string) {
     const insert = `
     INSERT into workspace_users
         (
@@ -117,7 +117,7 @@ const acceptInvitations = function(pool: sql.ConnectionPool, id: Number, email: 
     return request.query(insert);
 }
 
-const getUserPermissions = function(pool: sql.ConnectionPool, id: Number) {
+const getUserPermissions = function(pool: sql.ConnectionPool, id: number) {
     const select = `
     SELECT
         id as 'workspace_id',

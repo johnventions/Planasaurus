@@ -5,6 +5,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+const redis = require('redis');
+const redisConnect = require('connect-redis');
 
 
 const { getSQLPool } = require('./server/sql');
@@ -14,9 +16,11 @@ const PORT = process.env.PORT || 3000;
 class App {
     app: any;
     server: any;
+    redisClient: any;
 
     constructor() {
         this.createApp();
+        this.startRedis();
         this.appConfig();
         this.startServer();
         this.startDB();
@@ -28,14 +32,27 @@ class App {
         this.app = express();
     }
 
+    startRedis() {
+        this.redisClient = redis.createClient();
+    }
+
     appConfig() {
+        const redisStore = redisConnect(session);
+
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
 
         this.app.use(session({
             secret: process.env.SESSION_SECRET || 'planasaurus3000',
             resave: true,
-            saveUninitialized: true
+            saveUninitialized: true,
+            store: new redisStore({
+                host: 'localhost',
+                name: 'pterobyteUUID',
+                port: 6379,
+                client: this.redisClient,
+                ttl: 86400
+            })
         }));
 
         this.app.use(passport.initialize());

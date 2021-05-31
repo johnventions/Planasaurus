@@ -3,7 +3,7 @@ import FieldDef from "../models/fielddef";
 import ProjectType from "../models/projecttype";
 
 
-const getProjectTypes = function (pool: sql.ConnectionPool, workspace: Number) {
+const getProjectTypes = function (pool: sql.ConnectionPool, workspace: number) {
     const select = `
     /* SELECT THE LIST OF PROJECT TYPES */
         SELECT
@@ -31,7 +31,7 @@ const getProjectTypes = function (pool: sql.ConnectionPool, workspace: Number) {
     return request.query(select);
 }
 
-const createType = function (pool: sql.ConnectionPool, workspace: Number, type: ProjectType) {
+const createType = function (pool: sql.ConnectionPool, workspace: number, type: ProjectType) {
     const insert = `
         INSERT INTO project_types 
             (name, codename, parent_id, workspace, menu_order)
@@ -50,7 +50,7 @@ const createType = function (pool: sql.ConnectionPool, workspace: Number, type: 
     return request.query(insert);
 }
 
-const updateType = function (pool: sql.ConnectionPool, workspace: Number, type: ProjectType) {
+const updateType = function (pool: sql.ConnectionPool, workspace: number, type: ProjectType) {
     const update = `
         UPDATE t
         
@@ -78,7 +78,7 @@ const updateType = function (pool: sql.ConnectionPool, workspace: Number, type: 
     return request.query(update);
 }
 
-const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
+const getFieldsByType = function(pool: sql.ConnectionPool, id: number) {
     const select = `
     /* SELECT THE LIST OF FIELDS FOR A TYPE TYPES */
         SELECT
@@ -113,7 +113,7 @@ const getFieldsByType = function(pool: sql.ConnectionPool, id: Number) {
 }
 
 
-const createFieldForType = function (pool: sql.ConnectionPool, typeID: Number, field: FieldDef) {
+const createFieldForType = function (pool: sql.ConnectionPool, typeID: number, field: FieldDef) {
     const insert = `
     /* CREATE A NEW RECORD IN field_defs */
         INSERT INTO field_defs
@@ -131,7 +131,7 @@ const createFieldForType = function (pool: sql.ConnectionPool, typeID: Number, f
     return request.query(insert);
 }
 
-const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Number, field: FieldDef) {
+const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: number, field: FieldDef) {
     const update = `
     /* UPDATE EXISTING NEW RECORD IN field_defs */
         UPDATE field_defs
@@ -153,7 +153,7 @@ const updateFieldDefinition = function (pool: sql.ConnectionPool, fieldID: Numbe
 
 }
 
-const getLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Number) {
+const getLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: number) {
     const select = `
     /* Pull out the LAYOUT field */
         SELECT layout
@@ -167,7 +167,7 @@ const getLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Numb
     return request.query(select);
 }
 
-const getOptionsForProjectType = function (pool: sql.ConnectionPool, typeID: Number) {
+const getOptionsForProjectType = function (pool: sql.ConnectionPool, typeID: number) {
     const select = `
     /* Pull out the OPTIONS field */
         SELECT
@@ -203,7 +203,7 @@ const getOptionsForProjectType = function (pool: sql.ConnectionPool, typeID: Num
     return request.query(select);
 }
 
-const updateLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Number, layout: String) {
+const updateLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: number, layout: String) {
     const update = `
         UPDATE project_types
         SET layout = @layout
@@ -217,7 +217,7 @@ const updateLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: N
     return request.query(update);
 }
 
-const updateFieldLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: Number, layout: String) {
+const updateFieldLayoutForProjectType = function (pool: sql.ConnectionPool, typeID: number, layout: String) {
     const update = `
         UPDATE project_types
         SET fieldLayout = @layout

@@ -1,7 +1,7 @@
 export default class SiteSession {
-    id: Number = 0;
-    workspace: Number = 0;
-    lastCheck: Number = Date.now();
+    id: number = 0;
+    workspace: number = 0;
+    lastCheck: number = Date.now();
 
     static load(req: any) {
         let s = new this();

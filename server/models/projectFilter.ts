@@ -5,18 +5,18 @@ import FieldDef from "./fielddef";
 
 export default class ProjectFilter {
     param: string;
-    fieldID: Number;
+    fieldID: number;
     value: any;
-    index: Number;
+    index: number;
     operator: string = "=";
     joinStatement: string = '';
     whereStatement: string = '';
     def: FieldDef;
 
     constructor(
-        i: Number,
+        i: number,
         _param: string,
-        _fieldid: string | Number,
+        _fieldid: string | number,
         _value: any,
         def?: FieldDef
     ) {
@@ -117,7 +117,7 @@ export default class ProjectFilter {
     }
 
     
-    makeDateComparisonWhere(request: sql.Request, tableAlias: string, fieldID: Number, param: string, value: string) {
+    makeDateComparisonWhere(request: sql.Request, tableAlias: string, fieldID: number, param: string, value: string) {
         let [val, op] = this.checkOperator(value);
         this.whereStatement += `
             AND ${tableAlias}.field_id = ${fieldID} AND ${tableAlias}.value ${op} @${param}
@@ -125,7 +125,7 @@ export default class ProjectFilter {
         request.input(param, `${ val }`);
     }
 
-    makeBoolComparison(request: sql.Request, tableAlias: string, fieldID: Number, param: string, value: string) {
+    makeBoolComparison(request: sql.Request, tableAlias: string, fieldID: number, param: string, value: string) {
         this.whereStatement = `
             AND ${tableAlias}.field_id = ${fieldID} AND ${tableAlias}.value = @${param}
         `;
@@ -133,14 +133,14 @@ export default class ProjectFilter {
     }
     
 
-    makeExactIntCompare(request: sql.Request, tableAlias: string, fieldID: Number, param: string, value: string) {
+    makeExactIntCompare(request: sql.Request, tableAlias: string, fieldID: number, param: string, value: string) {
         this.whereStatement = `
             AND ${tableAlias}.field_id = ${fieldID} AND ${tableAlias}.value = @${param}
         `;
         request.input(param, `${ value }`);
     }
     
-    makeLikeComparision(request: sql.Request, tableAlias: string, fieldID: Number, param: string, value: string)  {
+    makeLikeComparision(request: sql.Request, tableAlias: string, fieldID: number, param: string, value: string)  {
         this.whereStatement = `
             AND ${tableAlias}.field_id = ${fieldID} AND ${tableAlias}.value LIKE '%' + @${param} + '%'
         `;

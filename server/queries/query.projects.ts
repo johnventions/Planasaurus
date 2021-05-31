@@ -111,7 +111,7 @@ const newProject = function (pool: sql.ConnectionPool, project: Project) {
     return request.query(insert);
 }
 
-const getProjectCount = function (pool: sql.ConnectionPool, type: Number) {
+const getProjectCount = function (pool: sql.ConnectionPool, type: number) {
     const select = `
     SELECT COUNT(id) as 'total'
     FROM projects
@@ -145,7 +145,7 @@ const getProjects = function (pool: sql.ConnectionPool, spec: ProjectSpecificati
     return query.request.query(select);
 }
 
-const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
+const getProjectById = function (pool: sql.ConnectionPool, id: number) {
     const select = `
     /* SELECT THE LIST OF PROJECTS */
     WITH project_list as (
@@ -162,7 +162,7 @@ const getProjectById = function (pool: sql.ConnectionPool, id: Number) {
     return request.query(select);
 };
 
-const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: Array<FieldUpdate>, definitions: Map<string, FieldDef>) {
+const updateProject = function (pool: sql.ConnectionPool, id: number,  fields: Array<FieldUpdate>, definitions: Map<string, FieldDef>) {
     const request = pool.request();
 
     let update : string[] = [];
@@ -195,7 +195,7 @@ const updateProject = function (pool: sql.ConnectionPool, id: Number,  fields: A
     return request.query(updateString);
 };
 
-const getProjectType = function (pool: sql.ConnectionPool, id: Number) {
+const getProjectType = function (pool: sql.ConnectionPool, id: number) {
     const select = `
         SELECT project_type FROM projects
         WHERE id = @id
@@ -207,7 +207,7 @@ const getProjectType = function (pool: sql.ConnectionPool, id: Number) {
     return request.query(select);
 }
 
-const getProjectChildData = function (pool: sql.ConnectionPool, id: Number) {
+const getProjectChildData = function (pool: sql.ConnectionPool, id: number) {
     const select = `
     /* SELECT THE LIST OF PROJECTS */
     WITH project_list as (
@@ -226,7 +226,7 @@ const getProjectChildData = function (pool: sql.ConnectionPool, id: Number) {
 }
 
 
-const getProjectMetaForField = function (pool: sql.ConnectionPool, fieldID: Number, projectID: Number) {
+const getProjectMetaForField = function (pool: sql.ConnectionPool, fieldID: number, projectID: number) {
     const select = `
     SELECT
         defs.id as 'field_id',

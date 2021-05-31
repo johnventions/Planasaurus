@@ -1,7 +1,7 @@
 import Workspace from './workspace';
 
 export default class User {
-    id: Number = 0;
+    id: number = 0;
     firstname: string = '';
     lastname: string = '';
     email: string = '';

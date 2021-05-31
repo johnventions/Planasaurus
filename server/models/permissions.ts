@@ -1,4 +1,4 @@
 export default class Permission {
-    workspace_id: Number = 0;
+    workspace_id: number = 0;
     granted: string = 'none';
 }

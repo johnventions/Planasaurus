@@ -10,13 +10,13 @@ export default class WorkspaceService {
 
     }
 
-    async createUpload(upload: Upload) : Promise<Number> {
+    static async createUpload(upload: Upload) : Promise<number> {
         const pool = await getSQLPool;
         const uploadId = await uploadQueries.createUpload(pool, upload);
         return parseInt(uploadId.recordset[0].id);
     }
 
-    async getUploadByGuid(guid: string) : Promise<MediaFile> {
+    static async getUploadByGuid(guid: string) : Promise<MediaFile> {
         const pool = await getSQLPool;
         const upload = await uploadQueries.getUploadByGuid(pool, guid);
         const mf = new MediaFile(upload.recordset[0]);
