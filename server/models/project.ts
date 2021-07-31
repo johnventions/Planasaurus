@@ -1,11 +1,11 @@
 import FieldEntry from "./fieldentry"
 
 export default class Project {
-    id: Number = 0;
+    id: number = 0;
     date_created: any;
     name: string = 'New Project';
-    project_type: Number = 0;
-    status: Number = 0;
+    project_type: number = 0;
+    status: number = 0;
     fields: Array<FieldEntry> = [];
     files: any = [];
 

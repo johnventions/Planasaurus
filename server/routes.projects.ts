@@ -11,8 +11,8 @@ import FieldDef from './models/fielddef';
 module.exports = function () {
     let routes : Router = require('express').Router();
 
-    routes.get('/',  checkPermissions('read', ['projects']), async (req: Request, res: Response) => {
-        const typeID : Number = Number(req.query.type);
+    routes.get('/', checkPermissions('read', ['projects']), async (req: Request, res: Response) => {
+        const typeID : number = Number(req.query.type);
 
         // Look up field definitions, so we can search the correct table
         const typeService = new TypeService();
@@ -69,7 +69,7 @@ module.exports = function () {
     });
 
     routes.post('/:id', checkPermissions('write', ['projects']), async (req: Request, res: Response) => {
-        let id : Number = parseInt(req.params.id);
+        let id : number = parseInt(req.params.id);
         const service = new ProjectService();
 
         let p = Project.fromData(req.body);

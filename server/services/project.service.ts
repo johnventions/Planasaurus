@@ -20,7 +20,7 @@ export default class ProjectService {
         return p;
     }
 
-    async getProjectCount(type: Number) : Promise<Number> {
+    async getProjectCount(type: number) : Promise<number> {
         const pool = await getSQLPool;
         const count = await projectQueries.getProjectCount(pool, type);
         return parseInt(count.recordset[0].total);
@@ -32,27 +32,27 @@ export default class ProjectService {
         return projects.recordset.map( x => this.ToModel(x) );
     }
 
-    async getProjectById(id: Number) : Promise<Project> {
+    async getProjectById(id: number) : Promise<Project> {
         const pool = await getSQLPool;
         const project = await projectQueries.getProjectById(pool, id);
         const firstProject = project.recordset[0];
         return this.ToModel(firstProject);
     }
 
-    async getProjectType(id: Number) : Promise<Number> {
+    async getProjectType(id: number) : Promise<number> {
         const pool = await getSQLPool;
         const project = await projectQueries.getProjectType(pool, id);
         return project.recordset[0].project_type;
     }
 
-    async getProjectFieldDefinitions(id: Number): Promise<Map<string, FieldDef>> {
+    async getProjectFieldDefinitions(id: number): Promise<Map<string, FieldDef>> {
         const type = await this.getProjectType(id);
         const service = new TypeService();
         const fields = await service.getTypeFieldsMapById(type);
         return fields;
     }
 
-    async updateProjectFields(id: Number, fields: Array<any>) : Promise<any> {
+    async updateProjectFields(id: number, fields: Array<any>) : Promise<any> {
         const pool = await getSQLPool;
         // convert fields to proper type
         let fieldData : Array<FieldUpdate> = fields.map(x => {
@@ -64,7 +64,7 @@ export default class ProjectService {
         return 1;
     }
 
-    async getProjectChildren(id: Number) {
+    async getProjectChildren(id: number) {
         const pool = await getSQLPool;
         const children = await projectQueries.getProjectChildData(pool, id);
         children.recordset.forEach(x => {
@@ -78,7 +78,7 @@ export default class ProjectService {
         return children.recordset;
     }
 
-    async getFieldMetaForProject(field: Number, project: Number) {
+    async getFieldMetaForProject(field: number, project: number) {
         const pool = await getSQLPool;
         const records = await projectQueries.getProjectMetaForField(pool, field, project);
         records.recordset.forEach(x => {

@@ -134,9 +134,8 @@ module.exports = function () {
         });
 
 
-        const service = new UploadService();
-        const fileID = await service.createUpload(uploadedFile);
-        const newFile : MediaFile = await service.getUploadByGuid(uploadedFile.uuid);
+        const fileID = UploadService.createUpload(uploadedFile);
+        const newFile : MediaFile = await UploadService.getUploadByGuid(uploadedFile.uuid);
     
         return res.status(200).json({
                 success: true,
@@ -145,12 +144,11 @@ module.exports = function () {
             });
     });
 
-    routes.route('/:guid/:filename').get(checkPermissions('read', ['projects']), async (req: Request, res: Response) => {
+    routes.route('/:guid/:filename').get(checkPermissions('read', ['uploads']), async (req: Request, res: Response) => {
         const preview = req.query.preview || 0;
-        const service = new UploadService();
         const guid = req.params.guid;
 
-        const uploadFile : MediaFile = await service.getUploadByGuid(guid);
+        const uploadFile : MediaFile = await UploadService.getUploadByGuid(guid);
         
         const dest = {
             path: (preview && uploadFile.preview_filepath) ? uploadFile.preview_filepath : uploadFile.filepath,

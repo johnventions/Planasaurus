@@ -1,13 +1,13 @@
 import { v4 } from "uuid";
 
 export default class Upload {
-    id: Number = 0;
-    workspace: Number = 0;
-    user_id: Number = 0;
+    id: number = 0;
+    workspace: number = 0;
+    user_id: number = 0;
     original_filename: string = '';
-    size: Number = 0;
+    size: number = 0;
     filename: string = '';
-    bucket: Number = 0;
+    bucket: number = 0;
     date_created: any = null;
     uuid: string = v4();
     preview_filename: string | null = null;

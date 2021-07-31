@@ -22,7 +22,7 @@ passport.serializeUser(async function (user: any, done: any) {
         email: user._json ? user._json.email : ''
     };
     const userLogin : User = await service.createOrGetUser('googleid', userObj);
-    const activeWorkspace: Number = userLogin.workspaces[0].id;
+    const activeWorkspace: number = userLogin.workspaces[0].id;
 
     const session = {
         id: userLogin.id,
@@ -44,7 +44,7 @@ passport.deserializeUser(async function (user: any, done: any) {
     /*
     const service = new UsersService();
     const userLogin = await service.getUserById(user.id);
-    const activeWorkspace: Number = userLogin.default_workspace ? userLogin.default_workspace : userLogin.workspaces[0].id;
+    const activeWorkspace: number = userLogin.default_workspace ? userLogin.default_workspace : userLogin.workspaces[0].id;
 
     done(null, {
         user: userLogin,

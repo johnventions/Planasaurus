@@ -5,7 +5,7 @@ export default class ProjectQuery {
     request: sql.Request;
     joins: string[] = [];
     wheres: string[] = [];
-    constructor(req: sql.Request, projectType: Number) {
+    constructor(req: sql.Request, projectType: number) {
         this.request = req;
         this.request.input('ptype', sql.Int, projectType);
         this.request.multiple = true;
