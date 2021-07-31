@@ -1,12 +1,12 @@
 import Project from "./project";
 
 export default class ProjectType {
-    id: Number = 0;
+    id: number = 0;
     codename: string = '';
     name: string = '';
-    menu_order: Number = 0;
-    parent_id: Number | null = null;
-    qty: Number = 0;
+    menu_order: number = 0;
+    parent_id: number | null = null;
+    qty: number = 0;
     fieldLayout: any[] = [];
 
     static fromData(data: any) : ProjectType {

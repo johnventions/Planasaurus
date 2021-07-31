@@ -39,7 +39,7 @@ export default class UserService {
         return user;
     }
 
-    async getUserById(id: Number) : Promise<User> {
+    async getUserById(id: number) : Promise<User> {
         const pool = await getSQLPool;
         const dbUser = await userQueries.getUserById(pool, id);
         return User.fromData(dbUser.recordset[0]);
@@ -51,7 +51,7 @@ export default class UserService {
         return dbUser.recordset.length ? User.fromData(dbUser.recordset[0]) : null;
     }
 
-    static async getUserPermissions(id: Number) : Promise<Array<Permission>> {
+    static async getUserPermissions(id: number) : Promise<Array<Permission>> {
         const pool = await getSQLPool;
         const permissions = await userQueries.getUserPermissions(pool, id);
         return permissions.recordset as Permission[];

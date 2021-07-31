@@ -8,31 +8,31 @@ export default class WorkspaceService {
     constructor() {
     }
 
-    async createWorkSpace(ownerID: Number, name: String) {
+    async createWorkSpace(ownerID: number, name: String) {
         const pool = await getSQLPool;
         const ws = await workspaceQueries.createWorkspace(pool, ownerID, name);
         return ws;
     }
 
-    async getUserWorkspaces(ownerID: Number) {
+    async getUserWorkspaces(ownerID: number) {
         const pool = await getSQLPool;
         const ws = await workspaceQueries.getWorkspacesByOwner(pool, ownerID);
         return ws.recordset as Workspace[];
     }
 
-    async getWorkspaceSharedTos(id: Number) {
+    async getWorkspaceSharedTos(id: number) {
         const pool = await getSQLPool;
         const shared = await workspaceQueries.getWorkspaceSharedTos(pool, id);
         return shared.recordset;
     }
 
-    async getWorkspaceById(id: Number) : Promise<Workspace> {
+    async getWorkspaceById(id: number) : Promise<Workspace> {
         const pool = await getSQLPool;
         const ws = await workspaceQueries.getWorkspacesById(pool, id);
         return ws.recordset[0] as Workspace;
     }
 
-    async inviteUserToWorkspace(id: Number, email: string, addedBy: Number) {
+    async inviteUserToWorkspace(id: number, email: string, addedBy: number) {
         const pool = await getSQLPool;
         const userService =  new UserService();
         const existingUser : User | null = await userService.getUserByEmail(email);

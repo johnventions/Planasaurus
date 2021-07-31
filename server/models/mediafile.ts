@@ -1,8 +1,8 @@
 import { v4 } from "uuid";
 
 export default class MediaFile {
-    id: Number = 0;
-    workspace: Number = 0;
+    id: number = 0;
+    workspace: number = 0;
     uuid: string = '';
     bucket_name: string = '';
     bucket_region: string = '';

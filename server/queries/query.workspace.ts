@@ -1,6 +1,6 @@
 import * as sql from 'mssql';
 
-const createWorkspace = function (pool: sql.ConnectionPool, owner: Number, name: String) {
+const createWorkspace = function (pool: sql.ConnectionPool, owner: number, name: String) {
     const insert = `
         INSERT INTO workspaces
             (name, owner_id)
@@ -15,7 +15,7 @@ const createWorkspace = function (pool: sql.ConnectionPool, owner: Number, name:
     return request.query(insert);
 }
 
-const getWorkspacesById = function (pool: sql.ConnectionPool, id: Number) {
+const getWorkspacesById = function (pool: sql.ConnectionPool, id: number) {
     const select = `
         SELECT TOP 1 
         *
@@ -30,7 +30,7 @@ const getWorkspacesById = function (pool: sql.ConnectionPool, id: Number) {
 }
 
 
-const getWorkspacesByOwner = function (pool: sql.ConnectionPool, owner: Number) {
+const getWorkspacesByOwner = function (pool: sql.ConnectionPool, owner: number) {
     const select = `
         SELECT *
         FROM workspaces
@@ -43,7 +43,7 @@ const getWorkspacesByOwner = function (pool: sql.ConnectionPool, owner: Number) 
     return request.query(select);
 }
 
-const getWorkspaceSharedTos = function(pool: sql.ConnectionPool, id: Number) {
+const getWorkspaceSharedTos = function(pool: sql.ConnectionPool, id: number) {
     const select = `
     SELECT
         u.email,
@@ -68,7 +68,7 @@ const getWorkspaceSharedTos = function(pool: sql.ConnectionPool, id: Number) {
     return request.query(select);
 }
 
-const addUserToWorkspace = function(pool: sql.ConnectionPool, id: Number, user: Number, addedBy: Number) {
+const addUserToWorkspace = function(pool: sql.ConnectionPool, id: number, user: number, addedBy: number) {
     const insert = `
         INSERT INTO workspace_users
         (workspace_id, user_id, added_by)
@@ -83,7 +83,7 @@ const addUserToWorkspace = function(pool: sql.ConnectionPool, id: Number, user: 
     return request.query(insert);
 }
 
-const createWorkspaceInvitation = function(pool: sql.ConnectionPool, id: Number, email: string, addedBy: Number) {
+const createWorkspaceInvitation = function(pool: sql.ConnectionPool, id: number, email: string, addedBy: number) {
     const insert = `
         INSERT INTO workspace_invites
         (workspace_id, email, added_by)

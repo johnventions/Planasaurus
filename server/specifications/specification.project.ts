@@ -4,7 +4,7 @@ import FieldDef from '../models/fielddef';
 import ProjectFilter from '../models/projectFilter';
 
 export default class ProjectSpecification {
-    type: Number;
+    type: number;
     sortBy: string;
     sortByDir?: string;
     fields: Map<string, any>;
@@ -17,7 +17,7 @@ export default class ProjectSpecification {
     ];
 
     constructor(
-        _type: Number,
+        _type: number,
         _sortBy: string | null,
         _sortByDir: string | null
     ) {

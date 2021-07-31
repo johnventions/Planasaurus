@@ -1,11 +1,11 @@
 export default class FieldDef {
-    id: Number = 0;
+    id: number = 0;
     name: string = '';
-    data_type: Number = 1;
-    relationship_type: Number | null = null;
+    data_type: number = 1;
+    relationship_type: number | null = null;
     metadata: any = {};
-    related_keys: Number | null = null;
-    parent: Number | null = null;
+    related_keys: number | null = null;
+    parent: number | null = null;
     related_fields: Map<string, FieldDef> = new Map<string, FieldDef>();
 
     static fromData(data: any) : FieldDef {
