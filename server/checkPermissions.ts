@@ -8,10 +8,11 @@ const checkPermissions = function(action: string, resource: [string] ) {
         try {
             const sessionUser = SiteSession.load(req);
             if (!sessionUser.id) throw new Error('Not allowed');
+
             const permissions = await UserServie.getUserPermissions(sessionUser.id);
 
             let match = null;
-            if (resource.indexOf('uploads') > -1) {
+            if (resource.indexOf('uploads') > -1 && req.method == 'GET') {
                 // custom lookup for images since we don't have workspace values
                 const guid = req.params.guid;
                 const file = await UploadService.getUploadByGuid(guid);
