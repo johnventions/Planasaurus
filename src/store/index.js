@@ -229,7 +229,7 @@ export default new Vuex.Store({
 			}
 		},
 
-		RESET_UPDATES(state) {
+		SAVE_COMPLETE(state) {
 			state.pendingUpdates = {};
 		},
 
@@ -435,7 +435,7 @@ export default new Vuex.Store({
 
 			return axios.post(`/api/projects/${id}`, updatedProject)
 				.then((response) => {
-					commit('RESET_UPDATES');
+					commit('SAVE_COMPLETE');
 					//commit('SET_RECORD', updatedProject);
 					return response.data;
 				})

@@ -80,3 +80,8 @@ export default {
     },
 }
 </script>
+<style lang="scss" scoped>
+    .sidenav-header {
+        min-height: 65px;
+    }
+</style>

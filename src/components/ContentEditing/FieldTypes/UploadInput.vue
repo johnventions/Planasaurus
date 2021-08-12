@@ -29,7 +29,7 @@
             class="d-flex flex-wrap"  
             v-bind:class="`uploads-${displayType}`">
             <v-card 
-                v-for="(file) in value" :key="file.uuid"
+                v-for="(file, i) in value" :key="file.uuid"
                 class="file-card mx-2 mb-3">
                     <router-link 
                         target="_blank"
@@ -41,10 +41,14 @@
                         </v-card-text>
                     </router-link>
                     <v-card-actions class="py-0">
-                        <v-img
-                            class="thumb"
-                             :src="file.previewPath"
-                            v-if="file.previewPath" />
+                        <router-link 
+                        target="_blank"
+                        v-if="file.previewPath"
+                        :to="file.publicPath">
+                            <v-img
+                                class="thumb"
+                                :src="file.previewPath"/>
+                        </router-link>
                         <template v-if="!file.previewPath">
                         <v-icon color="secondary">
                             {{ getPathIcon(file.original_filename) }}
@@ -121,18 +125,19 @@ export default {
                      'Content-Type': 'multipart/form-data'
                 }
             }).then(res => {
+                // add to 'value' so it appears in list
                 this.value = [
-                        ... this.value,
-                        res.data.file
-                    ];
-                    // add as a pending change
-                    this.changes = [
-                        ...this.changes,
-                        {
-                            value: res.data.file.id,
-                            order: this.value.length
-                        }
-                    ];
+                    ... this.value,
+                    res.data.file
+                ];
+                // add as a pending change
+                this.changes = [
+                    ...this.changes,
+                    {
+                        value: res.data.file.id,
+                        order: this.value.length
+                    }
+                ];
                 this.handleUpdate();
                 this.files = null;
             })
@@ -159,6 +164,9 @@ export default {
         this.$store.subscribe((mutation) => {
             if (mutation.type == "SET_RECORD") {
                 this.resetValue();
+            } else if (mutation.type == "SAVE_COMPLETE") {
+                this.touched = false;
+                this.changes = [];
             }
         });
     }

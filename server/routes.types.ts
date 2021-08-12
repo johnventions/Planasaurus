@@ -8,10 +8,13 @@ import ProjectType from './models/projecttype';
 module.exports = function () {
     let routes : Router = require('express').Router();
 
-    routes.get('/', checkPermissions('read', ['type']), async (req: Request, res: Response) => {
+    routes.get('/', checkPermissions('read', ['type']), async (req: any, res: Response) => {
         const workspace = Number(req.headers['pterobyte-workspace']);
         const service = new TypeService();
         const result = await service.getTypes(workspace);
+
+        req.user.workspace = workspace;
+
         return res.status(200).json({
                 success: true,
                 types: result

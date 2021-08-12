@@ -76,7 +76,7 @@ export default {
         this.$store.subscribe((mutation) => {
             if (mutation.type == "SET_RECORD") {
                 this.resetValue();
-            } else if (mutation.type == "RESET_UPDATES") {
+            } else if (mutation.type == "SAVE_COMPLETE") {
                 this.touched = false;
             }
         });
